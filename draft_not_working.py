@@ -144,73 +144,41 @@ for i in range(n):
         model.addConstr(y_pred[i, j] <= z_hidden_final[i, j] + M * (1 - binary_v_output[i, j]))
         model.addConstr(y_pred[i, j] <= M * binary_v_output[i, j])
 
-## MAX CORRECT LOSS FUNCTION
-# Variables: Binary indicators for correct predictions
-correct_preds = model.addVars(n, vtype=GRB.BINARY, name="correct_preds")
-
-# Variables: Predicted class for each sample
-predicted_class = model.addVars(n, output_dim, vtype=GRB.BINARY, name="predicted_class")
-
-# Constraints to ensure that for each sample, exactly one class is predicted
+''' Constraints to make sure the maximum in y_pred is unique, but it does not work '''
+# Add constraint to ensure only one maximum value in y_pred for each sample
+max_prob = model.addVars(n, vtype=GRB.CONTINUOUS, name="max_prob")  # Create variables to represent the maximum probability for each sample
+is_max = model.addVars(n, output_dim, vtype=GRB.BINARY, name="is_max")  # Binary variables to indicate if y_pred[i, j] is equal to max_prob[i]
 for i in range(n):
-    model.addConstr(gp.quicksum(predicted_class[i, j] for j in range(output_dim)) == 1, name=f"unique_class_{i}")
+    model.addConstr(max_prob[i] == gp.max_([y_pred[i, k] for k in range(output_dim)]))  # Define max_prob[i] as the maximum probability for sample i
+    for j in range(output_dim):
+        model.addConstr(y_pred[i, j] - max_prob[i] <= 10 * (1 - is_max[i, j]))  # Set is_max to 1 if y_pred equals max_prob
+        model.addConstr(y_pred[i, j] - max_prob[i] >= -10 * is_max[i, j])  # Set is_max to 0 otherwise
+    model.addConstr(gp.quicksum(is_max[i, j] for j in range(output_dim)) == 1)  # Ensure only one maximum value
 
-# Constraints to ensure that the predicted class has the highest score
+''' Cross entropy loss function is not adapted to this model 
+    since final activation function is ReLU and 
+    not Softmax or Sigmoid so y_pred not strictly between [0,1]'''
+## CROSS ENTROPY LOSS FUNCTION
+
+# Loss calculation using a piecewise-linear approximation of the logarithm
+log_breaking_points = np.linspace(1.0e-4, 10, 200)
+log_values = np.log(log_breaking_points)
+
+loss = model.addVar(name="loss")
+log_loss_terms = []
+
 for i in range(n):
     for j in range(output_dim):
-        for k in range(output_dim):
-            if j != k:
-                model.addConstr(y_pred[i, j] - y_pred[i, k] >= epsilon - M * (1 - predicted_class[i, j]), 
-                                name=f"max_class_{i}_{j}_{k}")
+        log_term = model.addVar(lb=-GRB.INFINITY, name=f"log_term_{i}_{j}")
+        model.addGenConstrPWL(y_pred[i, j], log_term, log_breaking_points, log_values, name="pwl_log")
+        log_loss_terms.append((log_term, y_train_one_hot[i, j]))
 
-# Constraints to ensure correct_preds is set correctly
-for i in range(n):
-    true_class = np.argmax(y_train_one_hot[i])
-    model.addConstr(correct_preds[i] == predicted_class[i, true_class], name=f"correct_pred_{i}")
-
-# Objective: Maximize the number of correct predictions
-model.setObjective(gp.quicksum(correct_preds[i] for i in range(n)), GRB.MAXIMIZE)
-
-'''
-## HINGE LOSS FUNCTION
-# Define auxiliary variables for hinge loss terms
-hinge_loss_terms = model.addVars(n, output_dim, vtype=GRB.CONTINUOUS, name="hinge_loss_terms")
-
-# Constraints for hinge loss
-for i in range(n):
-    for j in range(output_dim):
-        # True class label (-1 or 1)
-        y_true = 2 * y_train_one_hot[i, j] - 1
-        
-        # Hinge loss constraint
-        model.addConstr(hinge_loss_terms[i, j] >= 0)
-        model.addConstr(hinge_loss_terms[i, j] >= (1 - y_true * y_pred[i, j]))
+# Loss function
+model.addConstr(loss == -gp.quicksum(log_term * cond for log_term, cond in log_loss_terms), name="loss_function")
 
 # Objective function
-model.setObjective(1/n*gp.quicksum(hinge_loss_terms[i, j] for i in range(n) for j in range(output_dim)), GRB.MINIMIZE)
-'''
-'''
-## SAT MARGIN LOSS FUNCTION
-loss_expr = gp.LinExpr()
+model.setObjective(loss, GRB.MINIMIZE)
 
-# Define binary variables to indicate correct predictions
-correct_preds = model.addVars(n, output_dim, vtype=GRB.BINARY, name="correct_preds")
-
-for i in range(n):
-    for j in range(output_dim):
-        y_true = 2 * y_train_one_hot[i, j] - 1
-        # If correct_preds[i, j] == 1, then y_true * y_pred[i, j] >= margin
-        model.addConstr(y_true * y_pred[i, j] >= margin - M * (1 - correct_preds[i, j]))
-
-        # If correct_preds[i, j] == 0, then y_true * y_pred[i, j] < margin
-        model.addConstr(y_true * y_pred[i, j] <= margin - epsilon + M * correct_preds[i, j])
-
-        # Accumulate the binary variables for the loss expression
-        loss_expr += 1 - correct_preds[i, j]
-
-# Objective function
-model.setObjective(loss_expr, GRB.MINIMIZE)
-'''
 # Save model for inspection
 model.write('model.lp')
 
@@ -248,20 +216,6 @@ def write_variables_to_file(model, filename):
             for j in range(output_dim):
                 f.write(f"Auxiliary Variable for calculation of z = Wx + b[{i}, {j}] = {hidden_vars[-1][i, j].X}\n")
                 f.write(f"Prediction Variable y_pred[{i}, {j}] = {y_pred[i, j].X}\n")
-        '''
-        # Write the values of hinge loss terms
-        for i in range(n):
-            for j in range(output_dim):
-                f.write(f"Hinge Loss Term hinge_loss_terms[{i}, {j}] = {hinge_loss_terms[i, j].X}\n")
-        '''
-        # Write the values of correct_pred variables
-        for i in range(n):
-            #for j in range(output_dim):
-                f.write(f"correct prediction for sample {i} = {correct_preds[i].X}\n")
-        
-        for i in range(n):
-            for j in range(output_dim):
-                f.write(f"Predicted class sample {i} class {j} = {predicted_class[i, j].X}\n")
         
 
 # Call the function to write variables to a file
