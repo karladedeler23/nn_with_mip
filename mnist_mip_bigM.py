@@ -8,7 +8,20 @@ from keras.layers import Input, Dense, Flatten
 from keras.utils import to_categorical
 from sklearn.metrics import accuracy_score
 from keras.datasets import mnist
+import tensorflow as tf
 from matplotlib import pyplot as plt
+
+########################################################
+
+#### Definition of the parameters we might want to change 
+
+n = 10  # number of data points
+hidden_layers = [32]    # Definition of the neural network structure
+M = 2.6e4   # Big M constant for ReLU activation constraints (output range)
+margin = 300    # A reasonable margin (for SAT margin) should be a small fraction of this estimated output range
+epsilon = 1.0e-6    # set the precision
+
+########################################################
 
 #### Loading and preprocessing the data
  
@@ -16,7 +29,6 @@ from matplotlib import pyplot as plt
 (X_train_sample, y_train), (X_test, y_test) = mnist.load_data()
 
 # Select n points from the dataset
-n = 10 # number of data points
 selected_indices = []
 selected_labels = []
 for class_label in range(n): # Iterate through the dataset to select one data point per class
@@ -37,8 +49,7 @@ y_test_one_hot = keras.utils.to_categorical(y_test, num_classes)
 
 # Definition of the neural network structure
 input_dim = X_train_sample.shape[1] 
-hidden_layers = [32] 
-output_dim = num_classes  # MNIST has 10 classes
+output_dim = num_classes
 
 '''
 # Plot the selected samples
@@ -58,15 +69,20 @@ print("y_train_one_hot shape:", y_train_one_hot.shape)
 
 #### Training using a Gurobi optimization model
 
-# Initialize model
+# Initialise model and set some paramters for the resolution
 model = gp.Model("neural_network_training")
-model.Params.MIPGap = 0
+model.setParam('IntegralityFocus', 1)
+model.setParam('OptimalityTol', 1e-9)
+model.setParam('FeasibilityTol', 1e-9)
+model.setParam('MIPGap', 0)
+model.setParam('NodeLimit', 1e9)
+model.setParam('SolutionLimit', 1e9)
 
 # Define variables for weights and biases
 weights = []
 biases = []
 
-# Define variables for each layer
+# Define weights and biases variables for each hidden layer
 previous_layer_size = input_dim
 for i, layer_size in enumerate(hidden_layers):
     W = model.addVars(layer_size, previous_layer_size, vtype=GRB.CONTINUOUS, lb=-1, ub=1, name=f"W{i+1}")
@@ -75,14 +91,14 @@ for i, layer_size in enumerate(hidden_layers):
     biases.append(b)
     previous_layer_size = layer_size
 
-# Define variables for the outputs
+# Define variables for the hidden outputs
 hidden_vars = []
 relu_activation = []
 binary_vars = []
 for i, layer_size in enumerate(hidden_layers):
-    z = model.addVars(n, layer_size, vtype=GRB.CONTINUOUS, name=f"z{i+1}")
-    hidden_vars.append(z)
-    a = model.addVars(n, layer_size, vtype=GRB.CONTINUOUS, name=f"a{i+1}")
+    z_hidden = model.addVars(n, layer_size, vtype=GRB.CONTINUOUS, name=f"z{i+1}")
+    hidden_vars.append(z_hidden)
+    a = model.addVars(n, layer_size, vtype=GRB.CONTINUOUS, name=f"a{i+1}=max(0,z)")
     relu_activation.append(a)
     binary_v = model.addVars(n, layer_size, vtype=GRB.BINARY, name=f"binary_vars{i+1}")
     binary_vars.append(binary_v)
@@ -94,14 +110,11 @@ weights.append(W_output)
 biases.append(b_output)
 
 # Define the output layer variables for the final activation function (here ReLU)
-y_pred_aux = model.addVars(n, output_dim, vtype=GRB.CONTINUOUS, name=f"z_final")
-hidden_vars.append(y_pred_aux)
-y_pred = model.addVars(n, output_dim, vtype=GRB.CONTINUOUS, name=f"y_pred")
+z_hidden_final = model.addVars(n, output_dim, vtype=GRB.CONTINUOUS, name=f"z_final")
+hidden_vars.append(z_hidden_final)
+y_pred = model.addVars(n, output_dim, vtype=GRB.CONTINUOUS, lb=0, ub=80, name=f"y_pred")
 binary_v_output = model.addVars(n, output_dim, vtype=GRB.BINARY, name=f"binary_vars_final")
 binary_vars.append(binary_v_output)
-
-# Big M constant for ReLU activation constraints
-M = 2.6e4
 
 # Constraints for the first hidden layer
 for i in range(n):
@@ -125,30 +138,53 @@ for l in range(1, len(hidden_layers)):
 # Constraints for the output layer
 for i in range(n):
     for j in range(output_dim):
-        model.addConstr(y_pred_aux[i, j] == gp.quicksum(relu_activation[-1][i, k] * W_output[j, k] for k in range(hidden_layers[-1])) + b_output[j])
-        model.addConstr(y_pred[i, j] >= y_pred_aux[i, j])
+        model.addConstr(z_hidden_final[i, j] == gp.quicksum(relu_activation[-1][i, k] * W_output[j, k] for k in range(hidden_layers[-1])) + b_output[j])
+        model.addConstr(y_pred[i, j] >= z_hidden_final[i, j])
         model.addConstr(y_pred[i, j] >= 0)
-        model.addConstr(y_pred[i, j] <= y_pred_aux[i, j] + M * (1 - binary_v_output[i, j]))
+        model.addConstr(y_pred[i, j] <= z_hidden_final[i, j] + M * (1 - binary_v_output[i, j]))
         model.addConstr(y_pred[i, j] <= M * binary_v_output[i, j])
-
 '''
-# Loss calculation using a piecewise-linear approximation of the logarithm
-loss = model.addVar(name="loss")
-log_loss_terms = []
+# Add constraint to ensure only one maximum value in y_pred for each sample
+max_prob = model.addVars(n, vtype=GRB.CONTINUOUS, name="max_prob")  # Create variables to represent the maximum probability for each sample
+is_max = model.addVars(n, output_dim, vtype=GRB.BINARY, name="is_max")  # Binary variables to indicate if y_pred[i, j] is equal to max_prob[i]
+for i in range(n):
+    model.addConstr(max_prob[i] == gp.max_([y_pred[i, k] for k in range(output_dim)]))  # Define max_prob[i] as the maximum probability for sample i
+    for j in range(output_dim):
+        model.addConstr(y_pred[i, j] - max_prob[i] <= 10 * (1 - is_max[i, j]))  # Set is_max to 1 if y_pred equals max_prob
+        model.addConstr(y_pred[i, j] - max_prob[i] >= -10 * is_max[i, j])  # Set is_max to 0 otherwise
+    model.addConstr(gp.quicksum(is_max[i, j] for j in range(output_dim)) == 1)  # Ensure only one maximum value
+'''
 
+## MAX CORRECT LOSS FUNCTION
+# Variables: Binary indicators for correct predictions
+correct_preds = model.addVars(n, vtype=GRB.BINARY, name="correct_preds")
+
+# Variables: Predicted class for each sample
+predicted_class = model.addVars(n, output_dim, vtype=GRB.BINARY, name="predicted_class")
+
+# Constraints to ensure that for each sample, exactly one class is predicted
+for i in range(n):
+    model.addConstr(gp.quicksum(predicted_class[i, j] for j in range(output_dim)) == 1, name=f"unique_class_{i}")
+
+# Constraints to ensure that the predicted class has the highest score
 for i in range(n):
     for j in range(output_dim):
-        log_term = model.addVar(lb=-GRB.INFINITY, name=f"log_term_{i}_{j}")
-        model.addGenConstrLog(y_pred[i, j], log_term, name=f"log_constr_{i}_{j}")
-        log_loss_terms.append((log_term, y_train_one_hot[i, j]))
+        for k in range(output_dim):
+            if j != k:
+                model.addConstr(y_pred[i, j] - y_pred[i, k] >= epsilon - M * (1 - predicted_class[i, j]), 
+                                name=f"max_class_{i}_{j}_{k}")
 
-# Loss function
-model.addConstr(loss == -gp.quicksum(log_term * cond for log_term, cond in log_loss_terms), name="loss_function")
+# Constraints to ensure correct_preds is set correctly
+for i in range(n):
+    true_class = np.argmax(y_train_one_hot[i])
+    model.addConstr(correct_preds[i] == predicted_class[i, true_class], name=f"correct_pred_{i}")
 
-# Objective function
-model.setObjective(loss, GRB.MINIMIZE)
+# Objective: Maximize the number of correct predictions
+model.setObjective(gp.quicksum(correct_preds[i] for i in range(n)), GRB.MAXIMIZE)
+
+
 '''
-
+## HINGE LOSS FUNCTION
 # Define auxiliary variables for hinge loss terms
 hinge_loss_terms = model.addVars(n, output_dim, vtype=GRB.CONTINUOUS, name="hinge_loss_terms")
 
@@ -160,11 +196,55 @@ for i in range(n):
         
         # Hinge loss constraint
         model.addConstr(hinge_loss_terms[i, j] >= 0)
-        model.addConstr(hinge_loss_terms[i, j] >= (1 - y_true * y_pred[i, j])**2)
+        model.addConstr(hinge_loss_terms[i, j] >= (1 - y_true * y_pred[i, j]))
 
 # Objective function
-model.setObjective(gp.quicksum(hinge_loss_terms[i, j] for i in range(n) for j in range(output_dim)), GRB.MINIMIZE)
+model.setObjective(1/n*gp.quicksum(hinge_loss_terms[i, j] for i in range(n) for j in range(output_dim)), GRB.MINIMIZE)
+'''
+'''
+## SAT MARGIN LOSS FUNCTION
+loss_expr = gp.LinExpr()
 
+# Define binary variables to indicate correct predictions
+correct_preds = model.addVars(n, output_dim, vtype=GRB.BINARY, name="correct_preds")
+
+for i in range(n):
+    for j in range(output_dim):
+        y_true = 2 * y_train_one_hot[i, j] - 1
+        # If correct_preds[i, j] == 1, then y_true * y_pred[i, j] >= margin
+        model.addConstr(y_true * y_pred[i, j] >= margin - M * (1 - correct_preds[i, j]))
+
+        # If correct_preds[i, j] == 0, then y_true * y_pred[i, j] < margin
+        model.addConstr(y_true * y_pred[i, j] <= margin - epsilon + M * correct_preds[i, j])
+
+        # Accumulate the binary variables for the loss expression
+        loss_expr += 1 - correct_preds[i, j]
+
+# Objective function
+model.setObjective(loss_expr, GRB.MINIMIZE)
+'''
+'''
+## CROSS ENTROPY LOSS FUNCTION
+
+# Loss calculation using a piecewise-linear approximation of the logarithm
+log_breaking_points = np.linspace(1.0e-4, 10, 200)
+log_values = np.log(log_breaking_points)
+
+loss = model.addVar(name="loss")
+log_loss_terms = []
+
+for i in range(n):
+    for j in range(output_dim):
+        log_term = model.addVar(lb=-GRB.INFINITY, name=f"log_term_{i}_{j}")
+        model.addGenConstrPWL(y_pred[i, j], log_term, log_breaking_points, log_values, name="pwl_log")
+        log_loss_terms.append((log_term, y_train_one_hot[i, j]))
+
+# Loss function
+model.addConstr(loss == -gp.quicksum(log_term * cond for log_term, cond in log_loss_terms), name="loss_function")
+
+# Objective function
+model.setObjective(loss, GRB.MINIMIZE)
+'''
 # Save model for inspection
 model.write('model.lp')
 
@@ -172,6 +252,8 @@ model.write('model.lp')
 model.optimize()
 
 ########################################################
+
+#### Write the results (for debugging mostly)
 
 # Function to write variables to a file
 def write_variables_to_file(model, filename):
@@ -190,20 +272,31 @@ def write_variables_to_file(model, filename):
 
         # Write the values of auxiliary variables for prediction
         for i in range(n):
-            for j in range(hidden_layers[0]):
-                f.write(f"Auxiliary Variable z_interm[{i}, {j}] = {z[i, j].X}\n")
-                f.write(f"Prediction Variable relu_activation[{i}, {j}] = {a[i, j].X}\n")
+            for k in range(len(hidden_layers)):
+                for j in range(hidden_layers[k]):
+                    f.write(f"Auxiliary Variable for calculation of z = Wx + b [{i}, {j}] = {hidden_vars[k][i, j].X}\n")
+                    f.write(f"Variable for hidden layer relu_activation[{i}, {j}] = {relu_activation[k][i, j].X}\n")
 
         # Write the values of auxiliary variables for prediction
         for i in range(n):
             for j in range(output_dim):
-                f.write(f"Auxiliary Variable y_pred_aux[{i}, {j}] = {y_pred_aux[i, j].X}\n")
+                f.write(f"Auxiliary Variable for calculation of z = Wx + b[{i}, {j}] = {hidden_vars[-1][i, j].X}\n")
                 f.write(f"Prediction Variable y_pred[{i}, {j}] = {y_pred[i, j].X}\n")
-
+        '''
         # Write the values of hinge loss terms
         for i in range(n):
             for j in range(output_dim):
                 f.write(f"Hinge Loss Term hinge_loss_terms[{i}, {j}] = {hinge_loss_terms[i, j].X}\n")
+        '''
+        # Write the values of correct_pred variables
+        for i in range(n):
+            #for j in range(output_dim):
+                f.write(f"correct prediction for sample {i} = {correct_preds[i].X}\n")
+        
+        for i in range(n):
+            for j in range(output_dim):
+                f.write(f"Predicted class sample {i} class {j} = {predicted_class[i, j].X}\n")
+        
 
 # Call the function to write variables to a file
 write_variables_to_file(model, 'variables_values.txt')
@@ -274,7 +367,7 @@ def predict_with_mip(X, y, true_labels):
             layer_output = np.maximum(0.0, layer_output)
             #print(f"Layer output after ReLU activation: {layer_output}")
 
-        ## print(f"Prediction output : {layer_output}")
+        # print(f"Prediction output : {layer_output}")
         pred = np.argmax(layer_output)
         predictions.append(pred)
         # print(f"Sample {i}: Prediction = {pred}, True Label = {true_labels[i]}")
@@ -312,7 +405,7 @@ model_sgd = Sequential([
     Dense(output_dim, activation='relu')
 ])
 
-model_sgd.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+model_sgd.compile(optimizer='adam', loss=tf.keras.losses.Hinge(), metrics=['accuracy'])
 model_sgd.fit(X_train_sample, y_train_one_hot, epochs=10, batch_size=32, verbose=0)
 accuracy_sgd = model_sgd.evaluate(X_test, y_test_one_hot, verbose=0)[1]
 print("SGD Model Accuracy:", accuracy_sgd)
