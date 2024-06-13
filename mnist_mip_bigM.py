@@ -112,7 +112,7 @@ biases.append(b_output)
 # Define the output layer variables for the final activation function (here ReLU)
 z_hidden_final = model.addVars(n, output_dim, vtype=GRB.CONTINUOUS, name=f"z_final")
 hidden_vars.append(z_hidden_final)
-y_pred = model.addVars(n, output_dim, vtype=GRB.CONTINUOUS, lb=0, ub=80, name=f"y_pred")
+y_pred = model.addVars(n, output_dim, vtype=GRB.CONTINUOUS, lb=0, name=f"y_pred")
 binary_v_output = model.addVars(n, output_dim, vtype=GRB.BINARY, name=f"binary_vars_final")
 binary_vars.append(binary_v_output)
 
@@ -144,6 +144,7 @@ for i in range(n):
         model.addConstr(y_pred[i, j] <= z_hidden_final[i, j] + M * (1 - binary_v_output[i, j]))
         model.addConstr(y_pred[i, j] <= M * binary_v_output[i, j])
 
+'''
 ## MAX CORRECT LOSS FUNCTION
 # Variables: Binary indicators for correct predictions
 correct_preds = model.addVars(n, vtype=GRB.BINARY, name="correct_preds")
@@ -170,7 +171,7 @@ for i in range(n):
 
 # Objective: Maximize the number of correct predictions
 model.setObjective(gp.quicksum(correct_preds[i] for i in range(n)), GRB.MAXIMIZE)
-
+'''
 '''
 ## HINGE LOSS FUNCTION
 # Define auxiliary variables for hinge loss terms
@@ -189,7 +190,7 @@ for i in range(n):
 # Objective function
 model.setObjective(1/n*gp.quicksum(hinge_loss_terms[i, j] for i in range(n) for j in range(output_dim)), GRB.MINIMIZE)
 '''
-'''
+
 ## SAT MARGIN LOSS FUNCTION
 loss_expr = gp.LinExpr()
 
@@ -210,7 +211,7 @@ for i in range(n):
 
 # Objective function
 model.setObjective(loss_expr, GRB.MINIMIZE)
-'''
+
 # Save model for inspection
 model.write('model.lp')
 
@@ -256,13 +257,13 @@ def write_variables_to_file(model, filename):
         '''
         # Write the values of correct_pred variables
         for i in range(n):
-            #for j in range(output_dim):
-                f.write(f"correct prediction for sample {i} = {correct_preds[i].X}\n")
-        
+            for j in range(output_dim):
+                f.write(f"correct prediction for sample {i} class {j}= {correct_preds[i,j].X}\n")
+        '''
         for i in range(n):
             for j in range(output_dim):
                 f.write(f"Predicted class sample {i} class {j} = {predicted_class[i, j].X}\n")
-        
+        '''
 
 # Call the function to write variables to a file
 write_variables_to_file(model, 'variables_values.txt')
