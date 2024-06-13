@@ -145,7 +145,7 @@ def train_gurobi_model(X_train_sample, y_train_sample, y_train_one_hot, input_di
                 # If correct_preds[i, j] == 1, then y_true * y_pred[i, j] >= margin
                 model.addConstr(y_true * y_pred[i, j] >= margin - M * (1 - correct_preds[i, j]))
                 # If correct_preds[i, j] == 0, then y_true * y_pred[i, j] < margin
-                model.addConstr(y_true * y_pred[i, j] <= margin - epsilon + M * correct_preds[i, j])
+                model.addConstr(-y_true * y_pred[i, j] <= margin - epsilon + M * correct_preds[i, j])
                 # Accumulate the binary variables for the loss expression
                 loss_expr += 1 - correct_preds[i, j]
     elif loss_function == 'hinge':

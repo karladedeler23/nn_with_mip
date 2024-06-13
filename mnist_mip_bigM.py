@@ -204,7 +204,7 @@ for i in range(n):
         model.addConstr(y_true * y_pred[i, j] >= margin - M * (1 - correct_preds[i, j]))
 
         # If correct_preds[i, j] == 0, then y_true * y_pred[i, j] < margin
-        model.addConstr(y_true * y_pred[i, j] <= margin - epsilon + M * correct_preds[i, j])
+        model.addConstr(- y_true * y_pred[i, j] <= margin - epsilon + M * correct_preds[i, j])
 
         # Accumulate the binary variables for the loss expression
         loss_expr += 1 - correct_preds[i, j]
@@ -254,12 +254,12 @@ def write_variables_to_file(model, filename):
         for i in range(n):
             for j in range(output_dim):
                 f.write(f"Hinge Loss Term hinge_loss_terms[{i}, {j}] = {hinge_loss_terms[i, j].X}\n")
-        '''
+        
         # Write the values of correct_pred variables
         for i in range(n):
             for j in range(output_dim):
                 f.write(f"correct prediction for sample {i} class {j}= {correct_preds[i,j].X}\n")
-        '''
+        
         for i in range(n):
             for j in range(output_dim):
                 f.write(f"Predicted class sample {i} class {j} = {predicted_class[i, j].X}\n")
@@ -334,7 +334,7 @@ def predict_with_mip(X, y, true_labels):
             layer_output = np.maximum(0.0, layer_output)
             #print(f"Layer output after ReLU activation: {layer_output}")
 
-        # print(f"Prediction output : {layer_output}")
+        # print(f"Prediction output : {layer_output}")
         pred = np.argmax(layer_output)
         predictions.append(pred)
         # print(f"Sample {i}: Prediction = {pred}, True Label = {true_labels[i]}")
@@ -372,7 +372,20 @@ model_sgd = Sequential([
     Dense(output_dim, activation='relu')
 ])
 
-model_sgd.compile(optimizer='adam', loss=tf.keras.losses.Hinge(), metrics=['accuracy'])
+# Custom sat-margin loss function
+def sat_margin_loss(margin=M):
+    def loss(y_true, y_pred):
+        # Correct predictions binary variable
+        correct_predictions = tf.cast(tf.equal(tf.round(y_pred), y_true), tf.float32)
+        # Hinge loss to enforce margin (confidence)
+        hinge_loss = tf.maximum(0., margin - y_true * y_pred)
+        # Loss is negative of correct predictions (to maximize) + hinge loss for confidence
+        return -tf.reduce_mean(correct_predictions) + tf.reduce_mean(hinge_loss)
+    return loss
+# obj_function = 'CategoricalCrossentropy'
+# obj_function = tf.keras.losses.Hinge()
+obj_function = sat_margin_loss()
+model_sgd.compile(optimizer='adam', loss=obj_function, metrics=['accuracy'])
 model_sgd.fit(X_train_sample, y_train_one_hot, epochs=10, batch_size=32, verbose=0)
 accuracy_sgd = model_sgd.evaluate(X_test, y_test_one_hot, verbose=0)[1]
 print("SGD Model Accuracy:", accuracy_sgd)
