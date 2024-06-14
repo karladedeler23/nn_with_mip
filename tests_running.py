@@ -1,13 +1,13 @@
 from experiments import run_multiple_experiments
 
 # Define parameters
-num_experiments = 10
+num_experiments = 1
 hidden_layers = [32]  # Hidden layers configuration
-sample_size = 10  # number of data points
+sample_size = 20  # number of data points
 M = 2.6e4   # Big M constant for ReLU activation constraints (output range)
 margin = 260    # A reasonable margin (for SAT margin) should be a small fraction of this estimated output range
 epsilon = 1.0e-6    # set the precision
-loss_function = 'sat_margin'  # Choose between 'max_correct', 'hinge', or 'sat_margin'
+loss_function = 'max_correct'  # Choose between 'max_correct', 'hinge', or 'sat_margin'
 
 # Run the experiments and calculate the average accuracy
 average_accuracy = run_multiple_experiments(num_experiments, sample_size, hidden_layers, M, margin, epsilon, loss_function)

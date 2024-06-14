@@ -5,9 +5,10 @@ import keras
 from keras.datasets import mnist
 from keras.models import Sequential
 from keras.layers import Input, Dense, Flatten
+from keras.constraints import Constraint
 from keras.utils import to_categorical
+from tensorflow.keras import backend as K
 from sklearn.metrics import accuracy_score
-from keras.datasets import mnist
 import tensorflow as tf
 from matplotlib import pyplot as plt
 
@@ -15,7 +16,7 @@ from matplotlib import pyplot as plt
 
 #### Definition of the parameters we might want to change 
 
-n = 10  # number of data points
+n = 40  # number of data points
 hidden_layers = [32]    # Definition of the neural network structure
 M = 2.6e4   # Big M constant for ReLU activation constraints (output range)
 margin = 300    # A reasonable margin (for SAT margin) should be a small fraction of this estimated output range
@@ -144,7 +145,7 @@ for i in range(n):
         model.addConstr(y_pred[i, j] <= z_hidden_final[i, j] + M * (1 - binary_v_output[i, j]))
         model.addConstr(y_pred[i, j] <= M * binary_v_output[i, j])
 
-'''
+
 ## MAX CORRECT LOSS FUNCTION
 # Variables: Binary indicators for correct predictions
 correct_preds = model.addVars(n, vtype=GRB.BINARY, name="correct_preds")
@@ -171,7 +172,7 @@ for i in range(n):
 
 # Objective: Maximize the number of correct predictions
 model.setObjective(gp.quicksum(correct_preds[i] for i in range(n)), GRB.MAXIMIZE)
-'''
+
 '''
 ## HINGE LOSS FUNCTION
 # Define auxiliary variables for hinge loss terms
@@ -190,7 +191,7 @@ for i in range(n):
 # Objective function
 model.setObjective(1/n*gp.quicksum(hinge_loss_terms[i, j] for i in range(n) for j in range(output_dim)), GRB.MINIMIZE)
 '''
-
+'''
 ## SAT MARGIN LOSS FUNCTION
 loss_expr = gp.LinExpr()
 
@@ -211,7 +212,7 @@ for i in range(n):
 
 # Objective function
 model.setObjective(loss_expr, GRB.MINIMIZE)
-
+'''
 # Save model for inspection
 model.write('model.lp')
 
@@ -365,12 +366,47 @@ print("MIP Model Accuracy on testing set:", accuracy_mip_test)
 
 ### Comparison with typical SGD
 
-# Model with Keras (SGD)
+# Make sure the weights and biases are also between -1 and 1 like when using MIP
+class ClipConstraint(Constraint):
+    def __init__(self, min_value, max_value):
+        self.min_value = min_value
+        self.max_value = max_value
+    def __call__(self, w):
+        return tf.clip_by_value(w, self.min_value, self.max_value)
+    def get_config(self):
+        return {'min_value': self.min_value, 'max_value': self.max_value}
+weight_constraint = ClipConstraint(min_value=-1, max_value=1)
+bias_constraint = ClipConstraint(min_value=-1, max_value=1)
+
+# Define the model with the constraints applied
 model_sgd = Sequential([
     Input(shape=(input_dim,)),
-    Dense(hidden_layers[0], activation='relu'),
-    Dense(output_dim, activation='relu')
+    Dense(hidden_layers[0], activation='relu', 
+          kernel_constraint=weight_constraint, 
+          bias_constraint=bias_constraint),
+    Dense(output_dim, activation='relu', 
+          kernel_constraint=weight_constraint, 
+          bias_constraint=bias_constraint)
 ])
+
+# Define the custom max_correct loss function 
+def custom_accuracy(y_true, y_pred):
+    # Convert y_true to the correct format
+    y_true_class = K.argmax(y_true, axis=-1)
+    # Compute the predicted class
+    y_pred_class = K.argmax(y_pred, axis=-1)
+    # Compute the accuracy
+    accuracy = K.sum(K.cast(K.equal(y_true_class, y_pred_class), dtype='float32'))
+    return accuracy
+
+# Define the custom hinge loss function
+def hinge_loss(y_true, y_pred):
+    # Convert y_true to -1 or 1
+    y_true = 2 * y_true - 1
+    # Compute hinge loss
+    hinge_loss = K.sum(K.maximum(0.0, 1 - y_true * y_pred), axis=-1)
+    # Take the mean over all samples and classes
+    return K.mean(hinge_loss)
 
 # Custom sat-margin loss function
 def sat_margin_loss(margin=M):
@@ -382,10 +418,11 @@ def sat_margin_loss(margin=M):
         # Loss is negative of correct predictions (to maximize) + hinge loss for confidence
         return -tf.reduce_mean(correct_predictions) + tf.reduce_mean(hinge_loss)
     return loss
-# obj_function = 'CategoricalCrossentropy'
-# obj_function = tf.keras.losses.Hinge()
-obj_function = sat_margin_loss()
+
+obj_function = 'categorical_crossentropy'
+# obj_function = hinge_loss
+# obj_function = sat_margin_loss
 model_sgd.compile(optimizer='adam', loss=obj_function, metrics=['accuracy'])
-model_sgd.fit(X_train_sample, y_train_one_hot, epochs=10, batch_size=32, verbose=0)
+model_sgd.fit(X_train_sample, y_train_one_hot, epochs=10, batch_size=16, verbose=0)
 accuracy_sgd = model_sgd.evaluate(X_test, y_test_one_hot, verbose=0)[1]
 print("SGD Model Accuracy:", accuracy_sgd)
