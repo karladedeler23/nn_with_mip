@@ -236,7 +236,9 @@ def predict_with_mip(W_opt, b_opt, X, y, true_labels):
 
 # Function to run the entire process multiple times and calculate average accuracy
 def run_multiple_experiments(num_experiments, sample_size, hidden_layers, M, margin, epsilon, loss_function):
-    accuracies = []
+    training_accuracies = []
+    testing_accuracies = []
+
     for _ in range(num_experiments):
         # Load and preprocess data
         (X_train_sample, y_train_sample, y_train_one_hot), (X_test, y_test, y_test_one_hot) = load_and_preprocess_data(sample_size)
@@ -245,12 +247,13 @@ def run_multiple_experiments(num_experiments, sample_size, hidden_layers, M, mar
         W_opt, b_opt = train_gurobi_model(X_train_sample, y_train_sample, y_train_one_hot, X_train_sample.shape[1], hidden_layers, 10, M, margin, epsilon, loss_function)
 
         if W_opt is not None and b_opt is not None:
-            # Create and evaluate Keras model
-            predictions = predict_with_mip(W_opt, b_opt, X_train_sample, y_train_one_hot, y_train_sample)
-            accuracy = accuracy_score(y_train_sample, predictions)
-            accuracies.append(accuracy)
+            predictions_training = predict_with_mip(W_opt, b_opt, X_train_sample, y_train_one_hot, y_train_sample)
+            accuracy_training = accuracy_score(y_train_sample, predictions_training)
+            training_accuracies.append(accuracy_training)
+            predictions_testing = predict_with_mip(W_opt, b_opt, X_test, y_test_one_hot, y_test)
+            accuracy_testing = accuracy_score(y_test, predictions_testing)
+            testing_accuracies.append(accuracy_testing)
         else:
             print("Model did not converge.")
 
-    average_accuracy = np.mean(accuracies)
-    return average_accuracy
+    return np.mean(training_accuracies), np.mean(testing_accuracies)

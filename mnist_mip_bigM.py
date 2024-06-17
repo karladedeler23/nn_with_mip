@@ -16,7 +16,7 @@ from matplotlib import pyplot as plt
 
 #### Definition of the parameters we might want to change 
 
-n = 40  # number of data points
+n = 10  # number of data points
 hidden_layers = [32]    # Definition of the neural network structure
 M = 2.6e4   # Big M constant for ReLU activation constraints (output range)
 margin = 300    # A reasonable margin (for SAT margin) should be a small fraction of this estimated output range
@@ -423,6 +423,14 @@ obj_function = 'categorical_crossentropy'
 # obj_function = hinge_loss
 # obj_function = sat_margin_loss
 model_sgd.compile(optimizer='adam', loss=obj_function, metrics=['accuracy'])
-model_sgd.fit(X_train_sample, y_train_one_hot, epochs=10, batch_size=16, verbose=0)
+model_sgd.fit(X_train_sample, y_train_one_hot, epochs=10, batch_size=32, verbose=1)
 accuracy_sgd = model_sgd.evaluate(X_test, y_test_one_hot, verbose=0)[1]
 print("SGD Model Accuracy:", accuracy_sgd)
+'''
+# Print weights and biases for comparison
+for layer_idx, layer in enumerate(model_sgd.layers):
+    weights, biases = layer.get_weights()
+    print(f"Layer {layer_idx + 1} - Weights: {weights.shape}, Biases: {biases.shape}")
+    print("Weights:", weights)
+    print("Biases:", biases)
+'''
