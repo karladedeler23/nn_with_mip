@@ -97,7 +97,7 @@ hidden_vars = []
 relu_activation = []
 binary_vars = []
 for i, layer_size in enumerate(hidden_layers):
-    z_hidden = model.addVars(n, layer_size, vtype=GRB.CONTINUOUS, name=f"z{i+1}")
+    z_hidden = model.addVars(n, layer_size, vtype=GRB.CONTINUOUS, lb= -GRB.INFINITY, name=f"z{i+1}")
     hidden_vars.append(z_hidden)
     a = model.addVars(n, layer_size, vtype=GRB.CONTINUOUS, name=f"a{i+1}=max(0,z)")
     relu_activation.append(a)
@@ -111,7 +111,7 @@ weights.append(W_output)
 biases.append(b_output)
 
 # Define the output layer variables for the final activation function (here ReLU)
-z_hidden_final = model.addVars(n, output_dim, vtype=GRB.CONTINUOUS, name=f"z_final")
+z_hidden_final = model.addVars(n, output_dim, vtype=GRB.CONTINUOUS, lb= -GRB.INFINITY, name=f"z_final")
 hidden_vars.append(z_hidden_final)
 y_pred = model.addVars(n, output_dim, vtype=GRB.CONTINUOUS, lb=0, name=f"y_pred")
 binary_v_output = model.addVars(n, output_dim, vtype=GRB.BINARY, name=f"binary_vars_final")
@@ -145,7 +145,7 @@ for i in range(n):
         model.addConstr(y_pred[i, j] <= z_hidden_final[i, j] + M * (1 - binary_v_output[i, j]))
         model.addConstr(y_pred[i, j] <= M * binary_v_output[i, j])
 
-
+'''
 ## MAX CORRECT LOSS FUNCTION
 # Variables: Binary indicators for correct predictions
 correct_preds = model.addVars(n, vtype=GRB.BINARY, name="correct_preds")
@@ -172,8 +172,8 @@ for i in range(n):
 
 # Objective: Maximize the number of correct predictions
 model.setObjective(gp.quicksum(correct_preds[i] for i in range(n)), GRB.MAXIMIZE)
-
 '''
+
 ## HINGE LOSS FUNCTION
 # Define auxiliary variables for hinge loss terms
 hinge_loss_terms = model.addVars(n, output_dim, vtype=GRB.CONTINUOUS, name="hinge_loss_terms")
@@ -190,7 +190,7 @@ for i in range(n):
 
 # Objective function
 model.setObjective(1/n*gp.quicksum(hinge_loss_terms[i, j] for i in range(n) for j in range(output_dim)), GRB.MINIMIZE)
-'''
+
 '''
 ## SAT MARGIN LOSS FUNCTION
 loss_expr = gp.LinExpr()
@@ -423,7 +423,7 @@ obj_function = 'categorical_crossentropy'
 # obj_function = hinge_loss
 # obj_function = sat_margin_loss
 model_sgd.compile(optimizer='adam', loss=obj_function, metrics=['accuracy'])
-model_sgd.fit(X_train_sample, y_train_one_hot, epochs=10, batch_size=32, verbose=1)
+model_sgd.fit(X_train_sample, y_train_one_hot, epochs=10, batch_size=32, verbose=0)
 accuracy_sgd = model_sgd.evaluate(X_test, y_test_one_hot, verbose=0)[1]
 print("SGD Model Accuracy:", accuracy_sgd)
 '''

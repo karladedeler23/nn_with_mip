@@ -63,7 +63,7 @@ def train_gurobi_model(X_train_sample, y_train_sample, y_train_one_hot, input_di
     relu_activation = []
     binary_vars = []
     for i, layer_size in enumerate(hidden_layers):
-        z_hidden = model.addVars(n, layer_size, vtype=GRB.CONTINUOUS, name=f"z{i+1}")
+        z_hidden = model.addVars(n, layer_size, vtype=GRB.CONTINUOUS, lb = -GRB.INFINITY, name=f"z{i+1}")
         hidden_vars.append(z_hidden)
         a = model.addVars(n, layer_size, vtype=GRB.CONTINUOUS, name=f"a{i+1}=max(0,z)")
         relu_activation.append(a)
@@ -77,7 +77,7 @@ def train_gurobi_model(X_train_sample, y_train_sample, y_train_one_hot, input_di
     biases.append(b_output)
 
     # Define the output layer variables for the final activation function (here ReLU)
-    z_hidden_final = model.addVars(n, output_dim, vtype=GRB.CONTINUOUS, name=f"z_final")
+    z_hidden_final = model.addVars(n, output_dim, vtype=GRB.CONTINUOUS, lb = -GRB.INFINITY, name=f"z_final")
     hidden_vars.append(z_hidden_final)
     y_pred = model.addVars(n, output_dim, vtype=GRB.CONTINUOUS, lb=0, name=f"y_pred")
     binary_v_output = model.addVars(n, output_dim, vtype=GRB.BINARY, name=f"binary_vars_final")

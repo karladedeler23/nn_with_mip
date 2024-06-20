@@ -13,7 +13,7 @@ size_list = []
 accuracy_train_list = []
 accuracy_test_list = []
 
-for size in range(10, 30, 10):
+for size in range(10, 60, 10):
     sample_size = size  # number of data points
     size_list.append(sample_size)
     # Run the experiments and calculate the average accuracy
