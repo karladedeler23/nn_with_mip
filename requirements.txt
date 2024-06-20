@@ -3,3 +3,4 @@ gurobipy
 keras
 scikit-learn
 matplotlib
+tensorflow
