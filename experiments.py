@@ -18,14 +18,13 @@ import tensorflow as tf
 ### PREPROCESSING 
 
 # Function to load and preprocess data
-def load_and_preprocess_data(n):
+def load_and_preprocess_data(n, random_nb):
     (X_train, y_train), (X_test, y_test) = mnist.load_data()
     selected_indices = []
-    selected_labels = []
-    for class_label in range(n):  # Iterate through the dataset to select one data point per class
-        index = np.where(y_train == (class_label % 10))[0][np.random.randint(100)]  # Get the index of one of the occurrences of the class
+    
+    for i in range(n):  # Iterate through the dataset to select one data point per class
+        index = np.where(y_train == (i % 10))[0][random_nb + i]  # Get the index of one of the occurrences of the class
         selected_indices.append(index)
-        selected_labels.append(class_label)
     X_train_sample = X_train[selected_indices]
     y_train_sample = y_train[selected_indices]
 
@@ -385,13 +384,13 @@ def predict_with_mip(W_opt, b_opt, X, y, true_labels):
 
 ### MAIN FUNCTION
 # Function to run the entire process multiple times and calculate average accuracy
-def run_multiple_experiments_warm_start(num_experiments, sample_size, hidden_layers, M, margin, epsilon, loss_function, warm_start = False):
+def run_multiple_experiments_warm_start(num_experiments, sample_size, hidden_layers, M, margin, epsilon, loss_function, random_nb, warm_start = False):
     training_accuracies = []
     testing_accuracies = []
 
     for _ in range(num_experiments):
         # Load and preprocess data
-        (X_train_sample, y_train_sample, y_train_sample_one_hot), (X_test, y_test, y_test_one_hot), (X_train, y_train, y_train_one_hot) = load_and_preprocess_data(sample_size)
+        (X_train_sample, y_train_sample, y_train_sample_one_hot), (X_test, y_test, y_test_one_hot), (X_train, y_train, y_train_one_hot) = load_and_preprocess_data(sample_size, random_nb)
         
         # Train Gurobi model and get optimal weights and biases
         if warm_start : 
