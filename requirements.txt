@@ -1,6 +1,8 @@
 numpy
 gurobipy
 keras
-scikit-learn
-matplotlib
 tensorflow
+scikit-learn
+pandas
+matplotlib
+seaborn
