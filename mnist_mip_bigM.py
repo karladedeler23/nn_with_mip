@@ -11,21 +11,27 @@ from tensorflow.keras import backend as K
 from sklearn.metrics import accuracy_score
 import tensorflow as tf
 from matplotlib import pyplot as plt
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 
 ########################################################
 
 #### Definition of the parameters we might want to change 
 
 n = 10  # number of data points
-hidden_layers = [32]    # Definition of the neural network structure
-M = 2.6e4   # Big M constant for ReLU activation constraints (output range)
-margin = 300    # A reasonable margin (for SAT margin) should be a small fraction of this estimated output range
-epsilon = 1.0e-6    # set the precision
+hidden_layers = [16]    # Definition of the neural network structure
+M = 2.6e3   # Big M constant for ReLU activation constraints (output range)
+margin = M*0.01    # A reasonable margin (for SAT margin) should be a small fraction of this estimated output range
+epsilon =  1.0e-6    # set the precision
+lambda_reg = 0.005  # Regularization parameter
+
+random_nb = np.random.randint(50)
 
 ########################################################
 
 #### Loading and preprocessing the data
- 
+'''
 # Load MNIST data
 (X_train_sample, y_train), (X_test, y_test) = mnist.load_data()
 
@@ -52,7 +58,6 @@ y_test_one_hot = keras.utils.to_categorical(y_test, num_classes)
 input_dim = X_train_sample.shape[1] 
 output_dim = num_classes
 
-'''
 # Plot the selected samples
 for i in range(n):
     plt.subplot(1, n, i+1)
@@ -65,6 +70,60 @@ print("X_train_sample shape:", X_train_sample.shape)
 print(X_train_sample[0])
 print("y_train_one_hot shape:", y_train_one_hot.shape)
 '''
+
+
+# Load the Pen-Based Recognition of Handwritten Digits dataset from UCI repository
+url_train = 'https://archive.ics.uci.edu/ml/machine-learning-databases/pendigits/pendigits.tra'
+url_test = 'https://archive.ics.uci.edu/ml/machine-learning-databases/pendigits/pendigits.tes'
+
+# Read the CSV files
+train_data = pd.read_csv(url_train, header=None)
+test_data = pd.read_csv(url_test, header=None)
+
+# Split into features and labels
+X_train = train_data.iloc[:, :-1].values
+y_train = train_data.iloc[:, -1].values
+X_test = test_data.iloc[:, :-1].values
+y_test = test_data.iloc[:, -1].values
+
+# Inspect the shapes
+print(f"X_train shape: {X_train.shape}")
+print(f"y_train shape: {y_train.shape}")
+print(f"X_test shape: {X_test.shape}")
+print(f"y_test shape: {y_test.shape}")
+
+# Select one data point per class for training sample
+selected_indices = []
+for i in range(n):  # Iterate through the dataset to select one data point per class
+    class_indices = np.where(y_train == (i % 10))[0]
+    if len(class_indices) > random_nb + i:
+        index = class_indices[random_nb + i]  # Get the index of one of the occurrences of the class
+    else:
+        index = class_indices[0]  # In case the desired index is out of bounds, use the first index
+    selected_indices.append(index)
+X_train_sample = X_train[selected_indices]
+y_train_sample = y_train[selected_indices]
+
+# Normalize the inputs
+X_train = X_train / 100
+X_train_sample = X_train_sample / 100
+X_test = X_test / 100
+# print(X_train_sample[0])
+
+# Convert to "one-hot" vectors using the to_categorical function
+num_classes = 10
+y_train_one_hot = to_categorical(y_train, num_classes)
+y_train_sample_one_hot = to_categorical(y_train_sample, num_classes)
+y_test_one_hot = to_categorical(y_test, num_classes)
+
+# Inspect the shapes
+print(f"y_train_one_hot shape: {y_train_one_hot.shape}")
+print(f"y_test_one_hot shape: {y_test_one_hot.shape}")
+
+
+# Definition of the neural network structure
+input_dim = X_train_sample.shape[1] 
+output_dim = num_classes
 
 ########################################################
 
@@ -144,19 +203,46 @@ for i in range(n):
         model.addConstr(y_pred[i, j] >= 0)
         model.addConstr(y_pred[i, j] <= z_hidden_final[i, j] + M * (1 - binary_v_output[i, j]))
         model.addConstr(y_pred[i, j] <= M * binary_v_output[i, j])
+    #model.addConstr(gp.quicksum(y_pred[i, j] for j in range(output_dim)) >= epsilon)
+
+### LOSS FUNCTION
+loss_expr = gp.LinExpr()
 
 '''
 ## MAX CORRECT LOSS FUNCTION
 # Variables: Binary indicators for correct predictions
 correct_preds = model.addVars(n, vtype=GRB.BINARY, name="correct_preds")
-
 # Variables: Predicted class for each sample
 predicted_class = model.addVars(n, output_dim, vtype=GRB.BINARY, name="predicted_class")
-
 # Constraints to ensure that for each sample, exactly one class is predicted
 for i in range(n):
     model.addConstr(gp.quicksum(predicted_class[i, j] for j in range(output_dim)) == 1, name=f"unique_class_{i}")
+# Constraints to ensure that the predicted class has the highest score
+for i in range(n):
+    true_class = np.argmax(y_train_sample_one_hot[i])  # Replace with your true labels
+    for j in range(output_dim):
+        if j != true_class:
+            model.addConstr(y_pred[i, true_class] >= y_pred[i, j] + epsilon - M * (1 - predicted_class[i, true_class]), 
+                            name=f"max_class_{i}_{true_class}_{j}")
+            model.addConstr(y_pred[i, j] <= M * (1 - predicted_class[i, j]), 
+                            name=f"max_class_inequality_{i}_{j}")
 
+# Constraints to ensure correct_preds is set correctly
+for i in range(n):
+    true_class = np.argmax(y_train_sample_one_hot[i])
+    model.addConstr(correct_preds[i] == predicted_class[i, true_class], name=f"correct_pred_{i}")
+
+# Objective: Maximize the number of correct predictions
+loss_expr = gp.quicksum(-correct_preds[i] for i in range(n))
+
+# V2 MAX CORRECT
+# Variables: Binary indicators for correct predictions
+correct_preds = model.addVars(n, vtype=GRB.BINARY, name="correct_preds")
+# Variables: Predicted class for each sample
+predicted_class = model.addVars(n, output_dim, vtype=GRB.BINARY, name="predicted_class")
+# Constraints to ensure that for each sample, exactly one class is predicted
+for i in range(n):
+    model.addConstr(gp.quicksum(predicted_class[i, j] for j in range(output_dim)) == 1, name=f"unique_class_{i}")
 # Constraints to ensure that the predicted class has the highest score
 for i in range(n):
     for j in range(output_dim):
@@ -164,16 +250,14 @@ for i in range(n):
             if j != k:
                 model.addConstr(y_pred[i, j] - y_pred[i, k] >= epsilon - M * (1 - predicted_class[i, j]), 
                                 name=f"max_class_{i}_{j}_{k}")
-
 # Constraints to ensure correct_preds is set correctly
 for i in range(n):
-    true_class = np.argmax(y_train_one_hot[i])
+    true_class = np.argmax(y_train_sample_one_hot[i])
     model.addConstr(correct_preds[i] == predicted_class[i, true_class], name=f"correct_pred_{i}")
-
 # Objective: Maximize the number of correct predictions
-model.setObjective(gp.quicksum(correct_preds[i] for i in range(n)), GRB.MAXIMIZE)
+loss_expr = gp.quicksum(-correct_preds[i] for i in range(n))
 '''
-
+'''
 ## HINGE LOSS FUNCTION
 # Define auxiliary variables for hinge loss terms
 hinge_loss_terms = model.addVars(n, output_dim, vtype=GRB.CONTINUOUS, name="hinge_loss_terms")
@@ -182,25 +266,24 @@ hinge_loss_terms = model.addVars(n, output_dim, vtype=GRB.CONTINUOUS, name="hing
 for i in range(n):
     for j in range(output_dim):
         # True class label (-1 or 1)
-        y_true = 2 * y_train_one_hot[i, j] - 1
+        y_true = 2 * y_train_sample_one_hot[i, j] - 1
         
         # Hinge loss constraint
         model.addConstr(hinge_loss_terms[i, j] >= 0)
         model.addConstr(hinge_loss_terms[i, j] >= (1 - y_true * y_pred[i, j]))
 
 # Objective function
-model.setObjective(1/n*gp.quicksum(hinge_loss_terms[i, j] for i in range(n) for j in range(output_dim)), GRB.MINIMIZE)
-
+loss_expr = 1/n*gp.quicksum(hinge_loss_terms[i, j] for i in range(n) for j in range(output_dim))
 '''
+
 ## SAT MARGIN LOSS FUNCTION
-loss_expr = gp.LinExpr()
 
 # Define binary variables to indicate correct predictions
 correct_preds = model.addVars(n, output_dim, vtype=GRB.BINARY, name="correct_preds")
 
 for i in range(n):
     for j in range(output_dim):
-        y_true = 2 * y_train_one_hot[i, j] - 1
+        y_true = 2 * y_train_sample_one_hot[i, j] - 1
         # If correct_preds[i, j] == 1, then y_true * y_pred[i, j] >= margin
         model.addConstr(y_true * y_pred[i, j] >= margin - M * (1 - correct_preds[i, j]))
 
@@ -210,9 +293,27 @@ for i in range(n):
         # Accumulate the binary variables for the loss expression
         loss_expr += 1 - correct_preds[i, j]
 
+## REGULARISATION
+abs_weights = []
+
+# Create absolute weight variables
+previous_layer_size = input_dim
+for i, layer_size in enumerate(hidden_layers + [output_dim]):
+    abs_W = model.addVars(layer_size, previous_layer_size, vtype=GRB.CONTINUOUS, lb=0, ub=1, name=f"abs_W{i+1}")
+    abs_weights.append(abs_W)
+    previous_layer_size = layer_size
+
+# Add the absolute values of the weights to the regularization term
+for i, weight_matrix in enumerate(weights):
+    for (j, k) in weight_matrix.keys():
+        model.addConstr(abs_weights[i][j, k] >= weight_matrix[j, k])
+        model.addConstr(abs_weights[i][j, k] >= -weight_matrix[j, k])
+        # Add regularization to the loss expression
+        loss_expr += lambda_reg * abs_weights[i][j, k]
+    
 # Objective function
 model.setObjective(loss_expr, GRB.MINIMIZE)
-'''
+
 # Save model for inspection
 model.write('model.lp')
 
@@ -249,6 +350,7 @@ def write_variables_to_file(model, filename):
         for i in range(n):
             for j in range(output_dim):
                 f.write(f"Auxiliary Variable for calculation of z = Wx + b[{i}, {j}] = {hidden_vars[-1][i, j].X}\n")
+                f.write(f"Binary_variable associated = {binary_v_output[i,j].X}\n")
                 f.write(f"Prediction Variable y_pred[{i}, {j}] = {y_pred[i, j].X}\n")
         '''
         # Write the values of hinge loss terms
@@ -258,8 +360,8 @@ def write_variables_to_file(model, filename):
         
         # Write the values of correct_pred variables
         for i in range(n):
-            for j in range(output_dim):
-                f.write(f"correct prediction for sample {i} class {j}= {correct_preds[i,j].X}\n")
+            #for j in range(output_dim):
+                f.write(f"correct prediction for sample {i} = {correct_preds[i].X}\n")
         
         for i in range(n):
             for j in range(output_dim):
@@ -335,10 +437,10 @@ def predict_with_mip(X, y, true_labels):
             layer_output = np.maximum(0.0, layer_output)
             #print(f"Layer output after ReLU activation: {layer_output}")
 
-        # print(f"Prediction output : {layer_output}")
+        #print(f"Prediction output : {layer_output}")
         pred = np.argmax(layer_output)
         predictions.append(pred)
-        # print(f"Sample {i}: Prediction = {pred}, True Label = {true_labels[i]}")
+        #print(f"Sample {i}: Prediction = {pred}, True Label = {true_labels[i]}")
     
     return predictions
 
@@ -423,7 +525,7 @@ obj_function = 'categorical_crossentropy'
 # obj_function = hinge_loss
 # obj_function = sat_margin_loss
 model_sgd.compile(optimizer='adam', loss=obj_function, metrics=['accuracy'])
-model_sgd.fit(X_train_sample, y_train_one_hot, epochs=10, batch_size=32, verbose=0)
+model_sgd.fit(X_train_sample, y_train_sample_one_hot, epochs=10, batch_size=32, verbose=0)
 accuracy_sgd = model_sgd.evaluate(X_test, y_test_one_hot, verbose=0)[1]
 print("SGD Model Accuracy:", accuracy_sgd)
 '''
