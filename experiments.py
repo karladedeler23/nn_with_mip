@@ -11,13 +11,18 @@ from keras.utils import to_categorical
 from tensorflow.keras import backend as K
 from sklearn.metrics import accuracy_score
 import tensorflow as tf
-
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from matplotlib import pyplot as plt
+import seaborn as sns
+from datetime import datetime
 
 ########################################################
 
 ### PREPROCESSING 
-
-# Function to load and preprocess data
+'''
+# Function to load and preprocess MNIST data
 def load_and_preprocess_data(n, random_nb):
     (X_train, y_train), (X_test, y_test) = mnist.load_data()
     selected_indices = []
@@ -32,6 +37,48 @@ def load_and_preprocess_data(n, random_nb):
     X_train = X_train.reshape(X_train.shape[0], -1) / 255.0
     X_train_sample = X_train_sample.reshape(X_train_sample.shape[0], -1) / 255.0
     X_test = X_test.reshape(X_test.shape[0], -1) / 255.0
+
+    # Convert to "one-hot" vectors using the to_categorical function
+    num_classes = 10
+    y_train_one_hot = to_categorical(y_train, num_classes)
+    y_train_sample_one_hot = to_categorical(y_train_sample, num_classes)
+    y_test_one_hot = to_categorical(y_test, num_classes)
+
+    return (X_train_sample, y_train_sample, y_train_sample_one_hot), (X_test, y_test, y_test_one_hot), (X_train, y_train, y_train_one_hot)
+'''
+# Function to load and preprocess another smaller handwritten digit data
+def load_and_preprocess_data(n, random_nb):
+    # Load the Pen-Based Recognition of Handwritten Digits dataset from UCI repository
+    url_train = 'https://archive.ics.uci.edu/ml/machine-learning-databases/pendigits/pendigits.tra'
+    url_test = 'https://archive.ics.uci.edu/ml/machine-learning-databases/pendigits/pendigits.tes'
+
+    # Read the CSV files
+    train_data = pd.read_csv(url_train, header=None)
+    test_data = pd.read_csv(url_test, header=None)
+
+    # Split into features and labels
+    X_train = train_data.iloc[:, :-1].values
+    y_train = train_data.iloc[:, -1].values
+    X_test = test_data.iloc[:, :-1].values
+    y_test = test_data.iloc[:, -1].values
+
+    # Select one data point per class for training sample
+    selected_indices = []
+    for i in range(n):  # Iterate through the dataset to select one data point per class
+        class_indices = np.where(y_train == (i % 10))[0]
+        if len(class_indices) > random_nb + i:
+            index = class_indices[random_nb + i]  # Get the index of one of the occurrences of the class
+        else:
+            index = class_indices[0]  # In case the desired index is out of bounds, use the first index
+        selected_indices.append(index)
+    X_train_sample = X_train[selected_indices]
+    y_train_sample = y_train[selected_indices]
+
+    # Normalize the inputs
+    scaler = StandardScaler()
+    X_train = scaler.fit_transform(X_train)
+    X_train_sample = scaler.transform(X_train_sample)
+    X_test = scaler.transform(X_test)
 
     # Convert to "one-hot" vectors using the to_categorical function
     num_classes = 10
@@ -151,7 +198,7 @@ def train_gurobi_model(X_train_sample, y_train_sample, y_train_sample_one_hot, i
     weights, biases, hidden_vars, relu_activation, binary_vars, y_pred = create_variables(model, input_dim, hidden_layers, output_dim, n)
     add_hidden_layer_constraints(model, X_train_sample, weights, biases, hidden_vars, relu_activation, binary_vars, input_dim, hidden_layers, M, n)
     add_output_layer_constraints(model, relu_activation, weights, biases, hidden_vars, y_pred, binary_vars, output_dim, hidden_layers, M, n)
-    set_loss_function(model, y_pred, y_train_sample_one_hot, loss_function, M, margin, epsilon, n, output_dim)
+    set_loss_function(model, weights, y_pred, y_train_sample_one_hot, loss_function, M, margin, epsilon, n, input_dim, hidden_layers, output_dim, False)
 
     if optimize_model(model):
         return extract_weights_biases(model, weights, biases)
@@ -183,7 +230,7 @@ def warm_start_train_gurobi_model(X_train_sample, y_train_sample, y_train_sample
 
     add_hidden_layer_constraints(model, X_train_sample, weights, biases, hidden_vars, relu_activation, binary_vars, input_dim, hidden_layers, M, n)
     add_output_layer_constraints(model, relu_activation, weights, biases, hidden_vars, y_pred, binary_vars, output_dim, hidden_layers, M, n)
-    set_loss_function(model, y_pred, y_train_sample_one_hot, loss_function, M, margin, epsilon, n, output_dim)
+    set_loss_function(model, weights, y_pred, y_train_sample_one_hot, loss_function, M, margin, epsilon, n, input_dim, hidden_layers, output_dim, False)
 
     if optimize_model(model):
         return extract_weights_biases(model, weights, biases)
@@ -274,7 +321,7 @@ def add_output_layer_constraints(model, relu_activation, weights, biases, hidden
             model.addConstr(y_pred[i, j] <= M * binary_vars[-1][i, j])
 
 # Define the loss function based on the choice
-def set_loss_function(model, y_pred, y_train_sample_one_hot, loss_function, M, margin, epsilon, n, output_dim):
+def set_loss_function(model, weights, y_pred, y_train_sample_one_hot, loss_function, M, margin, epsilon, n, input_dim, hidden_layers, output_dim, regularisation = True):
     loss_expr = gp.LinExpr()
     if loss_function == 'max_correct':
         # Variables: Binary indicators for correct predictions
@@ -323,6 +370,25 @@ def set_loss_function(model, y_pred, y_train_sample_one_hot, loss_function, M, m
     else:
         raise ValueError("Unsupported loss function")
 
+    if regularisation:
+        lambda_reg = 0.01  # Regularization parameter
+        abs_weights = []
+
+        # Create absolute weight variables
+        previous_layer_size = input_dim
+        for i, layer_size in enumerate(hidden_layers + [output_dim]):
+            abs_W = model.addVars(layer_size, previous_layer_size, vtype=GRB.CONTINUOUS, lb=0, ub=1, name=f"abs_W{i+1}")
+            abs_weights.append(abs_W)
+            previous_layer_size = layer_size
+
+        # Add the absolute values of the weights to the regularization term
+        for i, weight_matrix in enumerate(weights):
+            for (j, k) in weight_matrix.keys():
+                model.addConstr(abs_weights[i][j, k] >= weight_matrix[j, k])
+                model.addConstr(abs_weights[i][j, k] >= -weight_matrix[j, k])
+                # Add regularization to the loss expression
+                loss_expr += lambda_reg * abs_weights[i][j, k]
+    
     # Objective function
     model.setObjective(loss_expr, GRB.MINIMIZE)
 
@@ -379,6 +445,53 @@ def predict_with_mip(W_opt, b_opt, X, y, true_labels):
     
     return predictions
 
+########################################################
+
+### PLOTTING THE DISTRIBUTION OF THE PARAMETERS OBTAINED
+def plot_distribution_parameters(n, loss_function, W_opt, b_opt):
+    # Retrieve the current time so the figures have some meaningful names
+    current_date_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+
+    # Flatten the weights and biases
+    W_flat = np.concatenate([w.flatten() for w in W_opt])
+    b_flat = np.concatenate([b.flatten() for b in b_opt])
+
+    # Plot distributions
+    fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+
+    # Weight distribution
+    sns.histplot(W_flat, kde=True, ax=axes[0])
+    axes[0].set_title('Distribution of Weights')
+    axes[0].set_xlabel('Weight values')
+    axes[0].set_ylabel('Frequency')
+
+    # Bias distribution
+    sns.histplot(b_flat, kde=True, ax=axes[1])
+    axes[1].set_title('Distribution of Biases')
+    axes[1].set_xlabel('Bias values')
+    axes[1].set_ylabel('Frequency')
+
+    plt.tight_layout()
+    plt.savefig(f'parameter_histograms_{n}training_points_{loss_function}_loss_{current_date_time}.png')  # Save histograms
+    #plt.show()
+
+    # Box plots
+    fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+
+    # Weight box plot
+    sns.boxplot(W_flat, ax=axes[0])
+    axes[0].set_title('Box Plot of Weights')
+    axes[0].set_xlabel('Weight values')
+
+    # Bias box plot
+    sns.boxplot(b_flat, ax=axes[1])
+    axes[1].set_title('Box Plot of Biases')
+    axes[1].set_xlabel('Bias values')
+
+    plt.tight_layout()
+    plt.savefig(f'parameter_boxplots_{n}training_points_{loss_function}_loss_{current_date_time}.png')  # Save box plots
+    #plt.show()
+
 
 ########################################################
 
@@ -407,6 +520,8 @@ def run_multiple_experiments_warm_start(num_experiments, sample_size, hidden_lay
             predictions_testing = predict_with_mip(W_opt, b_opt, X_test, y_test_one_hot, y_test)
             accuracy_testing = accuracy_score(y_test, predictions_testing)
             testing_accuracies.append(accuracy_testing)
+            plot_distribution_parameters(sample_size, loss_function, W_opt, b_opt)
+            
         else:
             print("Model did not converge.")
 
