@@ -191,14 +191,17 @@ def train_sgd(X, y, y_one_hot, input_dim, hidden_layers, output_dim, loss_functi
 ### TRAINING NN WITH MIP
 
 # Function to train Gurobi model with different loss functions
-def train_gurobi_model(X_train_sample, y_train_sample, y_train_sample_one_hot, input_dim, hidden_layers, output_dim, M, margin, epsilon, loss_function):
+def train_gurobi_model(X_train_sample, y_train_sample, y_train_sample_one_hot, input_dim, hidden_layers, output_dim, M, margin, epsilon, loss_function, lambda_reg):
     n = X_train_sample.shape[0]
     model = initialize_model()
 
     weights, biases, hidden_vars, relu_activation, binary_vars, y_pred = create_variables(model, input_dim, hidden_layers, output_dim, n)
     add_hidden_layer_constraints(model, X_train_sample, weights, biases, hidden_vars, relu_activation, binary_vars, input_dim, hidden_layers, M, n)
     add_output_layer_constraints(model, relu_activation, weights, biases, hidden_vars, y_pred, binary_vars, output_dim, hidden_layers, M, n)
-    set_loss_function(model, weights, y_pred, y_train_sample_one_hot, loss_function, M, margin, epsilon, n, input_dim, hidden_layers, output_dim, False)
+    set_loss_function(model, weights, biases, y_pred, y_train_sample_one_hot, loss_function, M, margin, epsilon, n, input_dim, hidden_layers, output_dim, lambda_reg)
+
+    # Save model for inspection
+    model.write('model.lp')
 
     if optimize_model(model):
         return extract_weights_biases(model, weights, biases)
@@ -206,31 +209,30 @@ def train_gurobi_model(X_train_sample, y_train_sample, y_train_sample_one_hot, i
         return None, None
 
 # Function to train Gurobi model with different loss functions and by startiing with some "good" weights and biases
-def warm_start_train_gurobi_model(X_train_sample, y_train_sample, y_train_sample_one_hot, X_train, y_train, y_train_one_hot, input_dim, hidden_layers, output_dim, M, margin, epsilon, loss_function):
+def warm_start_train_gurobi_model(X_train_sample, y_train_sample, y_train_sample_one_hot, X_train, y_train, y_train_one_hot, input_dim, hidden_layers, output_dim, M, margin, epsilon, loss_function, W_init, b_init, lambda_reg):
     n = X_train_sample.shape[0]
     model = initialize_model()
 
     weights, biases, hidden_vars, relu_activation, binary_vars, y_pred = create_variables(model, input_dim, hidden_layers, output_dim, n)
 
-    W_init, b_init = train_sgd(X_train_sample, y_train_sample, y_train_sample_one_hot, input_dim, hidden_layers, output_dim, loss_function)
     # Initialise the weights and biases from results of SGD training
     for j in range(hidden_layers[0]):
         biases[0][j].start = b_init[0][j]
         for k in range(input_dim):
-            weights[0][j, k].start = W_init[0][k,j]
+            weights[0][j, k].start = W_init[0][j,k]
     for l in range(1, len(hidden_layers)):
         for j in range(hidden_layers[l]):
             biases[l][j].start = b_init[l][j]
             for k in range(hidden_layers[l-1]):
-                weights[l][j, k].start = W_init[l][k,j]
+                weights[l][j, k].start = W_init[l][j,k]
     for j in range(output_dim):
         biases[-1][j].start = b_init[-1][j]
         for k in range(hidden_layers[-1]):
-            weights[-1][j, k].start = W_init[-1][k,j]
+            weights[-1][j, k].start = W_init[-1][j,k]
 
     add_hidden_layer_constraints(model, X_train_sample, weights, biases, hidden_vars, relu_activation, binary_vars, input_dim, hidden_layers, M, n)
     add_output_layer_constraints(model, relu_activation, weights, biases, hidden_vars, y_pred, binary_vars, output_dim, hidden_layers, M, n)
-    set_loss_function(model, weights, y_pred, y_train_sample_one_hot, loss_function, M, margin, epsilon, n, input_dim, hidden_layers, output_dim, False)
+    set_loss_function(model, weights, biases, y_pred, y_train_sample_one_hot, loss_function, M, margin, epsilon, n, input_dim, hidden_layers, output_dim, False, lambda_reg)
 
     if optimize_model(model):
         return extract_weights_biases(model, weights, biases)
@@ -245,12 +247,12 @@ def warm_start_train_gurobi_model(X_train_sample, y_train_sample, y_train_sample
 # Initialize model and set some parameters for the resolution
 def initialize_model():
     model = gp.Model("neural_network_training")
-    model.setParam('IntegralityFocus', 1)
-    model.setParam('OptimalityTol', 1e-9)
-    model.setParam('FeasibilityTol', 1e-9)
-    model.setParam('MIPGap', 0)
-    model.setParam('NodeLimit', 1e9)
-    model.setParam('SolutionLimit', 1e9)
+    #model.setParam('IntegralityFocus', 1)
+    #model.setParam('OptimalityTol', 1e-9)
+    #model.setParam('FeasibilityTol', 1e-9)
+    #model.setParam('MIPGap', 0)
+    #model.setParam('NodeLimit', 1e9)
+    #model.setParam('SolutionLimit', 1e9)
     return model
 
 # Define variables to mimic the NN
@@ -297,8 +299,8 @@ def add_hidden_layer_constraints(model, X_train_sample, weights, biases, hidden_
             model.addConstr(hidden_vars[0][i, j] == gp.quicksum(X_train_sample[i, k] * weights[0][j, k] for k in range(input_dim)) + biases[0][j])
             model.addConstr(relu_activation[0][i, j] >= hidden_vars[0][i, j])
             model.addConstr(relu_activation[0][i, j] >= 0)
-            model.addConstr(relu_activation[0][i, j] <= hidden_vars[0][i, j] + M * (1 - binary_vars[0][i, j]))
-            model.addConstr(relu_activation[0][i, j] <= M * binary_vars[0][i, j])
+            model.addConstr(relu_activation[0][i, j] <= hidden_vars[0][i, j] + M[0] * (1 - binary_vars[0][i, j]))
+            model.addConstr(relu_activation[0][i, j] <= M[0] * binary_vars[0][i, j])
 
     # Constraints for subsequent hidden layers
     for l in range(1, len(hidden_layers)):
@@ -307,8 +309,8 @@ def add_hidden_layer_constraints(model, X_train_sample, weights, biases, hidden_
                 model.addConstr(hidden_vars[l][i, j] == gp.quicksum(relu_activation[l-1][i, k] * weights[l][j, k] for k in range(hidden_layers[l-1])) + biases[l][j])
                 model.addConstr(relu_activation[l][i, j] >= hidden_vars[l][i, j])
                 model.addConstr(relu_activation[l][i, j] >= 0)
-                model.addConstr(relu_activation[l][i, j] <= hidden_vars[l][i, j] + M * (1 - binary_vars[l][i, j]))
-                model.addConstr(relu_activation[l][i, j] <= M * binary_vars[l][i, j])
+                model.addConstr(relu_activation[l][i, j] <= hidden_vars[l][i, j] + M[l] * (1 - binary_vars[l][i, j]))
+                model.addConstr(relu_activation[l][i, j] <= M[l] * binary_vars[l][i, j])
 
 # Constraints for the output layer
 def add_output_layer_constraints(model, relu_activation, weights, biases, hidden_vars, y_pred, binary_vars, output_dim, hidden_layers, M, n):
@@ -317,11 +319,11 @@ def add_output_layer_constraints(model, relu_activation, weights, biases, hidden
             model.addConstr(hidden_vars[-1][i, j] == gp.quicksum(relu_activation[-1][i, k] * weights[-1][j, k] for k in range(hidden_layers[-1])) + biases[-1][j])
             model.addConstr(y_pred[i, j] >= hidden_vars[-1][i, j])
             model.addConstr(y_pred[i, j] >= 0)
-            model.addConstr(y_pred[i, j] <= hidden_vars[-1][i, j] + M * (1 - binary_vars[-1][i, j]))
-            model.addConstr(y_pred[i, j] <= M * binary_vars[-1][i, j])
+            model.addConstr(y_pred[i, j] <= hidden_vars[-1][i, j] + M[-1] * (1 - binary_vars[-1][i, j]))
+            model.addConstr(y_pred[i, j] <= M[-1] * binary_vars[-1][i, j])
 
 # Define the loss function based on the choice
-def set_loss_function(model, weights, y_pred, y_train_sample_one_hot, loss_function, M, margin, epsilon, n, input_dim, hidden_layers, output_dim, regularisation = True):
+def set_loss_function(model, weights, biases, y_pred, y_train_sample_one_hot, loss_function, M, margin, epsilon, n, input_dim, hidden_layers, output_dim, lambda_reg, regularisation = True):
     loss_expr = gp.LinExpr()
     if loss_function == 'max_correct':
         # Variables: Binary indicators for correct predictions
@@ -350,9 +352,9 @@ def set_loss_function(model, weights, y_pred, y_train_sample_one_hot, loss_funct
             for j in range(output_dim):
                 y_true = 2 * y_train_sample_one_hot[i, j] - 1
                 # If correct_preds[i, j] == 1, then y_true * y_pred[i, j] >= margin
-                model.addConstr(y_true * y_pred[i, j] >= margin - M * (1 - correct_preds[i, j]))
+                model.addConstr(y_true * y_pred[i, j] >= margin - M[-1] * (1 - correct_preds[i, j]))
                 # If correct_preds[i, j] == 0, then y_true * y_pred[i, j] < margin
-                model.addConstr(-y_true * y_pred[i, j] <= margin - epsilon + M * correct_preds[i, j])
+                model.addConstr(-y_true * y_pred[i, j] <= margin - epsilon + M[-1] * correct_preds[i, j])
                 # Accumulate the binary variables for the loss expression
                 loss_expr += 1 - correct_preds[i, j]
     elif loss_function == 'hinge':
@@ -370,15 +372,17 @@ def set_loss_function(model, weights, y_pred, y_train_sample_one_hot, loss_funct
     else:
         raise ValueError("Unsupported loss function")
 
-    if regularisation:
-        lambda_reg = 0.01  # Regularization parameter
-        abs_weights = []
+    if regularisation and lambda_reg != 0 :
+        print("REGULARISATION L1")
+        abs_weights, abs_biases = [], []
 
         # Create absolute weight variables
         previous_layer_size = input_dim
         for i, layer_size in enumerate(hidden_layers + [output_dim]):
             abs_W = model.addVars(layer_size, previous_layer_size, vtype=GRB.CONTINUOUS, lb=0, ub=1, name=f"abs_W{i+1}")
+            abs_b = model.addVars(layer_size, vtype=GRB.CONTINUOUS, lb=0, ub=1, name=f"abs_b{i+1}")
             abs_weights.append(abs_W)
+            abs_biases.append(abs_b)
             previous_layer_size = layer_size
 
         # Add the absolute values of the weights to the regularization term
@@ -388,6 +392,14 @@ def set_loss_function(model, weights, y_pred, y_train_sample_one_hot, loss_funct
                 model.addConstr(abs_weights[i][j, k] >= -weight_matrix[j, k])
                 # Add regularization to the loss expression
                 loss_expr += lambda_reg * abs_weights[i][j, k]
+        
+        # Add the absolute values of the biases to the regularization term
+        for i, bias_matrix in enumerate(biases):
+            for j in bias_matrix.keys():
+                model.addConstr(abs_biases[i][j] >= bias_matrix[j])
+                model.addConstr(abs_biases[i][j] >= -bias_matrix[j])
+                # Add regularization to the loss expression
+                loss_expr += lambda_reg * abs_biases[i][j]
     
     # Objective function
     model.setObjective(loss_expr, GRB.MINIMIZE)
@@ -445,6 +457,7 @@ def predict_with_mip(W_opt, b_opt, X, y, true_labels):
     
     return predictions
 
+
 ########################################################
 
 ### PLOTTING THE DISTRIBUTION OF THE PARAMETERS OBTAINED
@@ -495,23 +508,25 @@ def plot_distribution_parameters(n, loss_function, W_opt, b_opt):
 
 ########################################################
 
-### MAIN FUNCTION
 # Function to run the entire process multiple times and calculate average accuracy
-def run_multiple_experiments_warm_start(num_experiments, sample_size, hidden_layers, M, margin, epsilon, loss_function, random_nb, warm_start = False):
-    training_accuracies = []
-    testing_accuracies = []
+def run_multiple_experiments_warm_start(num_experiments, sample_size, hidden_layers, M, margin, epsilon, loss_function, random_nb, lambda_reg = 0, warm_start = False, W_init = None, b_init = None):
+    training_accuracies, testing_accuracies = [], []
+    ''' W_list, b_list = [], [] '''
 
-    for _ in range(num_experiments):
+    for i in range(num_experiments):
         # Load and preprocess data
-        (X_train_sample, y_train_sample, y_train_sample_one_hot), (X_test, y_test, y_test_one_hot), (X_train, y_train, y_train_one_hot) = load_and_preprocess_data(sample_size, random_nb)
+        (X_train_sample, y_train_sample, y_train_sample_one_hot), (X_test, y_test, y_test_one_hot), (X_train, y_train, y_train_one_hot) = load_and_preprocess_data(sample_size, random_nb+i*sample_size)
         
         # Train Gurobi model and get optimal weights and biases
-        if warm_start : 
+        if warm_start and W_init is not None and b_init is not None : 
             print('warm start')
-            W_opt, b_opt = warm_start_train_gurobi_model(X_train_sample, y_train_sample, y_train_sample_one_hot, X_train, y_train, y_train_one_hot, X_train_sample.shape[1], hidden_layers, 10, M, margin, epsilon, loss_function)
+            # Using weights and biases from sgd
+            # W_init, b_init = train_sgd(X_train_sample, y_train_sample, y_train_sample_one_hot, input_dim, hidden_layers, output_dim, loss_function)
+            # Using previous weights (when we are actually training with more points)
+            W_opt, b_opt = warm_start_train_gurobi_model(X_train_sample, y_train_sample, y_train_sample_one_hot, X_train, y_train, y_train_one_hot, X_train_sample.shape[1], hidden_layers, 10, M, margin, epsilon, loss_function, W_init, b_init, lambda_reg)
         else :
             print('no warm start')
-            W_opt, b_opt = train_gurobi_model(X_train_sample, y_train_sample, y_train_sample_one_hot, X_train_sample.shape[1], hidden_layers, 10, M, margin, epsilon, loss_function)
+            W_opt, b_opt = train_gurobi_model(X_train_sample, y_train_sample, y_train_sample_one_hot, X_train_sample.shape[1], hidden_layers, 10, M, margin, epsilon, loss_function, lambda_reg)
 
         if W_opt is not None and b_opt is not None:
             predictions_training = predict_with_mip(W_opt, b_opt, X_train_sample, y_train_sample_one_hot, y_train_sample)
@@ -520,9 +535,29 @@ def run_multiple_experiments_warm_start(num_experiments, sample_size, hidden_lay
             predictions_testing = predict_with_mip(W_opt, b_opt, X_test, y_test_one_hot, y_test)
             accuracy_testing = accuracy_score(y_test, predictions_testing)
             testing_accuracies.append(accuracy_testing)
-            plot_distribution_parameters(sample_size, loss_function, W_opt, b_opt)
-            
+            #plot_distribution_parameters(sample_size, loss_function, W_opt, b_opt)
+            '''
+            W_list.append(W_opt)
+            b_list.append(b_opt)
+            '''
         else:
             print("Model did not converge.")
+            return
 
-    return np.mean(training_accuracies), np.mean(testing_accuracies)
+    '''
+    # Stack weights from each layer across simulations
+    stacked_weights = [np.stack([w[i] for w in W_list], axis=0) for i in range(len(W_list[0]))]
+    stacked_biaises = [np.stack([b[i] for b in b_list], axis=0) for i in range(len(b_list[0]))]
+
+    # Calculate the mean of the weights across simulations
+    W_avg = [np.mean(weights, axis=0) for weights in stacked_weights]
+    b_avg = [np.mean(biaises, axis=0) for biaises in stacked_biaises]
+
+    (X_train_sample, y_train_sample, y_train_sample_one_hot), (X_test, y_test, y_test_one_hot), (X_train, y_train, y_train_one_hot) = load_and_preprocess_data(sample_size*num_experiments, random_nb)
+    predictions_training_avg = predict_with_mip(W_avg, b_avg, X_train_sample, y_train_sample_one_hot, y_train_sample)
+    accuracy_training_avg = accuracy_score(y_train_sample, predictions_training_avg)
+    predictions_testing_avg = predict_with_mip(W_avg, b_avg, X_test, y_test_one_hot, y_test)
+    accuracy_testing_avg = accuracy_score(y_test, predictions_testing_avg)
+    return accuracy_training_avg, accuracy_testing_avg, W_avg, b_avg
+    '''
+    return np.mean(training_accuracies), np.mean(testing_accuracies), W_opt, b_opt

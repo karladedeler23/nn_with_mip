@@ -12,65 +12,24 @@ from sklearn.metrics import accuracy_score
 import tensorflow as tf
 from matplotlib import pyplot as plt
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
 
 ########################################################
 
 #### Definition of the parameters we might want to change 
 
-n = 4  # number of data points
+n = 10  # number of data points
 hidden_layers = [4]    # Definition of the neural network structure
-M = 640   # Big M constant for ReLU activation constraints (output range)
-margin = M*0.01    # A reasonable margin (for SAT margin) should be a small fraction of this estimated output range
-epsilon =  1.0e-6    # set the precision
-lambda_reg = 1e-8  # Regularization parameter
+M = [16, 16*hidden_layers[0]] # Big M constant for ReLU activation constraints (w and b are max = 1)
+margin = M[-1]*0.01    # A reasonable margin (for SAT margin) should be a small fraction of this estimated output range
+epsilon =  1.0e-4    # set the precision (for SAT margin)
+lambda_reg = 1.0e-5  # Regularization parameter
 
-random_nb = np.random.randint(50)
+random_nb = 709 #np.random.randint(1000)
+print(random_nb)
 
 ########################################################
 
 #### Loading and preprocessing the data
-'''
-# Load MNIST data
-(X_train_sample, y_train), (X_test, y_test) = mnist.load_data()
-
-# Select n points from the dataset
-selected_indices = []
-selected_labels = []
-for class_label in range(n): # Iterate through the dataset to select one data point per class
-    index = np.where(y_train == (class_label%10))[0][np.random.randint(100)]  # Get the index of one of the occurrences of the class
-    selected_indices.append(index)
-    selected_labels.append(class_label)
-X_train_sample = X_train_sample[selected_indices]
-y_train_sample = y_train[selected_indices]
-
-# Flatten the inputs and normalise 
-X_train_sample = X_train_sample.reshape(X_train_sample.shape[0], -1)/255.0
-X_test = X_test.reshape(X_test.shape[0], -1)/255.0
-
-# Convert to "one-hot" vectors using the to_categorical function
-num_classes = 10
-y_train_one_hot = keras.utils.to_categorical(y_train_sample, num_classes)
-y_test_one_hot = keras.utils.to_categorical(y_test, num_classes)
-
-# Definition of the neural network structure
-input_dim = X_train_sample.shape[1] 
-output_dim = num_classes
-
-# Plot the selected samples
-for i in range(n):
-    plt.subplot(1, n, i+1)
-    plt.imshow(X_train_sample[i].reshape(28, 28), cmap='gray')
-    plt.axis('off')
-plt.show()
-
-# Print the shapes to verify
-print("X_train_sample shape:", X_train_sample.shape)
-print(X_train_sample[0])
-print("y_train_one_hot shape:", y_train_one_hot.shape)
-'''
-
 
 # Load the Pen-Based Recognition of Handwritten Digits dataset from UCI repository
 url_train = 'https://archive.ics.uci.edu/ml/machine-learning-databases/pendigits/pendigits.tra'
@@ -85,13 +44,13 @@ X_train = train_data.iloc[:, :-1].values
 y_train = train_data.iloc[:, -1].values
 X_test = test_data.iloc[:, :-1].values
 y_test = test_data.iloc[:, -1].values
-
+'''
 # Inspect the shapes
 print(f"X_train shape: {X_train.shape}")
 print(f"y_train shape: {y_train.shape}")
 print(f"X_test shape: {X_test.shape}")
 print(f"y_test shape: {y_test.shape}")
-
+'''
 # Select one data point per class for training sample
 selected_indices = []
 for i in range(n):  # Iterate through the dataset to select one data point per class
@@ -108,7 +67,7 @@ y_train_sample = y_train[selected_indices]
 X_train = X_train / 100
 X_train_sample = X_train_sample / 100
 X_test = X_test / 100
-# print(X_train_sample[0])
+#print(X_train_sample[0])
 
 # Convert to "one-hot" vectors using the to_categorical function
 num_classes = 10
@@ -116,14 +75,10 @@ y_train_one_hot = to_categorical(y_train, num_classes)
 y_train_sample_one_hot = to_categorical(y_train_sample, num_classes)
 y_test_one_hot = to_categorical(y_test, num_classes)
 
-# Inspect the shapes
-print(f"y_train_one_hot shape: {y_train_one_hot.shape}")
-print(f"y_test_one_hot shape: {y_test_one_hot.shape}")
-
-
 # Definition of the neural network structure
 input_dim = X_train_sample.shape[1] 
 output_dim = num_classes
+
 
 ########################################################
 
@@ -131,12 +86,12 @@ output_dim = num_classes
 
 # Initialise model and set some paramters for the resolution
 model = gp.Model("neural_network_training")
-model.setParam('IntegralityFocus', 1)
-model.setParam('OptimalityTol', 1e-9)
-model.setParam('FeasibilityTol', 1e-9)
-model.setParam('MIPGap', 0)
-model.setParam('NodeLimit', 1e9)
-model.setParam('SolutionLimit', 1e9)
+#model.setParam('IntegralityFocus', 1)
+#model.setParam('OptimalityTol', 1e-5)
+#model.setParam('FeasibilityTol', 1e-9)
+#model.setParam('MIPGap', 0)
+#model.setParam('NodeLimit', 1e9)
+#model.setParam('SolutionLimit', 1e9)
 
 # Define variables for weights and biases
 weights = []
@@ -182,8 +137,8 @@ for i in range(n):
         model.addConstr(hidden_vars[0][i, j] == gp.quicksum(X_train_sample[i, k] * weights[0][j, k] for k in range(input_dim)) + biases[0][j])
         model.addConstr(relu_activation[0][i, j] >= hidden_vars[0][i, j])
         model.addConstr(relu_activation[0][i, j] >= 0)
-        model.addConstr(relu_activation[0][i, j] <= hidden_vars[0][i, j] + M * (1 - binary_vars[0][i, j]))
-        model.addConstr(relu_activation[0][i, j] <= M * binary_vars[0][i, j])
+        model.addConstr(relu_activation[0][i, j] <= hidden_vars[0][i, j] + M[0] * (1 - binary_vars[0][i, j]))
+        model.addConstr(relu_activation[0][i, j] <= M[0] * binary_vars[0][i, j])
 
 # Constraints for subsequent hidden layers
 for l in range(1, len(hidden_layers)):
@@ -192,8 +147,8 @@ for l in range(1, len(hidden_layers)):
             model.addConstr(hidden_vars[l][i, j] == gp.quicksum(relu_activation[l-1][i, k] * weights[l][j, k] for k in range(hidden_layers[l-1])) + biases[l][j])
             model.addConstr(relu_activation[l][i, j] >= hidden_vars[l][i, j])
             model.addConstr(relu_activation[l][i, j] >= 0)
-            model.addConstr(relu_activation[l][i, j] <= hidden_vars[l][i, j] + M * (1 - binary_vars[l][i, j]))
-            model.addConstr(relu_activation[l][i, j] <= M * binary_vars[l][i, j])
+            model.addConstr(relu_activation[l][i, j] <= hidden_vars[l][i, j] + M[l] * (1 - binary_vars[l][i, j]))
+            model.addConstr(relu_activation[l][i, j] <= M[l] * binary_vars[l][i, j])
 
 # Constraints for the output layer
 for i in range(n):
@@ -201,62 +156,11 @@ for i in range(n):
         model.addConstr(z_hidden_final[i, j] == gp.quicksum(relu_activation[-1][i, k] * W_output[j, k] for k in range(hidden_layers[-1])) + b_output[j])
         model.addConstr(y_pred[i, j] >= z_hidden_final[i, j])
         model.addConstr(y_pred[i, j] >= 0)
-        model.addConstr(y_pred[i, j] <= z_hidden_final[i, j] + M * (1 - binary_v_output[i, j]))
-        model.addConstr(y_pred[i, j] <= M * binary_v_output[i, j])
-    #model.addConstr(gp.quicksum(y_pred[i, j] for j in range(output_dim)) >= epsilon)
+        model.addConstr(y_pred[i, j] <= z_hidden_final[i, j] + M[-1] * (1 - binary_v_output[i, j]))
+        model.addConstr(y_pred[i, j] <= M[-1] * binary_v_output[i, j])
 
 ### LOSS FUNCTION
 loss_expr = gp.LinExpr()
-
-'''
-## MAX CORRECT LOSS FUNCTION
-# Variables: Binary indicators for correct predictions
-correct_preds = model.addVars(n, vtype=GRB.BINARY, name="correct_preds")
-# Variables: Predicted class for each sample
-predicted_class = model.addVars(n, output_dim, vtype=GRB.BINARY, name="predicted_class")
-# Constraints to ensure that for each sample, exactly one class is predicted
-for i in range(n):
-    model.addConstr(gp.quicksum(predicted_class[i, j] for j in range(output_dim)) == 1, name=f"unique_class_{i}")
-# Constraints to ensure that the predicted class has the highest score
-for i in range(n):
-    true_class = np.argmax(y_train_sample_one_hot[i])  # Replace with your true labels
-    for j in range(output_dim):
-        if j != true_class:
-            model.addConstr(y_pred[i, true_class] >= y_pred[i, j] + epsilon - M * (1 - predicted_class[i, true_class]), 
-                            name=f"max_class_{i}_{true_class}_{j}")
-            model.addConstr(y_pred[i, j] <= M * (1 - predicted_class[i, j]), 
-                            name=f"max_class_inequality_{i}_{j}")
-
-# Constraints to ensure correct_preds is set correctly
-for i in range(n):
-    true_class = np.argmax(y_train_sample_one_hot[i])
-    model.addConstr(correct_preds[i] == predicted_class[i, true_class], name=f"correct_pred_{i}")
-
-# Objective: Maximize the number of correct predictions
-loss_expr = gp.quicksum(-correct_preds[i] for i in range(n))
-
-# V2 MAX CORRECT
-# Variables: Binary indicators for correct predictions
-correct_preds = model.addVars(n, vtype=GRB.BINARY, name="correct_preds")
-# Variables: Predicted class for each sample
-predicted_class = model.addVars(n, output_dim, vtype=GRB.BINARY, name="predicted_class")
-# Constraints to ensure that for each sample, exactly one class is predicted
-for i in range(n):
-    model.addConstr(gp.quicksum(predicted_class[i, j] for j in range(output_dim)) == 1, name=f"unique_class_{i}")
-# Constraints to ensure that the predicted class has the highest score
-for i in range(n):
-    for j in range(output_dim):
-        for k in range(output_dim):
-            if j != k:
-                model.addConstr(y_pred[i, j] - y_pred[i, k] >= epsilon - M * (1 - predicted_class[i, j]), 
-                                name=f"max_class_{i}_{j}_{k}")
-# Constraints to ensure correct_preds is set correctly
-for i in range(n):
-    true_class = np.argmax(y_train_sample_one_hot[i])
-    model.addConstr(correct_preds[i] == predicted_class[i, true_class], name=f"correct_pred_{i}")
-# Objective: Maximize the number of correct predictions
-loss_expr = gp.quicksum(-correct_preds[i] for i in range(n))
-'''
 
 ## HINGE LOSS FUNCTION
 # Define auxiliary variables for hinge loss terms
@@ -285,17 +189,17 @@ for i in range(n):
     for j in range(output_dim):
         y_true = 2 * y_train_sample_one_hot[i, j] - 1
         # If correct_preds[i, j] == 1, then y_true * y_pred[i, j] >= margin
-        model.addConstr(y_true * y_pred[i, j] >= margin - M * (1 - correct_preds[i, j]))
+        model.addConstr(y_true * y_pred[i, j] >= margin - M[-1] * (1 - correct_preds[i, j]))
 
         # If correct_preds[i, j] == 0, then y_true * y_pred[i, j] < margin
-        model.addConstr(- y_true * y_pred[i, j] <= margin - epsilon + M * correct_preds[i, j])
+        model.addConstr(- y_true * y_pred[i, j] <= margin - epsilon + M[-1] * correct_preds[i, j])
 
         # Accumulate the binary variables for the loss expression
         loss_expr += 1 - correct_preds[i, j]
 '''
+'''
 ## REGULARISATION
 print("REGULARISATION L1")
-lambda_reg = 0.5  # Regularization parameter
 abs_weights, abs_biases = [], []
 
 # Create absolute weight variables
@@ -322,7 +226,7 @@ for i, bias_matrix in enumerate(biases):
         model.addConstr(abs_biases[i][j] >= -bias_matrix[j])
         # Add regularization to the loss expression
         loss_expr += lambda_reg * abs_biases[i][j]
-
+'''
 # Objective function
 model.setObjective(loss_expr, GRB.MINIMIZE)
 
@@ -342,19 +246,18 @@ def write_variables_to_file(model, filename):
         # Write the values of weight variables
         for l in range(len(weights)):
             W = weights[l]
-            abs_W = abs_weights[l]
+            #abs_W = abs_weights[l]
             for key in W.keys():
                 f.write(f"Weight W{l+1}[{key}] = {W[key].X}\n")
-                f.write(f"abs_Weight abs_W{l+1}[{key}] = {abs_W[key].X}\n")
-
+                #f.write(f"abs_Weight abs_W{l+1}[{key}] = {abs_W[key].X}\n")
 
         # Write the values of bias variables
         for l in range(len(biases)):
             b = biases[l]
-            abs_b = abs_biases[l]
+            #abs_b = abs_biases[l]
             for key in b.keys():
                 f.write(f"Bias b{l+1}[{key}] = {b[key].X}\n")
-                f.write(f"abs_Bias abs_b{l+1}[{key}] = {abs_b[key].X}\n")
+                #f.write(f"abs_Bias abs_b{l+1}[{key}] = {abs_b[key].X}\n")
 
         # Write the values of auxiliary variables for prediction
         for i in range(n):
@@ -480,76 +383,3 @@ for i in range(n):
 predictions_test = predict_with_mip(X_test, y_test_one_hot, y_test)
 accuracy_mip_test = accuracy_score(y_test, predictions_test)
 print("MIP Model Accuracy on testing set:", accuracy_mip_test)
-
-########################################################
-'''
-### Comparison with typical SGD
-
-# Make sure the weights and biases are also between -1 and 1 like when using MIP
-class ClipConstraint(Constraint):
-    def __init__(self, min_value, max_value):
-        self.min_value = min_value
-        self.max_value = max_value
-    def __call__(self, w):
-        return tf.clip_by_value(w, self.min_value, self.max_value)
-    def get_config(self):
-        return {'min_value': self.min_value, 'max_value': self.max_value}
-weight_constraint = ClipConstraint(min_value=-1, max_value=1)
-bias_constraint = ClipConstraint(min_value=-1, max_value=1)
-
-# Define the model with the constraints applied
-model_sgd = Sequential([
-    Input(shape=(input_dim,)),
-    Dense(hidden_layers[0], activation='relu', 
-          kernel_constraint=weight_constraint, 
-          bias_constraint=bias_constraint),
-    Dense(output_dim, activation='relu', 
-          kernel_constraint=weight_constraint, 
-          bias_constraint=bias_constraint)
-])
-
-# Define the custom max_correct loss function 
-def custom_accuracy(y_true, y_pred):
-    # Convert y_true to the correct format
-    y_true_class = K.argmax(y_true, axis=-1)
-    # Compute the predicted class
-    y_pred_class = K.argmax(y_pred, axis=-1)
-    # Compute the accuracy
-    accuracy = K.sum(K.cast(K.equal(y_true_class, y_pred_class), dtype='float32'))
-    return accuracy
-
-# Define the custom hinge loss function
-def hinge_loss(y_true, y_pred):
-    # Convert y_true to -1 or 1
-    y_true = 2 * y_true - 1
-    # Compute hinge loss
-    hinge_loss = K.sum(K.maximum(0.0, 1 - y_true * y_pred), axis=-1)
-    # Take the mean over all samples and classes
-    return K.mean(hinge_loss)
-
-# Custom sat-margin loss function
-def sat_margin_loss(margin=M):
-    def loss(y_true, y_pred):
-        # Correct predictions binary variable
-        correct_predictions = tf.cast(tf.equal(tf.round(y_pred), y_true), tf.float32)
-        # Hinge loss to enforce margin (confidence)
-        hinge_loss = tf.maximum(0., margin - y_true * y_pred)
-        # Loss is negative of correct predictions (to maximize) + hinge loss for confidence
-        return -tf.reduce_mean(correct_predictions) + tf.reduce_mean(hinge_loss)
-    return loss
-
-obj_function = 'categorical_crossentropy'
-# obj_function = hinge_loss
-# obj_function = sat_margin_loss
-model_sgd.compile(optimizer='adam', loss=obj_function, metrics=['accuracy'])
-model_sgd.fit(X_train_sample, y_train_sample_one_hot, epochs=10, batch_size=32, verbose=0)
-accuracy_sgd = model_sgd.evaluate(X_test, y_test_one_hot, verbose=0)[1]
-print("SGD Model Accuracy:", accuracy_sgd)
-
-# Print weights and biases for comparison
-for layer_idx, layer in enumerate(model_sgd.layers):
-    weights, biases = layer.get_weights()
-    print(f"Layer {layer_idx + 1} - Weights: {weights.shape}, Biases: {biases.shape}")
-    print("Weights:", weights)
-    print("Biases:", biases)
-'''
