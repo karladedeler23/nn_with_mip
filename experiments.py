@@ -201,12 +201,13 @@ def train_gurobi_model(X_train_sample, y_train_sample, y_train_sample_one_hot, i
     set_loss_function(model, weights, biases, y_pred, y_train_sample_one_hot, loss_function, M, margin, epsilon, n, input_dim, hidden_layers, output_dim, lambda_reg)
 
     # Save model for inspection
-    model.write('model.lp')
+    #model.write('model.lp')
 
     if optimize_model(model):
-        return extract_weights_biases(model, weights, biases)
+        W, b = extract_weights_biases(model, weights, biases)
+        return model.Runtime, W, b
     else:
-        return None, None
+        return None, None, None
 
 # Function to train Gurobi model with different loss functions and by startiing with some "good" weights and biases
 def warm_start_train_gurobi_model(X_train_sample, y_train_sample, y_train_sample_one_hot, X_train, y_train, y_train_one_hot, input_dim, hidden_layers, output_dim, M, margin, epsilon, loss_function, W_init, b_init, lambda_reg):
@@ -234,10 +235,14 @@ def warm_start_train_gurobi_model(X_train_sample, y_train_sample, y_train_sample
     add_output_layer_constraints(model, relu_activation, weights, biases, hidden_vars, y_pred, binary_vars, output_dim, hidden_layers, M, n)
     set_loss_function(model, weights, biases, y_pred, y_train_sample_one_hot, loss_function, M, margin, epsilon, n, input_dim, hidden_layers, output_dim, False, lambda_reg)
 
+    # Save model for inspection
+    #model.write('model.lp')
+
     if optimize_model(model):
-        return extract_weights_biases(model, weights, biases)
+        W, b = extract_weights_biases(model, weights, biases)
+        return model.Runtime, W, b
     else:
-        return None, None
+        return None, None, None
 
 
 ########################################################
@@ -488,6 +493,7 @@ def plot_distribution_parameters(n, loss_function, W_opt, b_opt):
     plt.savefig(f'parameter_histograms_{n}training_points_{loss_function}_loss_{current_date_time}.png')  # Save histograms
     #plt.show()
 
+    '''
     # Box plots
     fig, axes = plt.subplots(1, 2, figsize=(14, 6))
 
@@ -504,6 +510,7 @@ def plot_distribution_parameters(n, loss_function, W_opt, b_opt):
     plt.tight_layout()
     plt.savefig(f'parameter_boxplots_{n}training_points_{loss_function}_loss_{current_date_time}.png')  # Save box plots
     #plt.show()
+    '''
 
 
 ########################################################
@@ -512,6 +519,15 @@ def plot_distribution_parameters(n, loss_function, W_opt, b_opt):
 def run_multiple_experiments_warm_start(num_experiments, sample_size, hidden_layers, M, margin, epsilon, loss_function, random_nb, lambda_reg = 0, warm_start = False, W_init = None, b_init = None):
     training_accuracies, testing_accuracies = [], []
     ''' W_list, b_list = [], [] '''
+    nn_config = {'layers': [16] + hidden_layers + [10],
+                'training set size' : sample_size,
+                'starting point in the data': random_nb,
+                'activation': 'relu',
+                'loss' : loss_function,                
+                'M' : M,
+                'Regularisation' : lambda_reg,
+                'Warm start' : warm_start
+                }
 
     for i in range(num_experiments):
         # Load and preprocess data
@@ -523,10 +539,10 @@ def run_multiple_experiments_warm_start(num_experiments, sample_size, hidden_lay
             # Using weights and biases from sgd
             # W_init, b_init = train_sgd(X_train_sample, y_train_sample, y_train_sample_one_hot, input_dim, hidden_layers, output_dim, loss_function)
             # Using previous weights (when we are actually training with more points)
-            W_opt, b_opt = warm_start_train_gurobi_model(X_train_sample, y_train_sample, y_train_sample_one_hot, X_train, y_train, y_train_one_hot, X_train_sample.shape[1], hidden_layers, 10, M, margin, epsilon, loss_function, W_init, b_init, lambda_reg)
+            runtime, W_opt, b_opt = warm_start_train_gurobi_model(X_train_sample, y_train_sample, y_train_sample_one_hot, X_train, y_train, y_train_one_hot, X_train_sample.shape[1], hidden_layers, 10, M, margin, epsilon, loss_function, W_init, b_init, lambda_reg)
         else :
             print('no warm start')
-            W_opt, b_opt = train_gurobi_model(X_train_sample, y_train_sample, y_train_sample_one_hot, X_train_sample.shape[1], hidden_layers, 10, M, margin, epsilon, loss_function, lambda_reg)
+            runtime, W_opt, b_opt = train_gurobi_model(X_train_sample, y_train_sample, y_train_sample_one_hot, X_train_sample.shape[1], hidden_layers, 10, M, margin, epsilon, loss_function, lambda_reg)
 
         if W_opt is not None and b_opt is not None:
             predictions_training = predict_with_mip(W_opt, b_opt, X_train_sample, y_train_sample_one_hot, y_train_sample)
@@ -535,7 +551,12 @@ def run_multiple_experiments_warm_start(num_experiments, sample_size, hidden_lay
             predictions_testing = predict_with_mip(W_opt, b_opt, X_test, y_test_one_hot, y_test)
             accuracy_testing = accuracy_score(y_test, predictions_testing)
             testing_accuracies.append(accuracy_testing)
-            #plot_distribution_parameters(sample_size, loss_function, W_opt, b_opt)
+            plot_distribution_parameters(sample_size, loss_function, W_opt, b_opt)
+            with open('runtime_log.txt', 'a') as file:
+                current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                file.write(f"Date and Time: {current_time}\n")
+                file.write(f"Neural Network Configuration: {nn_config}\n")
+                file.write(f"Time taken to solve the model: {runtime} seconds\n\n")
             '''
             W_list.append(W_opt)
             b_list.append(b_opt)
