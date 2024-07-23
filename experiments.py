@@ -16,7 +16,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from matplotlib import pyplot as plt
 import seaborn as sns
-from datetime import datetime
+import os
 
 ########################################################
 
@@ -466,10 +466,7 @@ def predict_with_mip(W_opt, b_opt, X, y, true_labels):
 ########################################################
 
 ### PLOTTING THE DISTRIBUTION OF THE PARAMETERS OBTAINED
-def plot_distribution_parameters(n, loss_function, W_opt, b_opt):
-    # Retrieve the current time so the figures have some meaningful names
-    current_date_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-
+def plot_distribution_parameters(current_date_time, random_nb, lambda_reg, warm_start, n, loss_function, W_opt, b_opt):
     # Flatten the weights and biases
     W_flat = np.concatenate([w.flatten() for w in W_opt])
     b_flat = np.concatenate([b.flatten() for b in b_opt])
@@ -490,7 +487,12 @@ def plot_distribution_parameters(n, loss_function, W_opt, b_opt):
     axes[1].set_ylabel('Frequency')
 
     plt.tight_layout()
-    plt.savefig(f'parameter_histograms_{n}training_points_{loss_function}_loss_{current_date_time}.png')  # Save histograms
+    directory = f'graphs/pen/{loss_function}/{random_nb}/reg{lambda_reg}/warmstart_{warm_start}/{current_date_time}'
+    file_name = f'parameter_histograms_{n}training_points.png'
+    full_path = os.path.join(directory, file_name)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    plt.savefig(full_path)  # Save histograms
     #plt.show()
 
     '''
@@ -516,7 +518,7 @@ def plot_distribution_parameters(n, loss_function, W_opt, b_opt):
 ########################################################
 
 # Function to run the entire process multiple times and calculate average accuracy
-def run_multiple_experiments_warm_start(num_experiments, sample_size, hidden_layers, M, margin, epsilon, loss_function, random_nb, lambda_reg = 0, warm_start = False, W_init = None, b_init = None):
+def run_multiple_experiments_warm_start(current_date_time, num_experiments, sample_size, hidden_layers, M, margin, epsilon, loss_function, random_nb, lambda_reg = 0, warm_start = False, W_init = None, b_init = None):
     training_accuracies, testing_accuracies = [], []
     ''' W_list, b_list = [], [] '''
     nn_config = {'layers': [16] + hidden_layers + [10],
@@ -551,10 +553,9 @@ def run_multiple_experiments_warm_start(num_experiments, sample_size, hidden_lay
             predictions_testing = predict_with_mip(W_opt, b_opt, X_test, y_test_one_hot, y_test)
             accuracy_testing = accuracy_score(y_test, predictions_testing)
             testing_accuracies.append(accuracy_testing)
-            plot_distribution_parameters(sample_size, loss_function, W_opt, b_opt)
+            plot_distribution_parameters(current_date_time, random_nb, lambda_reg, warm_start, sample_size, loss_function, W_opt, b_opt)
             with open('runtime_log.txt', 'a') as file:
-                current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                file.write(f"Date and Time: {current_time}\n")
+                file.write(f"Date and Time: {current_date_time}\n")
                 file.write(f"Neural Network Configuration: {nn_config}\n")
                 file.write(f"Time taken to solve the model: {runtime} seconds\n\n")
             '''

@@ -2,6 +2,7 @@ from experiments import run_multiple_experiments_warm_start
 from matplotlib import pyplot as plt
 from datetime import datetime
 import numpy as np
+import os
 
 # Define parameters
 num_experiments = 1
@@ -16,15 +17,16 @@ warm_start = True
 size_list = []
 accuracy_train_list = []
 accuracy_test_list = []
+current_date_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 random_nb = np.random.randint(1000)
 print(random_nb)
 
 W_init, b_init = None, None
-for size in range(7, 58, 5):
+for size in range(7, 60, 3):
     sample_size = size  # number of data points
     size_list.append(sample_size)
     # Run the experiments and calculate the average accuracy
-    average_accuracy_train, accuracy_test, W_opt, b_opt = run_multiple_experiments_warm_start(num_experiments, sample_size, hidden_layers, M, margin, epsilon, loss_function, random_nb, lambda_reg, warm_start, W_init, b_init)    
+    average_accuracy_train, accuracy_test, W_opt, b_opt = run_multiple_experiments_warm_start(current_date_time, num_experiments, sample_size, hidden_layers, M, margin, epsilon, loss_function, random_nb, lambda_reg, warm_start, W_init, b_init)    
     accuracy_train_list.append(average_accuracy_train)
     accuracy_test_list.append(accuracy_test)
     print(f"Average accuracy over {num_experiments} experiments with {sample_size} training points: {average_accuracy_train}")
@@ -55,6 +57,9 @@ description_text = (
 plt.figtext(0.5, 0.14, description_text, ha='center', va='top', fontsize=9, wrap=True)
 
 # Save the figure with a meaningful name
-current_date_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-file_name = f'pen_training_test_accuracy_{loss_function}_loss_{current_date_time}.png'
-plt.savefig(file_name)
+directory = f'graphs/pen/{loss_function}/{random_nb}/reg{lambda_reg}/warmstart_{warm_start}/{current_date_time}'
+file_name = 'accuracy.png'
+full_path = os.path.join(directory, file_name)
+if not os.path.exists(directory):
+        os.makedirs(directory)
+plt.savefig(full_path)
