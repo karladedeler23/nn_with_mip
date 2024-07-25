@@ -1,196 +1,68 @@
-Date and Time: 2024-07-23 12:50:46
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 7, 'starting point in the data': 849, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 6.3407909870147705 seconds
+Date and Time: 2024-07-24_10-03-05
+Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 7, 'starting point in the data': 888, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': False}
+Time taken to solve the model: 1.6765449047088623 seconds
 
-Date and Time: 2024-07-23 12:50:54
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 8, 'starting point in the data': 849, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.5407299995422363 seconds
+Date and Time: 2024-07-24_10-03-05
+Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 10, 'starting point in the data': 888, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': False}
+Time taken to solve the model: 4.261500835418701 seconds
 
-Date and Time: 2024-07-23 12:51:02
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 9, 'starting point in the data': 849, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.06867003440856934 seconds
+Date and Time: 2024-07-24_10-03-05
+Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 13, 'starting point in the data': 888, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': False}
+Time taken to solve the model: 71.99692010879517 seconds
 
-Date and Time: 2024-07-23 12:51:12
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 10, 'starting point in the data': 849, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 1.7987968921661377 seconds
+Date and Time: 2024-07-24_10-03-05
+Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 16, 'starting point in the data': 888, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': False}
+Time taken to solve the model: 8.55168104171753 seconds
 
-Date and Time: 2024-07-23 12:51:19
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 11, 'starting point in the data': 849, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.024666786193847656 seconds
+Date and Time: 2024-07-24_10-03-05
+Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 19, 'starting point in the data': 888, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': False}
+Time taken to solve the model: 8.929802179336548 seconds
 
-Date and Time: 2024-07-23 12:51:26
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 12, 'starting point in the data': 849, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.02223801612854004 seconds
+Date and Time: 2024-07-24_10-03-05
+Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 22, 'starting point in the data': 888, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': False}
+Time taken to solve the model: 11.86572790145874 seconds
 
-Date and Time: 2024-07-23 12:51:33
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 13, 'starting point in the data': 849, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.020087003707885742 seconds
+Date and Time: 2024-07-24_10-03-05
+Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 25, 'starting point in the data': 888, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': False}
+Time taken to solve the model: 10.927515983581543 seconds
 
-Date and Time: 2024-07-23 12:51:39
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 14, 'starting point in the data': 849, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.022109031677246094 seconds
+Date and Time: 2024-07-24_10-03-05
+Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 28, 'starting point in the data': 888, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': False}
+Time taken to solve the model: 13.107851028442383 seconds
 
-Date and Time: 2024-07-23 12:51:48
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 15, 'starting point in the data': 849, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.07651686668395996 seconds
+Date and Time: 2024-07-24_10-03-05
+Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 31, 'starting point in the data': 888, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': False}
+Time taken to solve the model: 12.675879955291748 seconds
 
-Date and Time: 2024-07-23 12:51:55
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 16, 'starting point in the data': 849, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.02524399757385254 seconds
+Date and Time: 2024-07-24_10-03-05
+Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 34, 'starting point in the data': 888, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': False}
+Time taken to solve the model: 17.038254022598267 seconds
 
-Date and Time: 2024-07-23 12:52:03
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 17, 'starting point in the data': 849, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.026602983474731445 seconds
+Date and Time: 2024-07-24_10-03-05
+Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 37, 'starting point in the data': 888, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': False}
+Time taken to solve the model: 68.61497187614441 seconds
 
-Date and Time: 2024-07-23 12:52:11
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 18, 'starting point in the data': 849, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.02707505226135254 seconds
+Date and Time: 2024-07-24_10-03-05
+Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 40, 'starting point in the data': 888, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': False}
+Time taken to solve the model: 134.87299418449402 seconds
 
-Date and Time: 2024-07-23 12:52:18
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 19, 'starting point in the data': 849, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.029049158096313477 seconds
+Date and Time: 2024-07-24_10-03-05
+Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 43, 'starting point in the data': 888, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': False}
+Time taken to solve the model: 25.751224994659424 seconds
 
-Date and Time: 2024-07-23 12:52:26
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 20, 'starting point in the data': 849, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.029901981353759766 seconds
+Date and Time: 2024-07-24_10-03-05
+Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 46, 'starting point in the data': 888, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': False}
+Time taken to solve the model: 672.2948241233826 seconds
 
-Date and Time: 2024-07-23 12:52:33
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 21, 'starting point in the data': 849, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.03409886360168457 seconds
+Date and Time: 2024-07-24_10-03-05
+Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 49, 'starting point in the data': 888, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': False}
+Time taken to solve the model: 25.67329978942871 seconds
 
-Date and Time: 2024-07-23 12:52:40
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 22, 'starting point in the data': 849, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.035223960876464844 seconds
+Date and Time: 2024-07-24_10-03-05
+Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 52, 'starting point in the data': 888, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': False}
+Time taken to solve the model: 4351.8194789886475 seconds
 
-Date and Time: 2024-07-23 12:52:47
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 23, 'starting point in the data': 849, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.03421497344970703 seconds
-
-Date and Time: 2024-07-23 12:52:54
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 24, 'starting point in the data': 849, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.03710293769836426 seconds
-
-Date and Time: 2024-07-23 12:53:01
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 25, 'starting point in the data': 849, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.037444114685058594 seconds
-
-Date and Time: 2024-07-23 12:53:09
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 26, 'starting point in the data': 849, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.04189705848693848 seconds
-
-Date and Time: 2024-07-23 12:53:17
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 27, 'starting point in the data': 849, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.04192090034484863 seconds
-
-Date and Time: 2024-07-23 14:04:51
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 7, 'starting point in the data': 555, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 2.2062389850616455 seconds
-
-Date and Time: 2024-07-23 14:04:55
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 12, 'starting point in the data': 555, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.23383808135986328 seconds
-
-Date and Time: 2024-07-23 14:06:59
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 17, 'starting point in the data': 555, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 119.90263795852661 seconds
-
-Date and Time: 2024-07-23 14:16:47
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 22, 'starting point in the data': 555, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 582.8077039718628 seconds
-
-Date and Time: 2024-07-23 14:30:47
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 7, 'starting point in the data': 923, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 1.4603948593139648 seconds
-
-Date and Time: 2024-07-23 14:30:51
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 12, 'starting point in the data': 923, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.5222330093383789 seconds
-
-Date and Time: 2024-07-23 14:30:54
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 17, 'starting point in the data': 923, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.010606050491333008 seconds
-
-Date and Time: 2024-07-23 14:30:56
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 22, 'starting point in the data': 923, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.01308298110961914 seconds
-
-Date and Time: 2024-07-23 14:30:59
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 27, 'starting point in the data': 923, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.016185998916625977 seconds
-
-Date and Time: 2024-07-23 14:31:01
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 32, 'starting point in the data': 923, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.01966691017150879 seconds
-
-Date and Time: 2024-07-23 14:31:06
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 37, 'starting point in the data': 923, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.022615909576416016 seconds
-
-Date and Time: 2024-07-23 14:31:12
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 42, 'starting point in the data': 923, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.02536606788635254 seconds
-
-Date and Time: 2024-07-23 14:31:18
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 47, 'starting point in the data': 923, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.02910304069519043 seconds
-
-Date and Time: 2024-07-23 14:31:25
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 52, 'starting point in the data': 923, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.03097701072692871 seconds
-
-Date and Time: 2024-07-23 14:31:31
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 57, 'starting point in the data': 923, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.03387022018432617 seconds
-
-Date and Time: 2024-07-23 14:45:32
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 5, 'starting point in the data': 990, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 1.174673080444336 seconds
-
-Date and Time: 2024-07-23 14:55:33
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 5, 'starting point in the data': 725, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.7149310111999512 seconds
-
-Date and Time: 2024-07-23 14:57:09
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 5, 'starting point in the data': 388, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.6359879970550537 seconds
-
-Date and Time: 2024-07-23 15:03:14
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 4, 'starting point in the data': 628, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.27742719650268555 seconds
-
-Date and Time: 2024-07-23_15-09-42
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 7, 'starting point in the data': 629, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 6.297437906265259 seconds
-
-Date and Time: 2024-07-23_15-09-42
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 10, 'starting point in the data': 629, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.7748761177062988 seconds
-
-Date and Time: 2024-07-23_15-09-42
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 13, 'starting point in the data': 629, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.12132906913757324 seconds
-
-Date and Time: 2024-07-23_15-09-42
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 16, 'starting point in the data': 629, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 3.0145440101623535 seconds
-
-Date and Time: 2024-07-23_15-09-42
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 19, 'starting point in the data': 629, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 1.6379590034484863 seconds
-
-Date and Time: 2024-07-23_15-17-19
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 7, 'starting point in the data': 448, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 7.363990068435669 seconds
-
-Date and Time: 2024-07-23_15-17-19
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 10, 'starting point in the data': 448, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 1.9348499774932861 seconds
-
-Date and Time: 2024-07-23_15-17-19
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 13, 'starting point in the data': 448, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 0.9956488609313965 seconds
-
-Date and Time: 2024-07-23_15-17-19
-Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 16, 'starting point in the data': 448, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': True}
-Time taken to solve the model: 41.02196192741394 seconds
+Date and Time: 2024-07-24_10-03-05
+Neural Network Configuration: {'layers': [16, 4, 10], 'training set size': 55, 'starting point in the data': 888, 'activation': 'relu', 'loss': 'hinge', 'M': [16, 64], 'Regularisation': 0.0001, 'Warm start': False}
+Time taken to solve the model: 155.7066149711609 seconds
 

@@ -12,13 +12,13 @@ margin = M[-1]*0.1     # A reasonable margin (for SAT margin) should be a small 
 epsilon = 1.0e-4    # set the precision
 lambda_reg = 1.0e-4
 loss_function = 'hinge'  # Choose between 'max_correct', 'hinge', or 'sat_margin'
-warm_start = True
+warm_start = False
 
 size_list = []
 accuracy_train_list = []
 accuracy_test_list = []
 current_date_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-random_nb = np.random.randint(1000)
+random_nb = 888 #np.random.randint(1000)
 print(random_nb)
 
 W_init, b_init = None, None

@@ -233,7 +233,7 @@ def warm_start_train_gurobi_model(X_train_sample, y_train_sample, y_train_sample
 
     add_hidden_layer_constraints(model, X_train_sample, weights, biases, hidden_vars, relu_activation, binary_vars, input_dim, hidden_layers, M, n)
     add_output_layer_constraints(model, relu_activation, weights, biases, hidden_vars, y_pred, binary_vars, output_dim, hidden_layers, M, n)
-    set_loss_function(model, weights, biases, y_pred, y_train_sample_one_hot, loss_function, M, margin, epsilon, n, input_dim, hidden_layers, output_dim, False, lambda_reg)
+    set_loss_function(model, weights, biases, y_pred, y_train_sample_one_hot, loss_function, M, margin, epsilon, n, input_dim, hidden_layers, output_dim, lambda_reg)
 
     # Save model for inspection
     #model.write('model.lp')
@@ -328,7 +328,7 @@ def add_output_layer_constraints(model, relu_activation, weights, biases, hidden
             model.addConstr(y_pred[i, j] <= M[-1] * binary_vars[-1][i, j])
 
 # Define the loss function based on the choice
-def set_loss_function(model, weights, biases, y_pred, y_train_sample_one_hot, loss_function, M, margin, epsilon, n, input_dim, hidden_layers, output_dim, lambda_reg, regularisation = True):
+def set_loss_function(model, weights, biases, y_pred, y_train_sample_one_hot, loss_function, M, margin, epsilon, n, input_dim, hidden_layers, output_dim, lambda_reg):
     loss_expr = gp.LinExpr()
     if loss_function == 'max_correct':
         # Variables: Binary indicators for correct predictions
@@ -377,7 +377,7 @@ def set_loss_function(model, weights, biases, y_pred, y_train_sample_one_hot, lo
     else:
         raise ValueError("Unsupported loss function")
 
-    if regularisation and lambda_reg != 0 :
+    if lambda_reg != 0.0:
         print("REGULARISATION L1")
         abs_weights, abs_biases = [], []
 
@@ -518,7 +518,7 @@ def plot_distribution_parameters(current_date_time, random_nb, lambda_reg, warm_
 ########################################################
 
 # Function to run the entire process multiple times and calculate average accuracy
-def run_multiple_experiments_warm_start(current_date_time, num_experiments, sample_size, hidden_layers, M, margin, epsilon, loss_function, random_nb, lambda_reg = 0, warm_start = False, W_init = None, b_init = None):
+def run_multiple_experiments_warm_start(current_date_time, num_experiments, sample_size, hidden_layers, M, margin, epsilon, loss_function, random_nb, lambda_reg = 0.0, warm_start = False, W_init = None, b_init = None):
     training_accuracies, testing_accuracies = [], []
     ''' W_list, b_list = [], [] '''
     nn_config = {'layers': [16] + hidden_layers + [10],
