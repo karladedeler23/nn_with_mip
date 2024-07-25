@@ -15,7 +15,6 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from matplotlib import pyplot as plt
-import seaborn as sns
 import os
 
 ########################################################
@@ -466,22 +465,32 @@ def predict_with_mip(W_opt, b_opt, X, y, true_labels):
 ########################################################
 
 ### PLOTTING THE DISTRIBUTION OF THE PARAMETERS OBTAINED
+
+# Function to compute histogram efficiently
+def compute_histogram(data, bins=50):
+    hist, bin_edges = np.histogram(data, bins=bins)
+    return hist, bin_edges
+
 def plot_distribution_parameters(current_date_time, random_nb, lambda_reg, warm_start, n, loss_function, W_opt, b_opt):
     # Flatten the weights and biases
     W_flat = np.concatenate([w.flatten() for w in W_opt])
     b_flat = np.concatenate([b.flatten() for b in b_opt])
 
+    # Compute histograms
+    W_hist, W_bin_edges = compute_histogram(W_flat)
+    b_hist, b_bin_edges = compute_histogram(b_flat)
+
     # Plot distributions
     fig, axes = plt.subplots(1, 2, figsize=(14, 6))
 
     # Weight distribution
-    sns.histplot(W_flat, kde=True, ax=axes[0])
+    axes[0].bar(W_bin_edges[:-1], W_hist, width=np.diff(W_bin_edges), edgecolor='black', align='edge')
     axes[0].set_title('Distribution of Weights')
     axes[0].set_xlabel('Weight values')
     axes[0].set_ylabel('Frequency')
 
     # Bias distribution
-    sns.histplot(b_flat, kde=True, ax=axes[1])
+    axes[1].bar(b_bin_edges[:-1], b_hist, width=np.diff(b_bin_edges), edgecolor='black', align='edge')
     axes[1].set_title('Distribution of Biases')
     axes[1].set_xlabel('Bias values')
     axes[1].set_ylabel('Frequency')
@@ -554,7 +563,7 @@ def run_multiple_experiments_warm_start(current_date_time, num_experiments, samp
             accuracy_testing = accuracy_score(y_test, predictions_testing)
             testing_accuracies.append(accuracy_testing)
             plot_distribution_parameters(current_date_time, random_nb, lambda_reg, warm_start, sample_size, loss_function, W_opt, b_opt)
-            with open('runtime_log.txt', 'a') as file:
+            with open(f'graphs/pen/{loss_function}/{random_nb}/reg{lambda_reg}/warmstart_{warm_start}/{current_date_time}/runtime_log.txt', 'a') as file:
                 file.write(f"Date and Time: {current_date_time}\n")
                 file.write(f"Neural Network Configuration: {nn_config}\n")
                 file.write(f"Time taken to solve the model: {runtime} seconds\n")

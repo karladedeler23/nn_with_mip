@@ -6,23 +6,23 @@ import os
 
 # Define parameters
 num_experiments = 1
-hidden_layers = [4]  # Hidden layers configuration
+hidden_layers = [2]  # Hidden layers configuration
 M = [16, 16*hidden_layers[0]] # Big M constant for ReLU activation constraints (w and b are max = 1)
 margin = M[-1]*0.1     # A reasonable margin (for SAT margin) should be a small fraction of this estimated output range
 epsilon = 1.0e-4    # set the precision
-lambda_reg = 1.0e-4
+lambda_reg = 1.0e-1
 loss_function = 'hinge'  # Choose between 'max_correct', 'hinge', or 'sat_margin'
-warm_start = True
+warm_start = False
 
 size_list = []
 accuracy_train_list = []
 accuracy_test_list = []
 current_date_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-random_nb = np.random.randint(1000)
+random_nb = 434 #np.random.randint(1000)
 print(random_nb)
 
 W_init, b_init = None, None
-for size in range(7, 50, 3):
+for size in range(1, 5, 1):
     sample_size = size  # number of data points
     size_list.append(sample_size)
     # Run the experiments and calculate the average accuracy
