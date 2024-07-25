@@ -557,7 +557,10 @@ def run_multiple_experiments_warm_start(current_date_time, num_experiments, samp
             with open('runtime_log.txt', 'a') as file:
                 file.write(f"Date and Time: {current_date_time}\n")
                 file.write(f"Neural Network Configuration: {nn_config}\n")
-                file.write(f"Time taken to solve the model: {runtime} seconds\n\n")
+                file.write(f"Time taken to solve the model: {runtime} seconds\n")
+                file.write(f"Training accuracy: {accuracy_training}\n")
+                file.write(f"Testing accuracy: {accuracy_testing}\n\n")
+
             '''
             W_list.append(W_opt)
             b_list.append(b_opt)
