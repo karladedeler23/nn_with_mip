@@ -20,9 +20,9 @@ import os
 ########################################################
 
 ### PREPROCESSING 
-'''
+
 # Function to load and preprocess MNIST data
-def load_and_preprocess_data(n, random_nb):
+def load_and_preprocess_data_mnist(n, random_nb):
     (X_train, y_train), (X_test, y_test) = mnist.load_data()
     selected_indices = []
     
@@ -44,9 +44,9 @@ def load_and_preprocess_data(n, random_nb):
     y_test_one_hot = to_categorical(y_test, num_classes)
 
     return (X_train_sample, y_train_sample, y_train_sample_one_hot), (X_test, y_test, y_test_one_hot), (X_train, y_train, y_train_one_hot)
-'''
+
 # Function to load and preprocess another smaller handwritten digit data
-def load_and_preprocess_data(n, random_nb):
+def load_and_preprocess_data_smaller(n, random_nb):
     # Load the Pen-Based Recognition of Handwritten Digits dataset from UCI repository
     url_train = 'https://archive.ics.uci.edu/ml/machine-learning-databases/pendigits/pendigits.tra'
     url_test = 'https://archive.ics.uci.edu/ml/machine-learning-databases/pendigits/pendigits.tes'
@@ -371,7 +371,7 @@ def set_loss_function(model, weights, biases, y_pred, y_train_sample_one_hot, lo
                 y_true = 2 * y_train_sample_one_hot[i, j] - 1
                 # Hinge loss constraint
                 model.addConstr(hinge_loss_terms[i, j] >= 0)
-                model.addConstr(hinge_loss_terms[i, j] >= (1 - y_true * y_pred[i, j]))
+                model.addConstr(hinge_loss_terms[i, j] >= (1 - y_true * y_pred[i, j])**2)
                 loss_expr += hinge_loss_terms[i, j]
     else:
         raise ValueError("Unsupported loss function")
@@ -527,8 +527,9 @@ def plot_distribution_parameters(current_date_time, random_nb, lambda_reg, warm_
 ########################################################
 
 # Function to run the entire process multiple times and calculate average accuracy
-def run_multiple_experiments_warm_start(current_date_time, num_experiments, sample_size, hidden_layers, M, margin, epsilon, loss_function, random_nb, lambda_reg = 0.0, warm_start = False, W_init = None, b_init = None):
+def run_multiple_experiments_warm_start(current_date_time, num_experiments, sample_size, hidden_layers, M, margin, epsilon, loss_function, random_nb, lambda_reg = 0.0, warm_start = False, W_init = None, b_init = None, dataset = 'mnist'):
     training_accuracies, testing_accuracies = [], []
+    runtimes = []
     ''' W_list, b_list = [], [] '''
     nn_config = {'layers': [16] + hidden_layers + [10],
                 'training set size' : sample_size,
@@ -542,8 +543,11 @@ def run_multiple_experiments_warm_start(current_date_time, num_experiments, samp
 
     for i in range(num_experiments):
         # Load and preprocess data
-        (X_train_sample, y_train_sample, y_train_sample_one_hot), (X_test, y_test, y_test_one_hot), (X_train, y_train, y_train_one_hot) = load_and_preprocess_data(sample_size, random_nb+i*sample_size)
-        
+        if dataset == 'mnist' : 
+            (X_train_sample, y_train_sample, y_train_sample_one_hot), (X_test, y_test, y_test_one_hot), (X_train, y_train, y_train_one_hot) = load_and_preprocess_data_mnist(sample_size, random_nb+i*sample_size)
+        else :
+            (X_train_sample, y_train_sample, y_train_sample_one_hot), (X_test, y_test, y_test_one_hot), (X_train, y_train, y_train_one_hot) = load_and_preprocess_data_smaller(sample_size, random_nb+i*sample_size)
+
         # Train Gurobi model and get optimal weights and biases
         if warm_start and W_init is not None and b_init is not None : 
             print('warm start')
@@ -554,7 +558,6 @@ def run_multiple_experiments_warm_start(current_date_time, num_experiments, samp
         else :
             print('no warm start')
             runtime, W_opt, b_opt = train_gurobi_model(X_train_sample, y_train_sample, y_train_sample_one_hot, X_train_sample.shape[1], hidden_layers, 10, M, margin, epsilon, loss_function, lambda_reg)
-
         if W_opt is not None and b_opt is not None:
             predictions_training = predict_with_mip(W_opt, b_opt, X_train_sample, y_train_sample_one_hot, y_train_sample)
             accuracy_training = accuracy_score(y_train_sample, predictions_training)
@@ -562,8 +565,14 @@ def run_multiple_experiments_warm_start(current_date_time, num_experiments, samp
             predictions_testing = predict_with_mip(W_opt, b_opt, X_test, y_test_one_hot, y_test)
             accuracy_testing = accuracy_score(y_test, predictions_testing)
             testing_accuracies.append(accuracy_testing)
-            plot_distribution_parameters(current_date_time, random_nb, lambda_reg, warm_start, sample_size, loss_function, W_opt, b_opt)
-            with open(f'graphs/pen/{loss_function}/{random_nb}/reg{lambda_reg}/warmstart_{warm_start}/{current_date_time}/runtime_log.txt', 'a') as file:
+            #plot_distribution_parameters(current_date_time, random_nb, lambda_reg, warm_start, sample_size, loss_function, W_opt, b_opt)
+            runtimes.append(runtime)
+            directory = f'graphs/pen/{loss_function}/{random_nb}/reg{lambda_reg}/warmstart_{warm_start}/{current_date_time}'
+            file_name = 'runtime_log.txt'
+            full_path = os.path.join(directory, file_name)
+            if not os.path.exists(directory):
+                os.makedirs(directory)
+            with open(full_path, 'a') as file:
                 file.write(f"Date and Time: {current_date_time}\n")
                 file.write(f"Neural Network Configuration: {nn_config}\n")
                 file.write(f"Time taken to solve the model: {runtime} seconds\n")
@@ -594,4 +603,4 @@ def run_multiple_experiments_warm_start(current_date_time, num_experiments, samp
     accuracy_testing_avg = accuracy_score(y_test, predictions_testing_avg)
     return accuracy_training_avg, accuracy_testing_avg, W_avg, b_avg
     '''
-    return np.mean(training_accuracies), np.mean(testing_accuracies), W_opt, b_opt
+    return np.mean(training_accuracies), np.mean(testing_accuracies), W_opt, b_opt, np.mean(runtimes)

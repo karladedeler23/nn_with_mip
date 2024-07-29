@@ -10,7 +10,7 @@ hidden_layers = [2]  # Hidden layers configuration
 M = [16, 16*hidden_layers[0]] # Big M constant for ReLU activation constraints (w and b are max = 1)
 margin = M[-1]*0.1     # A reasonable margin (for SAT margin) should be a small fraction of this estimated output range
 epsilon = 1.0e-4    # set the precision
-lambda_reg = 1.0e-1
+lambda_reg = 10.0
 loss_function = 'hinge'  # Choose between 'max_correct', 'hinge', or 'sat_margin'
 warm_start = False
 
@@ -26,7 +26,7 @@ for size in range(1, 5, 1):
     sample_size = size  # number of data points
     size_list.append(sample_size)
     # Run the experiments and calculate the average accuracy
-    average_accuracy_train, accuracy_test, W_opt, b_opt = run_multiple_experiments_warm_start(current_date_time, num_experiments, sample_size, hidden_layers, M, margin, epsilon, loss_function, random_nb, lambda_reg, warm_start, W_init, b_init)    
+    average_accuracy_train, accuracy_test, W_opt, b_opt, runtime = run_multiple_experiments_warm_start(current_date_time, num_experiments, sample_size, hidden_layers, M, margin, epsilon, loss_function, random_nb, lambda_reg, warm_start, W_init, b_init)    
     accuracy_train_list.append(average_accuracy_train)
     accuracy_test_list.append(accuracy_test)
     print(f"Average accuracy over {num_experiments} experiments with {sample_size} training points: {average_accuracy_train}")
