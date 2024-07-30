@@ -71,7 +71,7 @@ description_text = (
 plt.figtext(0.5, 0.14, description_text, ha='center', va='top', fontsize=7, wrap=True)
 
 # Save the figure with a meaningful name
-directory = f'graphs/{dataset}/{random_nb}/reg{lambda_reg}/warmstart_{warm_start}/{current_date_time}'
+directory = f'graphs/warm_start/{dataset}/{random_nb}/reg{lambda_reg}/warmstart_{warm_start}/{current_date_time}'
 file_name = 'effect_warm_start.png'
 full_path = os.path.join(directory, file_name)
 if not os.path.exists(directory):
