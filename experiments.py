@@ -132,7 +132,7 @@ class ClipConstraint(Constraint):
     def get_config(self):
         return {'min_value': self.min_value, 'max_value': self.max_value}
 
-def train_sgd(X, y, y_one_hot, input_dim, hidden_layers, output_dim, loss_function):
+def train_sgd(X, y_one_hot, X_test, y_test_one_hot, input_dim, hidden_layers, output_dim, loss_function):
     # Define the model with the constraints applied
     weight_constraint = ClipConstraint(min_value=-1, max_value=1)
     bias_constraint = ClipConstraint(min_value=-1, max_value=1)
@@ -148,17 +148,15 @@ def train_sgd(X, y, y_one_hot, input_dim, hidden_layers, output_dim, loss_functi
 
     # Define the loss function
     obj_function = 'categorical_crossentropy'
-    if loss_function=='hinge':
-        obj_function=hinge_loss
 
     # Define the custom callback to stop training when loss is below 10 times the variable
     #custom_stopper = CustomStopper(monitor='loss', value=0.9*X.shape[0]*10, verbose=1)
 
-    model_sgd.compile(optimizer='adam', loss=obj_function, metrics=[custom_accuracy])
-    model_sgd.fit(X, y_one_hot, epochs=10, batch_size=32, verbose=1) #callbacks=[custom_stopper])
-    #accuracy_sgd = model_sgd.evaluate(X_test, y_test_one_hot, verbose=0)[1]
-    #print("SGD Model Accuracy on testing set :", accuracy_sgd)
+    model_sgd.compile(optimizer='adam', loss=obj_function, metrics=['accuracy'])
+    model_sgd.fit(X, y_one_hot, epochs=10, batch_size=X.shape[0], verbose=1) #callbacks=[custom_stopper])
+    accuracy_sgd = model_sgd.evaluate(X_test, y_test_one_hot, verbose=0)[1]
 
+    '''
     # Extract weights and biases
     sgd_w, sgd_b = [], []
     for layer_idx, layer in enumerate(model_sgd.layers):
@@ -183,6 +181,8 @@ def train_sgd(X, y, y_one_hot, input_dim, hidden_layers, output_dim, loss_functi
     print(f"Keras evaluation loss: {loss}")
     
     return sgd_w, sgd_b
+    '''
+    return accuracy_sgd
 
 
 ########################################################
@@ -605,3 +605,18 @@ def run_multiple_experiments_warm_start(current_date_time, num_experiments, samp
     return accuracy_training_avg, accuracy_testing_avg, W_avg, b_avg
     '''
     return np.mean(training_accuracies), np.mean(testing_accuracies), W_opt, b_opt, np.mean(runtimes)
+
+
+# Function to  train a NN using SGD
+def run_experiments_with_sgd(num_experiments, sample_size, hidden_layers, loss_function, random_nb, dataset = 'mnist'):
+    testing_accuracies = []
+
+    for i in range(num_experiments):
+        # Load and preprocess data
+        if dataset == 'mnist' : 
+            (X_train_sample, y_train_sample, y_train_sample_one_hot), (X_test, y_test, y_test_one_hot), (X_train, y_train, y_train_one_hot) = load_and_preprocess_data_mnist(sample_size, random_nb+i*sample_size)
+        else :
+            (X_train_sample, y_train_sample, y_train_sample_one_hot), (X_test, y_test, y_test_one_hot), (X_train, y_train, y_train_one_hot) = load_and_preprocess_data_smaller(sample_size, random_nb+i*sample_size)
+        test_accuracy = train_sgd(X_train_sample, y_train_sample_one_hot, X_test, y_test_one_hot, X_train_sample.shape[1], hidden_layers, 10, loss_function)
+        testing_accuracies.append(test_accuracy)
+    return np.mean(testing_accuracies)
