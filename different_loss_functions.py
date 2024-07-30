@@ -6,7 +6,7 @@ import os
 
 # Define parameters
 num_experiments = 1
-hidden_layers = [4]  # Hidden layers configuration
+hidden_layers = [8]  # Hidden layers configuration
 M = [17, 17 * hidden_layers[0] + 1]
 margin = M[-1] * 0.01  # A reasonable margin (for SAT margin) should be a small fraction of this estimated output range
 epsilon = 1.0e-1  # set the precision
@@ -27,7 +27,7 @@ W_init = [None for i in range(len(loss_function))]
 b_init = [None for i in range(len(loss_function))]
 
 
-for size in range(10, 40, 10):
+for size in range(9, 45, 7):
     sample_size = size  # number of data points
     size_list.append(sample_size)
     
@@ -51,7 +51,7 @@ plt.figure(figsize=(10, 8))
 color = ['g', 'b', 'orange']
 for i, loss in enumerate(loss_function):
     #plt.scatter(size_list, accuracy_train_list[i], color=color[i], marker='o', label=f'Training Accuracy - {loss_function[i]}', s=20)
-    plt.scatter(size_list, accuracy_test_list[i], color=color[i], marker='x', label=f'Test Accuracy - {loss_function[i]}', s=20)
+    plt.scatter(size_list, accuracy_test_list[i], color=color[i], marker='x', label=f'{loss_function[i]}', s=20)
 plt.title('Accuracy depending on the Training Set Size with different loss functions')
 plt.xlabel('Training Set Size')
 plt.ylabel('Accuracy on the testing set')

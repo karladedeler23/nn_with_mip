@@ -6,12 +6,12 @@ import os
 
 # Define parameters
 num_experiments = 1
-sample_size = 3
+sample_size = 5
 hidden_layers = [2]  # Hidden layers configuration
 M = [17, 17 * hidden_layers[0] + 1]
 margin = M[-1] * 0.1  # A reasonable margin (for SAT margin) should be a small fraction of this estimated output range
 epsilon = 1.0e-1  # set the precision
-lambda_reg = [1.0 * (10**i) for i in [-4, -1, 0, 1]]
+lambda_reg = [0.0, 1e-3, 1e-1, 1.0]
 print(lambda_reg)
 dataset = 'smaller'
 loss_function = 'hinge'  # Choose between 'max_correct', 'hinge', or 'sat_margin'
@@ -42,12 +42,13 @@ fig, ax1 = plt.subplots(figsize=(10, 8))
 
 # Plot accuracy on the left y-axis
 color = 'tab:red'
-ax1.set_xlabel('Lambda (log scale)')
+ax1.set_xlabel('Lambda')
 ax1.set_ylabel('Accuracy', color=color)
 for i, param in enumerate(lambda_reg):
     #ax1.scatter([param] * num_experiments, accuracy_train_list[i], color=color, marker='o', label='Training Accuracy' if i == 0 else "")
-    ax1.scatter([param] * num_experiments, accuracy_test_list[i], color=color, marker='x', label='Test Accuracy' if i == 0 else "")
-ax1.set_xscale('log')
+    ax1.scatter([i] * num_experiments, accuracy_test_list[i], color=color, marker='x', label='Test Accuracy' if i == 0 else "")
+ax1.set_xticks(range(len(lambda_reg)))  # Set x-ticks to the number of lambda values
+ax1.set_xticklabels(lambda_reg)  # Label the x-ticks with the lambda values
 ax1.tick_params(axis='y', labelcolor=color)
 
 # Create a second y-axis for computation time
@@ -55,8 +56,9 @@ ax2 = ax1.twinx()
 color = 'tab:green'
 ax2.set_ylabel('Computation Time (s)', color=color)
 for i, param in enumerate(lambda_reg):
-    ax2.scatter([param] * num_experiments, runtime_list[i], color=color, marker='o', label='Computation Time' if i == 0 else "")
-ax2.set_xscale('log')
+    ax2.scatter([i] * num_experiments, runtime_list[i], color=color, marker='o', label='Computation Time' if i == 0 else "")
+ax2.set_xticks(range(len(lambda_reg)))  # Set x-ticks to the number of lambda values
+ax2.set_xticklabels(lambda_reg)  # Label the x-ticks with the lambda values
 ax2.tick_params(axis='y', labelcolor=color)
 
 # Add title and descriptive text
