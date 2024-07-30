@@ -6,9 +6,9 @@ import os
 
 # Define parameters
 num_experiments = 1
-hidden_layers = [16]  # Hidden layers configuration
-M0 = [784, 784 * hidden_layers[0]]
-M1 = [16, 16 * hidden_layers[0]]  # Big M constant for ReLU activation constraints (w and b are max = 1)
+hidden_layers = [8]  # Hidden layers configuration
+M0 = [784 + 1, 785 * hidden_layers[0] + 1]
+M1 = [16 + 1, 17 * hidden_layers[0] + 1]  # Big M constant for ReLU activation constraints (w and b are max = 1)
 M = [M0, M1]
 margin0 = M[0][-1] * 0.1  # A reasonable margin (for SAT margin) should be a small fraction of this estimated output range
 margin1 = M[1][-1] * 0.1

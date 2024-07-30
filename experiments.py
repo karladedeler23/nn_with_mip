@@ -531,7 +531,7 @@ def run_multiple_experiments_warm_start(current_date_time, num_experiments, samp
     training_accuracies, testing_accuracies = [], []
     runtimes = []
     ''' W_list, b_list = [], [] '''
-    nn_config = {'layers': [16] + hidden_layers + [10],
+    nn_config = {'hidden layers': hidden_layers,
                 'training set size' : sample_size,
                 'starting point in the data': random_nb,
                 'activation': 'relu',
