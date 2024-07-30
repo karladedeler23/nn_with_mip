@@ -19,19 +19,19 @@ from sklearn.preprocessing import StandardScaler
 
 #### Definition of the parameters we might want to change 
 
-n = 4  # number of data points
-hidden_layers = [4]    # Definition of the neural network structure
-M = 640   # Big M constant for ReLU activation constraints (output range)
+n = 10  # number of data points
+hidden_layers = [32]    # Definition of the neural network structure
+M = 32*784+1   # Big M constant for ReLU activation constraints (output range)
 margin = M*0.01    # A reasonable margin (for SAT margin) should be a small fraction of this estimated output range
-epsilon =  1.0e-6    # set the precision
+epsilon =  1.0e-1   # set the precision
 lambda_reg = 1e-8  # Regularization parameter
 
-random_nb = np.random.randint(50)
+random_nb = np.random.randint(1000)
 
 ########################################################
 
 #### Loading and preprocessing the data
-'''
+
 # Load MNIST data
 (X_train_sample, y_train), (X_test, y_test) = mnist.load_data()
 
@@ -57,7 +57,7 @@ y_test_one_hot = keras.utils.to_categorical(y_test, num_classes)
 # Definition of the neural network structure
 input_dim = X_train_sample.shape[1] 
 output_dim = num_classes
-
+'''
 # Plot the selected samples
 for i in range(n):
     plt.subplot(1, n, i+1)
@@ -71,7 +71,7 @@ print(X_train_sample[0])
 print("y_train_one_hot shape:", y_train_one_hot.shape)
 '''
 
-
+'''
 # Load the Pen-Based Recognition of Handwritten Digits dataset from UCI repository
 url_train = 'https://archive.ics.uci.edu/ml/machine-learning-databases/pendigits/pendigits.tra'
 url_test = 'https://archive.ics.uci.edu/ml/machine-learning-databases/pendigits/pendigits.tes'
@@ -124,19 +124,19 @@ print(f"y_test_one_hot shape: {y_test_one_hot.shape}")
 # Definition of the neural network structure
 input_dim = X_train_sample.shape[1] 
 output_dim = num_classes
-
+'''
 ########################################################
 
 #### Training using a Gurobi optimization model
 
 # Initialise model and set some paramters for the resolution
 model = gp.Model("neural_network_training")
-model.setParam('IntegralityFocus', 1)
-model.setParam('OptimalityTol', 1e-9)
-model.setParam('FeasibilityTol', 1e-9)
-model.setParam('MIPGap', 0)
-model.setParam('NodeLimit', 1e9)
-model.setParam('SolutionLimit', 1e9)
+#model.setParam('IntegralityFocus', 1)
+#model.setParam('FeasibilityTol', 1e-9)
+#model.setParam('OptimalityTol', 1e-9)
+#model.setParam('MIPGap', 0)
+#model.setParam('NodeLimit', 1e9)
+#model.setParam('SolutionLimit', 1e9)
 
 # Define variables for weights and biases
 weights = []
@@ -208,7 +208,7 @@ for i in range(n):
 ### LOSS FUNCTION
 loss_expr = gp.LinExpr()
 
-'''
+
 ## MAX CORRECT LOSS FUNCTION
 # Variables: Binary indicators for correct predictions
 correct_preds = model.addVars(n, vtype=GRB.BINARY, name="correct_preds")
@@ -219,7 +219,7 @@ for i in range(n):
     model.addConstr(gp.quicksum(predicted_class[i, j] for j in range(output_dim)) == 1, name=f"unique_class_{i}")
 # Constraints to ensure that the predicted class has the highest score
 for i in range(n):
-    true_class = np.argmax(y_train_sample_one_hot[i])  # Replace with your true labels
+    true_class = np.argmax(y_train_one_hot[i])  # Replace with your true labels
     for j in range(output_dim):
         if j != true_class:
             model.addConstr(y_pred[i, true_class] >= y_pred[i, j] + epsilon - M * (1 - predicted_class[i, true_class]), 
@@ -229,12 +229,12 @@ for i in range(n):
 
 # Constraints to ensure correct_preds is set correctly
 for i in range(n):
-    true_class = np.argmax(y_train_sample_one_hot[i])
+    true_class = np.argmax(y_train_one_hot[i])
     model.addConstr(correct_preds[i] == predicted_class[i, true_class], name=f"correct_pred_{i}")
 
 # Objective: Maximize the number of correct predictions
 loss_expr = gp.quicksum(-correct_preds[i] for i in range(n))
-
+'''
 # V2 MAX CORRECT
 # Variables: Binary indicators for correct predictions
 correct_preds = model.addVars(n, vtype=GRB.BINARY, name="correct_preds")
@@ -257,7 +257,7 @@ for i in range(n):
 # Objective: Maximize the number of correct predictions
 loss_expr = gp.quicksum(-correct_preds[i] for i in range(n))
 '''
-
+'''
 ## HINGE LOSS FUNCTION
 # Define auxiliary variables for hinge loss terms
 hinge_loss_terms = model.addVars(n, output_dim, vtype=GRB.CONTINUOUS, name="hinge_loss_terms")
@@ -274,7 +274,7 @@ for i in range(n):
 
 # Objective function
 loss_expr = 1/n*gp.quicksum(hinge_loss_terms[i, j] for i in range(n) for j in range(output_dim))
-
+'''
 '''
 ## SAT MARGIN LOSS FUNCTION
 
@@ -292,6 +292,7 @@ for i in range(n):
 
         # Accumulate the binary variables for the loss expression
         loss_expr += 1 - correct_preds[i, j]
+'''
 '''
 ## REGULARISATION
 print("REGULARISATION L1")
@@ -322,7 +323,7 @@ for i, bias_matrix in enumerate(biases):
         model.addConstr(abs_biases[i][j] >= -bias_matrix[j])
         # Add regularization to the loss expression
         loss_expr += lambda_reg * abs_biases[i][j]
-
+'''
 # Objective function
 model.setObjective(loss_expr, GRB.MINIMIZE)
 
@@ -342,19 +343,19 @@ def write_variables_to_file(model, filename):
         # Write the values of weight variables
         for l in range(len(weights)):
             W = weights[l]
-            abs_W = abs_weights[l]
+            #abs_W = abs_weights[l]
             for key in W.keys():
                 f.write(f"Weight W{l+1}[{key}] = {W[key].X}\n")
-                f.write(f"abs_Weight abs_W{l+1}[{key}] = {abs_W[key].X}\n")
+                #f.write(f"abs_Weight abs_W{l+1}[{key}] = {abs_W[key].X}\n")
 
 
         # Write the values of bias variables
         for l in range(len(biases)):
             b = biases[l]
-            abs_b = abs_biases[l]
+            #abs_b = abs_biases[l]
             for key in b.keys():
                 f.write(f"Bias b{l+1}[{key}] = {b[key].X}\n")
-                f.write(f"abs_Bias abs_b{l+1}[{key}] = {abs_b[key].X}\n")
+                #f.write(f"abs_Bias abs_b{l+1}[{key}] = {abs_b[key].X}\n")
 
         # Write the values of auxiliary variables for prediction
         for i in range(n):
@@ -374,7 +375,7 @@ def write_variables_to_file(model, filename):
         for i in range(n):
             for j in range(output_dim):
                 f.write(f"Hinge Loss Term hinge_loss_terms[{i}, {j}] = {hinge_loss_terms[i, j].X}\n")
-        
+        '''
         # Write the values of correct_pred variables
         for i in range(n):
             #for j in range(output_dim):
@@ -383,7 +384,7 @@ def write_variables_to_file(model, filename):
         for i in range(n):
             for j in range(output_dim):
                 f.write(f"Predicted class sample {i} class {j} = {predicted_class[i, j].X}\n")
-        '''
+        
 
 # Call the function to write variables to a file
 write_variables_to_file(model, 'variables_values.txt')

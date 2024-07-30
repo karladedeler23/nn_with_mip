@@ -10,12 +10,12 @@ hidden_layers = [16]  # Hidden layers configuration
 M0 = [784, 784 * hidden_layers[0]]
 M1 = [16, 16 * hidden_layers[0]]  # Big M constant for ReLU activation constraints (w and b are max = 1)
 M = [M0, M1]
-margin0 = M[0][-1] * 0.1  # A reasonable margin (for SAT margin) should be a small fraction of this estimated output range
+margin0 = M[0][-1] * 0.01  # A reasonable margin (for SAT margin) should be a small fraction of this estimated output range
 margin1 = M[1][-1] * 0.1
 margin = [margin0, margin1]
 epsilon = 1.0e-4  # set the precision
 lambda_reg = 0.0
-loss_function = 'hinge'  # Choose between 'max_correct', 'hinge', or 'sat_margin'
+loss_function = 'sat_margin'  # Choose between 'max_correct', 'hinge', or 'sat_margin'
 warm_start = False
 
 size_list = []
@@ -34,7 +34,7 @@ W_init_2, b_init_2 = None, None
 
 datasets = ['mnist', 'smaller']  # Placeholder names for the two datasets
 
-for size in range(10, 51, 10):
+for size in range(10, 31, 10):
     sample_size = size  # number of data points
     size_list.append(sample_size)
     
@@ -89,8 +89,8 @@ description_text = (
 plt.figtext(0.5, 0.14, description_text, ha='center', va='top', fontsize=7, wrap=True)
 
 # Save the figure with a meaningful name
-directory = f'graphs/pen/{loss_function}/{random_nb}/reg{lambda_reg}/warmstart_{warm_start}/{current_date_time}'
-file_name = 'accuracy.png'
+directory = f'graphs/perf_datasets/{loss_function}/{random_nb}/reg{lambda_reg}/warmstart_{warm_start}/{current_date_time}'
+file_name = 'accuracy_mnist_vs_smaller.png'
 full_path = os.path.join(directory, file_name)
 if not os.path.exists(directory):
     os.makedirs(directory)
@@ -112,7 +112,7 @@ plt.subplots_adjust(bottom=0.2)  # Increase bottom space
 plt.figtext(0.5, 0.14, description_text, ha='center', va='top', fontsize=7, wrap=True)
 
 # Save the figure with a meaningful name
-file_name_time = 'computation_time.png'
+file_name_time = 'computation_time_mnist_vs_smaller.png'
 full_path_time = os.path.join(directory, file_name_time)
 if not os.path.exists(directory):
     os.makedirs(directory)

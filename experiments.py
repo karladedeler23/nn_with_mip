@@ -342,7 +342,7 @@ def set_loss_function(model, weights, biases, y_pred, y_train_sample_one_hot, lo
             for j in range(output_dim):
                 for k in range(output_dim):
                     if j != k:
-                        model.addConstr(y_pred[i, j] - y_pred[i, k] >= epsilon - M * (1 - predicted_class[i, j]), 
+                        model.addConstr(y_pred[i, j] - y_pred[i, k] >= epsilon - M[-1] * (1 - predicted_class[i, j]), 
                                         name=f"max_class_{i}_{j}_{k}")
         # Constraints to ensure correct_preds is set correctly
         for i in range(n):
@@ -567,6 +567,7 @@ def run_multiple_experiments_warm_start(current_date_time, num_experiments, samp
             testing_accuracies.append(accuracy_testing)
             #plot_distribution_parameters(current_date_time, random_nb, lambda_reg, warm_start, sample_size, loss_function, W_opt, b_opt)
             runtimes.append(runtime)
+            '''
             directory = f'graphs/pen/{loss_function}/{random_nb}/reg{lambda_reg}/warmstart_{warm_start}/{current_date_time}'
             file_name = 'runtime_log.txt'
             full_path = os.path.join(directory, file_name)
@@ -578,7 +579,7 @@ def run_multiple_experiments_warm_start(current_date_time, num_experiments, samp
                 file.write(f"Time taken to solve the model: {runtime} seconds\n")
                 file.write(f"Training accuracy: {accuracy_training}\n")
                 file.write(f"Testing accuracy: {accuracy_testing}\n\n")
-
+            '''
             '''
             W_list.append(W_opt)
             b_list.append(b_opt)
