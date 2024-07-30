@@ -8,7 +8,7 @@ import os
 num_experiments = 1
 hidden_layers = [4]  # Hidden layers configuration
 M = [17, 17 * hidden_layers[0] + 1]
-margin = M[-1] * 0.1  # A reasonable margin (for SAT margin) should be a small fraction of this estimated output range
+margin = M[-1] * 0.01  # A reasonable margin (for SAT margin) should be a small fraction of this estimated output range
 epsilon = 1.0e-1  # set the precision
 lambda_reg = 0.0
 dataset = 'smaller'
@@ -27,7 +27,7 @@ W_init = [None for i in range(len(loss_function))]
 b_init = [None for i in range(len(loss_function))]
 
 
-for size in range(6, 25, 3):
+for size in range(10, 40, 10):
     sample_size = size  # number of data points
     size_list.append(sample_size)
     
