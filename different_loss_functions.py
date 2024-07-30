@@ -50,11 +50,11 @@ for size in range(10, 40, 10):
 plt.figure(figsize=(10, 8))
 color = ['g', 'b', 'orange']
 for i, loss in enumerate(loss_function):
-    plt.scatter(size_list, accuracy_train_list[i], color=color[i], marker='o', label=f'Training Accuracy - {loss_function[i]}', s=20)
+    #plt.scatter(size_list, accuracy_train_list[i], color=color[i], marker='o', label=f'Training Accuracy - {loss_function[i]}', s=20)
     plt.scatter(size_list, accuracy_test_list[i], color=color[i], marker='x', label=f'Test Accuracy - {loss_function[i]}', s=20)
 plt.title('Accuracy depending on the Training Set Size with different loss functions')
 plt.xlabel('Training Set Size')
-plt.ylabel('Accuracy')
+plt.ylabel('Accuracy on the testing set')
 plt.legend()
 
 # Adding descriptive text below the plot

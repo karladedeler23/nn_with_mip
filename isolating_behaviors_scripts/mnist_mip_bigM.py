@@ -328,7 +328,7 @@ for i, bias_matrix in enumerate(biases):
 model.setObjective(loss_expr, GRB.MINIMIZE)
 
 # Save model for inspection
-model.write('model.lp')
+model.write('isolating_behaviors_scripts/model.lp')
 
 # Optimise the model
 model.optimize()
@@ -387,7 +387,7 @@ def write_variables_to_file(model, filename):
         
 
 # Call the function to write variables to a file
-write_variables_to_file(model, 'variables_values.txt')
+write_variables_to_file(model, 'isolating_behaviors_scripts/variables_values.txt')
 
 #### Extract the results
 
