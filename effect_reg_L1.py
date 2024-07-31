@@ -14,7 +14,7 @@ epsilon = 1.0e-1  # set the precision
 lambda_reg = [0.0, 1e-3, 1e-1, 1.0]
 print(lambda_reg)
 dataset = 'smaller'
-loss_function = 'hinge'  # Choose between 'max_correct', 'hinge', or 'sat_margin'
+loss_function = 'sat_margin'  # Choose between 'max_correct', 'hinge', or 'sat_margin'
 warm_start = False
 
 accuracy_train_list = [[] for i in range(len(lambda_reg))]
