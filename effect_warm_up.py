@@ -12,7 +12,7 @@ margin = M[-1] * 0.01  # A reasonable margin (for SAT margin) should be a small 
 epsilon = 1.0e-1  # set the precision
 lambda_reg = 0.0
 dataset = 'mnist'
-loss_function = 'hinge'  # Choose between 'max_correct', 'hinge', or 'sat_margin'
+loss_function = 'sat_margin'  # Choose between 'max_correct', 'hinge', or 'sat_margin'
 warm_start = [False, True]
 
 size_list = []
@@ -27,7 +27,7 @@ W_init = [None for i in range(len(warm_start))]
 b_init = [None for i in range(len(warm_start))]
 
 
-for size in range(9, 35, 3):
+for size in range(9, 45, 3):
     sample_size = size  # number of data points
     size_list.append(sample_size)
     
