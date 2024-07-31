@@ -12,7 +12,7 @@ margin = M[-1] * 0.1  # A reasonable margin (for SAT margin) should be a small f
 epsilon = 1.0e-1  # set the precision
 lambda_reg = 0.0
 dataset = 'smaller'
-loss_function = 'hinge'  # Choose between 'max_correct', 'hinge', or 'sat_margin'
+loss_function = 'sat_margin'  # Choose between 'max_correct', 'hinge', or 'sat_margin'
 warm_start = [False, True]
 
 size_list = []
@@ -27,7 +27,7 @@ W_init = [None for i in range(len(warm_start))]
 b_init = [None for i in range(len(warm_start))]
 
 
-for size in range(9, 35, 3):
+for size in range(9, 32, 3):
     sample_size = size  # number of data points
     size_list.append(sample_size)
     
@@ -45,7 +45,7 @@ for size in range(9, 35, 3):
 
         W_init[i] = W_opt
         b_init[i] = b_opt
-
+'''
 # Plotting the accuracy graph
 plt.figure(figsize=(10, 8))
 plt.plot(size_list, np.subtract(runtime_list[1],runtime_list[0]), color='b', markersize=5, label = 'with warm start - without')
@@ -53,7 +53,17 @@ plt.title('Difference of computation time whether using the warm start technique
 plt.xlabel('Training Set Size')
 plt.ylabel('Computation Time (s)')
 plt.legend()
+'''
+# Calculate the percentage difference
+percentage_difference = np.divide(np.subtract(runtime_list[0], runtime_list[1]), runtime_list[0]) * 100
 
+# Plotting the percentage difference graph
+plt.figure(figsize=(10, 8))
+plt.plot(size_list, percentage_difference, color='b', marker='o', markersize=5)
+plt.title('Percentage Difference in Computation Time with Warm Start Technique')
+plt.xlabel('Training Set Size')
+plt.ylabel('Percentage Difference (%)')
+plt.legend()
 
 # Adding descriptive text below the plot
 plt.subplots_adjust(bottom=0.2)  # Increase bottom space
