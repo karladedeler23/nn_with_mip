@@ -6,8 +6,8 @@ import os
 
 # Define parameters
 num_experiments = 1
-sample_size = 3
-hidden_layers = [4]  # Hidden layers configuration
+sample_size = 4
+hidden_layers = [2]  # Hidden layers configuration
 M = [17, 17 * hidden_layers[0] + 1]
 margin = M[-1] * 0.1  # A reasonable margin (for SAT margin) should be a small fraction of this estimated output range
 epsilon = 1.0e-1  # set the precision
