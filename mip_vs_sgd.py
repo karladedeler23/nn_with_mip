@@ -23,7 +23,7 @@ random_nb = np.random.randint(1000)
 print(random_nb)
 
 
-for size in range(10, 50, 10):
+for size in range(9, 31, 3):
     sample_size = size  # number of data points
     size_list.append(sample_size)
     
