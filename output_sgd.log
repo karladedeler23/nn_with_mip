@@ -1,13 +1,13 @@
 nohup: ignoring input
-2024-07-31 12:56:16.291946: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:32] Could not find cuda drivers on your machine, GPU will not be used.
-2024-07-31 12:56:16.297363: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:32] Could not find cuda drivers on your machine, GPU will not be used.
-2024-07-31 12:56:16.312624: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:485] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
-2024-07-31 12:56:16.338411: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:8454] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
-2024-07-31 12:56:16.345505: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1452] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
-2024-07-31 12:56:16.364888: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+2024-07-31 13:16:06.513183: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:32] Could not find cuda drivers on your machine, GPU will not be used.
+2024-07-31 13:16:06.515894: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:32] Could not find cuda drivers on your machine, GPU will not be used.
+2024-07-31 13:16:06.523866: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:485] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2024-07-31 13:16:06.536643: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:8454] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2024-07-31 13:16:06.540458: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1452] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+2024-07-31 13:16:06.551561: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
 To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
-2024-07-31 12:56:21.021393: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
-823
+2024-07-31 13:16:11.940965: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+130
 no warm start
 Set parameter TokenServer to value "vm-gurobi-license.doc.ic.ac.uk"
 Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 22.04.4 LTS")
@@ -15,79 +15,82 @@ Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 22.04.4 LTS"
 CPU model: Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz, instruction set [SSE2|AVX|AVX2]
 Thread count: 6 physical cores, 12 logical processors, using up to 12 threads
 
-Optimize a model with 1890 rows, 26674 columns and 51850 nonzeros
-Model fingerprint: 0xe939fbd3
-Model has 180 quadratic constraints
-Variable types: 26296 continuous, 378 integer (378 binary)
+Optimize a model with 1980 rows, 26674 columns and 45720 nonzeros
+Model fingerprint: 0xfbaf8d96
+Model has 90 quadratic constraints
+Variable types: 26206 continuous, 468 integer (468 binary)
 Coefficient statistics:
   Matrix range     [4e-03, 3e+04]
   QMatrix range    [1e+00, 1e+00]
-  QLMatrix range   [1e+00, 2e+00]
+  QLMatrix range   [1e+00, 1e+00]
   Objective range  [1e+00, 1e+00]
   Bounds range     [1e+00, 1e+00]
-  RHS range        [8e+02, 3e+04]
-  QRHS range       [1e+00, 1e+00]
-Presolve removed 468 rows and 15136 columns
-Presolve time: 0.16s
-Presolved: 13122 rows, 14508 columns, 80888 nonzeros
-Presolved model has 90 quadratic constraint(s)
+  RHS range        [3e+02, 3e+04]
+Presolve removed 549 rows and 16401 columns
+Presolve time: 0.05s
+Presolved: 13041 rows, 13153 columns, 73148 nonzeros
 Presolved model has 2880 bilinear constraint(s)
 
 Solving non-convex MIQCP
 
-Variable types: 14130 continuous, 378 integer (378 binary)
+Variable types: 12766 continuous, 387 integer (387 binary)
 Found heuristic solution: objective 90.0000000
 
-Root relaxation: objective 8.100000e+01, 3911 iterations, 0.10 seconds (0.05 work units)
+Root relaxation: objective 8.100000e+01, 4183 iterations, 0.06 seconds (0.09 work units)
 
     Nodes    |    Current Node    |     Objective Bounds      |     Work
  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
 
-     0     0   81.00000    0  122   90.00000   81.00000  10.0%     -    0s
-H    0     0                      89.0000001   81.00000  8.99%     -    1s
-     0     0   81.00000    0  122   89.00000   81.00000  8.99%     -    1s
-H    0     0                      81.4115881   81.00000  0.51%     -    1s
-     0     0   81.00000    0  122   81.41159   81.00000  0.51%     -    1s
-H    0     0                      81.3953423   81.00000  0.49%     -    1s
-     0     0   81.00000    0  122   81.39534   81.00000  0.49%     -    2s
-     0     0   81.00000    0  122   81.39534   81.00000  0.49%     -    2s
-H    0     0                      81.2329444   81.00000  0.29%     -    2s
-     0     0   81.00000    0  122   81.23294   81.00000  0.29%     -    2s
-     0     0   81.00000    0  122   81.23294   81.00000  0.29%     -    2s
-     0     0   81.00000    0  122   81.23294   81.00000  0.29%     -    2s
-H    0     0                      81.0027928   81.00000  0.00%     -    2s
+     0     0   81.00000    0  154   90.00000   81.00000  10.0%     -    0s
+     0     0   81.00000    0  193   90.00000   81.00000  10.0%     -    0s
+     0     0   81.00000    0  201   90.00000   81.00000  10.0%     -    0s
+     0     0   81.00000    0  232   90.00000   81.00000  10.0%     -    0s
+     0     0   81.00000    0  232   90.00000   81.00000  10.0%     -    1s
+H    0     0                      88.0000000   81.00000  7.95%     -    1s
+H    0     0                      85.0000000   81.00000  4.71%     -    1s
+H    0     0                      84.0000000   81.00000  3.57%     -    1s
+H    0     2                      83.0000000   81.00000  2.41%     -    4s
+     0     2   81.00000    0  232   83.00000   81.00000  2.41%     -    4s
+     7    14   82.00000    3  209   83.00000   81.00000  2.41%   300    5s
+H   33    38                      81.0000000   81.00000  0.00%   137    5s
 
-Explored 1 nodes (8573 simplex iterations) in 2.86 seconds (1.19 work units)
+Cutting planes:
+  Learned: 3
+  MIR: 4
+  Flow cover: 3
+  RLT: 2
+
+Explored 37 nodes (16789 simplex iterations) in 5.40 seconds (9.06 work units)
 Thread count was 12 (of 12 available processors)
 
-Solution count 6: 81.0028 81.2329 81.3953 ... 90
+Solution count 6: 81 83 84 ... 90
 
 Optimal solution found (tolerance 1.00e-04)
-Best objective 8.100279283309e+01, best bound 8.100000000000e+01, gap 0.0034%
+Best objective 8.100000000000e+01, best bound 8.100000000000e+01, gap 0.0000%
 WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
-I0000 00:00:1722427003.122526 3925860 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
-2024-07-31 12:56:43.123481: W tensorflow/core/common_runtime/gpu/gpu_device.cc:2343] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
+I0000 00:00:1722428193.615492 3943339 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
+2024-07-31 13:16:33.616092: W tensorflow/core/common_runtime/gpu/gpu_device.cc:2343] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
 Skipping registering GPU devices...
 Epoch 1/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 814ms/step - accuracy: 0.1111 - loss: 8.0857[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m1s[0m 820ms/step - accuracy: 0.1111 - loss: 8.0857
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 422ms/step - accuracy: 0.0000e+00 - loss: 9.8008[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 426ms/step - accuracy: 0.0000e+00 - loss: 9.8008
 Epoch 2/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 20ms/step - accuracy: 0.2222 - loss: 7.8474[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 22ms/step - accuracy: 0.2222 - loss: 7.8474
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3333 - loss: 9.3817[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3333 - loss: 9.3817
 Epoch 3/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 23ms/step - accuracy: 0.4444 - loss: 7.7508[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 25ms/step - accuracy: 0.4444 - loss: 7.7508
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.4444 - loss: 9.2466[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4444 - loss: 9.2466
 Epoch 4/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 22ms/step - accuracy: 0.5556 - loss: 7.6768[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 24ms/step - accuracy: 0.5556 - loss: 7.6768
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.4444 - loss: 9.1428[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4444 - loss: 9.1428
 Epoch 5/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 23ms/step - accuracy: 0.5556 - loss: 7.6096[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 25ms/step - accuracy: 0.5556 - loss: 7.6096
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4444 - loss: 9.0868[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 13ms/step - accuracy: 0.4444 - loss: 9.0868
 Epoch 6/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 23ms/step - accuracy: 0.5556 - loss: 7.5482[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 25ms/step - accuracy: 0.5556 - loss: 7.5482
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.4444 - loss: 9.0590[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4444 - loss: 9.0590
 Epoch 7/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 25ms/step - accuracy: 0.5556 - loss: 7.4898[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 26ms/step - accuracy: 0.5556 - loss: 7.4898
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.4444 - loss: 9.0385[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4444 - loss: 9.0385
 Epoch 8/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 23ms/step - accuracy: 0.5556 - loss: 7.4367[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 25ms/step - accuracy: 0.5556 - loss: 7.4367
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4444 - loss: 9.0309[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 13ms/step - accuracy: 0.4444 - loss: 9.0309
 Epoch 9/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 24ms/step - accuracy: 0.5556 - loss: 7.4002[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 27ms/step - accuracy: 0.5556 - loss: 7.4002
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 13ms/step - accuracy: 0.4444 - loss: 9.0161[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 14ms/step - accuracy: 0.4444 - loss: 9.0161
 Epoch 10/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 23ms/step - accuracy: 0.5556 - loss: 7.3783[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 25ms/step - accuracy: 0.5556 - loss: 7.3783
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.4444 - loss: 9.0003[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4444 - loss: 9.0003
 mnist - Training average accuracy over 1 experiments with 9 training points : 1.0
 no warm start
 Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 22.04.4 LTS")
@@ -95,97 +98,81 @@ Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 22.04.4 LTS"
 CPU model: Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz, instruction set [SSE2|AVX|AVX2]
 Thread count: 6 physical cores, 12 logical processors, using up to 12 threads
 
-Optimize a model with 2520 rows, 27082 columns and 67256 nonzeros
-Model fingerprint: 0x876e603f
-Model has 240 quadratic constraints
-Variable types: 26578 continuous, 504 integer (504 binary)
+Optimize a model with 2640 rows, 27082 columns and 63296 nonzeros
+Model fingerprint: 0xd5f1a31a
+Model has 120 quadratic constraints
+Variable types: 26458 continuous, 624 integer (624 binary)
 Coefficient statistics:
   Matrix range     [4e-03, 3e+04]
   QMatrix range    [1e+00, 1e+00]
-  QLMatrix range   [1e+00, 2e+00]
+  QLMatrix range   [1e+00, 1e+00]
   Objective range  [1e+00, 1e+00]
   Bounds range     [1e+00, 1e+00]
-  RHS range        [8e+02, 3e+04]
-  QRHS range       [1e+00, 1e+00]
-Presolve removed 624 rows and 14432 columns
-Presolve time: 0.20s
-Presolved: 17496 rows, 16610 columns, 106752 nonzeros
-Presolved model has 120 quadratic constraint(s)
+  RHS range        [3e+02, 3e+04]
+Presolve removed 732 rows and 14988 columns
+Presolve time: 0.06s
+Presolved: 17388 rows, 15934 columns, 102224 nonzeros
 Presolved model has 3840 bilinear constraint(s)
 
 Solving non-convex MIQCP
 
-Variable types: 16106 continuous, 504 integer (504 binary)
+Variable types: 15418 continuous, 516 integer (516 binary)
 Found heuristic solution: objective 120.0000000
 Deterministic concurrent LP optimizer: primal and dual simplex
 Showing primal log only...
 
 Concurrent spin time: 0.00s
 
-Solved with primal simplex
+Solved with dual simplex
 
 Use crossover to convert LP symmetric solution to basic solution...
 
-Root relaxation: objective 1.080000e+02, 892 iterations, 0.16 seconds (0.08 work units)
+Root relaxation: objective 1.080000e+02, 4952 iterations, 0.07 seconds (0.09 work units)
 
     Nodes    |    Current Node    |     Objective Bounds      |     Work
  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
 
-     0     0  108.00000    0   12  120.00000  108.00000  10.0%     -    0s
-H    0     0                     119.0000001  108.00000  9.24%     -   20s
-H    0     0                     114.0000001  108.00000  5.26%     -   20s
-H    0     0                     113.0000000  108.00000  4.42%     -   20s
-H    0     0                     112.0000002  108.00000  3.57%     -   20s
-H    0     0                     112.0000000  108.00000  3.57%     -   20s
-     0     0  108.00000    0 2812  112.00000  108.00000  3.57%     -   20s
-H    0     0                     111.0000000  108.00000  2.70%     -   20s
-H    0     0                     110.0000002  108.00000  1.82%     -   21s
-     0     0  108.00000    0 2715  110.00000  108.00000  1.82%     -   21s
-     0     0  108.00000    0 2715  110.00000  108.00000  1.82%     -   21s
-     0     0  108.00000    0 2715  110.00000  108.00000  1.82%     -   22s
-     0     0  108.00000    0 2715  110.00000  108.00000  1.82%     -   22s
-     0     0  108.00000    0 2715  110.00000  108.00000  1.82%     -   22s
-     0     0  108.00000    0 2715  110.00000  108.00000  1.82%     -   23s
-     0     0  108.00000    0 2715  110.00000  108.00000  1.82%     -   23s
-     0     2  108.00000    0 2715  110.00000  108.00000  1.82%     -   87s
-H    3     8                     108.4215147  108.00000  0.39%   302   99s
-     7    14  108.00000    3 2623  108.42151  108.00000  0.39%   340  100s
-H   31    38                     108.0000041  108.00000  0.00%   131  101s
-H   35    38                     108.0000001  108.00000  0.00%   127  101s
+     0     0  108.00000    0 2697  120.00000  108.00000  10.0%     -    2s
+     0     0  108.00000    0 2697  120.00000  108.00000  10.0%     -    2s
+H    0     0                     112.0000000  108.00000  3.57%     -    6s
+     0     2  108.00000    0 2697  112.00000  108.00000  3.57%     -    6s
+    20    26  108.00000    4 2672  112.00000  108.00000  3.57%   390   12s
+    31    38  108.00000    7 2513  112.00000  108.00000  3.57%  1299   19s
+H   35    38                     111.0000000  108.00000  2.70%  1182   19s
+    47    70  108.00000    9 2568  111.00000  108.00000  2.70%  1275   24s
+    69   170  108.00000   12 2547  111.00000  108.00000  2.70%  1353   35s
+H   92   170                     110.0000000  108.00000  1.82%  1098   35s
+   169   218  108.00000   25 2281  110.00000  108.00000  1.82%  1081   51s
+   217   625  108.00000   33 2261  110.00000  108.00000  1.82%  1482   73s
+H  502   625                     108.0000000  108.00000  0.00%   784   73s
 
-Cutting planes:
-  Gomory: 19
-  MIR: 1
-  Flow cover: 16
-  RLT: 5
-
-Explored 37 nodes (36247 simplex iterations) in 101.11 seconds (66.73 work units)
+Explored 624 nodes (527618 simplex iterations) in 73.95 seconds (126.21 work units)
 Thread count was 12 (of 12 available processors)
 
-Solution count 10: 108 108 108.422 ... 120
+Solution count 5: 108 110 111 ... 120
 
 Optimal solution found (tolerance 1.00e-04)
-Best objective 1.080000001193e+02, best bound 1.080000000000e+02, gap 0.0000%
+Best objective 1.080000000000e+02, best bound 1.080000000000e+02, gap 0.0000%
 Epoch 1/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 1s/step - accuracy: 0.1667 - loss: 7.8386[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m1s[0m 1s/step - accuracy: 0.1667 - loss: 7.8386
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 404ms/step - accuracy: 0.0833 - loss: 12.5240[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 405ms/step - accuracy: 0.0833 - loss: 12.5240
 Epoch 2/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 28ms/step - accuracy: 0.1667 - loss: 6.4068[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 30ms/step - accuracy: 0.1667 - loss: 6.4068
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.0833 - loss: 11.2991[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.0833 - loss: 11.2991
 Epoch 3/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 24ms/step - accuracy: 0.1667 - loss: 6.2275[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 26ms/step - accuracy: 0.1667 - loss: 6.2275
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.1667 - loss: 11.1185[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.1667 - loss: 11.1185
 Epoch 4/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 24ms/step - accuracy: 0.3333 - loss: 6.1373[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 26ms/step - accuracy: 0.3333 - loss: 6.1373
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.2500 - loss: 11.0220[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.2500 - loss: 11.0220
 Epoch 5/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 24ms/step - accuracy: 0.5000 - loss: 6.0678[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 26ms/step - accuracy: 0.5000 - loss: 6.0678
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3333 - loss: 10.9421[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3333 - loss: 10.9421
 Epoch 6/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 23ms/step - accuracy: 0.5000 - loss: 6.0047[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 25ms/step - accuracy: 0.5000 - loss: 6.0047
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3333 - loss: 10.8967[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3333 - loss: 10.8967
 Epoch 7/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 19ms/step - accuracy: 0.5833 - loss: 5.9391[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 21ms/step - accuracy: 0.5833 - loss: 5.9391
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3333 - loss: 10.8813[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3333 - loss: 10.8813
 Epoch 8/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 24ms/step - accuracy: 0.5833 - loss: 5.8736[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 26ms/step - accuracy: 0.5833 - loss: 5.8736
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3333 - loss: 9.7981[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3333 - loss: 9.7981
 Epoch 9/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 23ms/step - accuracy: 0.5833 - loss: 5.8137[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 25ms/step - accuracy: 0.5833 - loss: 5.8137
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3333 - loss: 9.6308[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3333 - loss: 9.6308
 Epoch 10/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 22ms/step - accuracy: 0.5833 - loss: 5.7763[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 24ms/step - accuracy: 0.5833 - loss: 5.7763
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3333 - loss: 9.5970[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3333 - loss: 9.5970
 mnist - Training average accuracy over 1 experiments with 12 training points : 1.0
 no warm start
 Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 22.04.4 LTS")
@@ -193,99 +180,90 @@ Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 22.04.4 LTS"
 CPU model: Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz, instruction set [SSE2|AVX|AVX2]
 Thread count: 6 physical cores, 12 logical processors, using up to 12 threads
 
-Optimize a model with 3150 rows, 27490 columns and 87750 nonzeros
-Model fingerprint: 0x89aa304f
-Model has 300 quadratic constraints
-Variable types: 26860 continuous, 630 integer (630 binary)
+Optimize a model with 3300 rows, 27490 columns and 80904 nonzeros
+Model fingerprint: 0xbc7cb325
+Model has 150 quadratic constraints
+Variable types: 26710 continuous, 780 integer (780 binary)
 Coefficient statistics:
   Matrix range     [4e-03, 3e+04]
   QMatrix range    [1e+00, 1e+00]
-  QLMatrix range   [1e+00, 2e+00]
+  QLMatrix range   [1e+00, 1e+00]
   Objective range  [1e+00, 1e+00]
   Bounds range     [1e+00, 1e+00]
-  RHS range        [8e+02, 3e+04]
-  QRHS range       [1e+00, 1e+00]
-Presolve removed 780 rows and 13216 columns
-Presolve time: 0.24s
-Presolved: 21870 rows, 19224 columns, 138504 nonzeros
-Presolved model has 150 quadratic constraint(s)
+  RHS range        [3e+02, 3e+04]
+Presolve removed 915 rows and 14119 columns
+Presolve time: 0.08s
+Presolved: 21735 rows, 18171 columns, 130852 nonzeros
 Presolved model has 4800 bilinear constraint(s)
 
 Solving non-convex MIQCP
 
-Variable types: 18594 continuous, 630 integer (630 binary)
+Variable types: 17526 continuous, 645 integer (645 binary)
 Found heuristic solution: objective 150.0000000
 Deterministic concurrent LP optimizer: primal and dual simplex
 Showing primal log only...
 
 Concurrent spin time: 0.00s
 
-Solved with primal simplex
+Solved with dual simplex
 
 Use crossover to convert LP symmetric solution to basic solution...
 
-Root relaxation: objective 1.350000e+02, 712 iterations, 0.19 seconds (0.10 work units)
+Root relaxation: objective 1.350000e+02, 6096 iterations, 0.09 seconds (0.12 work units)
 
     Nodes    |    Current Node    |     Objective Bounds      |     Work
  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
 
-     0     0  135.00000    0   15  150.00000  135.00000  10.0%     -    0s
-H    0     0                     149.0000001  135.00000  9.40%     -   40s
-H    0     0                     149.0000000  135.00000  9.40%     -   40s
-H    0     0                     146.0000000  135.00000  7.53%     -   40s
-H    0     0                     143.0000000  135.00000  5.59%     -   40s
-H    0     0                     142.0000000  135.00000  4.93%     -   40s
-H    0     0                     141.0000000  135.00000  4.26%     -   40s
-H    0     0                     140.0000004  135.00000  3.57%     -   40s
-H    0     0                     140.0000000  135.00000  3.57%     -   40s
-H    0     0                     139.0000000  135.00000  2.88%     -   40s
-H    0     0                     138.0000004  135.00000  2.17%     -   40s
-     0     0  135.00000    0 3421  138.00000  135.00000  2.17%     -   40s
-     0     0  135.00000    0 3465  138.00000  135.00000  2.17%     -   42s
-H    0     0                     138.0000002  135.00000  2.17%     -   42s
-     0     0  135.00000    0 3465  138.00000  135.00000  2.17%     -   42s
-     0     0  135.00000    0 3465  138.00000  135.00000  2.17%     -   43s
-     0     0  135.00000    0 3465  138.00000  135.00000  2.17%     -   43s
-     0     0  135.00000    0 3465  138.00000  135.00000  2.17%     -   44s
-     0     0  135.00000    0 3465  138.00000  135.00000  2.17%     -   44s
-     0     0  135.00000    0 3465  138.00000  135.00000  2.17%     -   44s
-     0     2  135.00000    0 3465  138.00000  135.00000  2.17%     -   90s
-H   31    38                     135.0194059  135.00000  0.01%   246   92s
-H  113   117                     135.0000012  135.00000  0.00%   161   94s
+     0     0  135.00000    0 3435  150.00000  135.00000  10.0%     -    4s
+     0     0  135.00000    0 3425  150.00000  135.00000  10.0%     -    4s
+     0     0  135.00000    0 3422  150.00000  135.00000  10.0%     -    5s
+     0     0  135.00000    0 3421  150.00000  135.00000  10.0%     -    5s
+     0     0  135.00000    0 3421  150.00000  135.00000  10.0%     -    5s
+H    0     0                     147.0000000  135.00000  8.16%     -   12s
+     0     2  135.00000    0 3421  147.00000  135.00000  8.16%     -   74s
+     3     8  135.00000    2 3463  147.00000  135.00000  8.16%   692   75s
+H   31    38                     146.0000000  135.00000  7.53%   355   77s
+    46    75  136.00000   10 3450  146.00000  135.00000  7.53%   285   93s
+    74   183  136.00000   11 3457  146.00000  135.00000  7.53%   685   96s
+   182   482  136.00000   17 3436  146.00000  135.00000  7.53%   384  106s
+H  195   482                     145.0000000  135.00000  6.90%   363  106s
+   481  1725  136.00000   35 3375  145.00000  135.00000  6.90%   235  116s
+H  502  1725                     144.0000000  135.00000  6.25%   240  116s
+H  810  1575                     135.0000000  135.00000  0.00%   178  116s
 
 Cutting planes:
-  Gomory: 16
-  MIR: 4
-  Flow cover: 18
-  RLT: 3
+  Learned: 1
+  MIR: 1
+  Flow cover: 1
+  RLT: 2
 
-Explored 116 nodes (63273 simplex iterations) in 94.24 seconds (94.83 work units)
+Explored 1724 nodes (233722 simplex iterations) in 116.33 seconds (242.94 work units)
 Thread count was 12 (of 12 available processors)
 
-Solution count 10: 135 135.019 138 ... 149
+Solution count 6: 135 144 145 ... 150
 
 Optimal solution found (tolerance 1.00e-04)
-Best objective 1.350000012431e+02, best bound 1.350000000000e+02, gap 0.0000%
+Best objective 1.350000000000e+02, best bound 1.350000000000e+02, gap 0.0000%
 Epoch 1/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 494ms/step - accuracy: 0.0000e+00 - loss: 9.5927[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 496ms/step - accuracy: 0.0000e+00 - loss: 9.5927
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 436ms/step - accuracy: 0.0667 - loss: 9.4096[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 437ms/step - accuracy: 0.0667 - loss: 9.4096
 Epoch 2/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 14ms/step - accuracy: 0.1333 - loss: 9.2166[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 15ms/step - accuracy: 0.1333 - loss: 9.2166
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.2000 - loss: 8.3010[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.2000 - loss: 8.3010
 Epoch 3/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 13ms/step - accuracy: 0.3333 - loss: 9.0833[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 14ms/step - accuracy: 0.3333 - loss: 9.0833
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3333 - loss: 8.0984[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3333 - loss: 8.0984
 Epoch 4/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3333 - loss: 8.9936[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 14ms/step - accuracy: 0.3333 - loss: 8.9936
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.4000 - loss: 7.9518[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4000 - loss: 7.9518
 Epoch 5/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 14ms/step - accuracy: 0.3333 - loss: 8.0718[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 15ms/step - accuracy: 0.3333 - loss: 8.0718
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.4667 - loss: 7.8649[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4667 - loss: 7.8649
 Epoch 6/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4000 - loss: 7.8980[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 14ms/step - accuracy: 0.4000 - loss: 7.8980
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.4667 - loss: 7.8005[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4667 - loss: 7.8005
 Epoch 7/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 13ms/step - accuracy: 0.4667 - loss: 7.8248[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 14ms/step - accuracy: 0.4667 - loss: 7.8248
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.4667 - loss: 7.7411[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4667 - loss: 7.7411
 Epoch 8/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4667 - loss: 7.7728[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 13ms/step - accuracy: 0.4667 - loss: 7.7728
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.4667 - loss: 7.6857[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4667 - loss: 7.6857
 Epoch 9/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.5333 - loss: 7.7298[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 13ms/step - accuracy: 0.5333 - loss: 7.7298
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.4667 - loss: nan[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4667 - loss: nan
 Epoch 10/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.5333 - loss: 7.6917[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 14ms/step - accuracy: 0.5333 - loss: 7.6917
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.1333 - loss: nan[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.1333 - loss: nan
 mnist - Training average accuracy over 1 experiments with 15 training points : 1.0
 no warm start
 Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 22.04.4 LTS")
@@ -293,103 +271,93 @@ Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 22.04.4 LTS"
 CPU model: Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz, instruction set [SSE2|AVX|AVX2]
 Thread count: 6 physical cores, 12 logical processors, using up to 12 threads
 
-Optimize a model with 3780 rows, 27898 columns and 105524 nonzeros
-Model fingerprint: 0x72ef5233
-Model has 360 quadratic constraints
-Variable types: 27142 continuous, 756 integer (756 binary)
+Optimize a model with 3960 rows, 27898 columns and 95056 nonzeros
+Model fingerprint: 0xe46edae8
+Model has 180 quadratic constraints
+Variable types: 26962 continuous, 936 integer (936 binary)
 Coefficient statistics:
   Matrix range     [4e-03, 3e+04]
   QMatrix range    [1e+00, 1e+00]
-  QLMatrix range   [1e+00, 2e+00]
+  QLMatrix range   [1e+00, 1e+00]
   Objective range  [1e+00, 1e+00]
   Bounds range     [1e+00, 1e+00]
-  RHS range        [8e+02, 3e+04]
-  QRHS range       [1e+00, 1e+00]
-Presolve removed 936 rows and 12736 columns
-Presolve time: 0.12s
-Presolved: 26244 rows, 21102 columns, 167120 nonzeros
-Presolved model has 180 quadratic constraint(s)
+  RHS range        [3e+02, 3e+04]
+Presolve removed 1098 rows and 13858 columns
+Presolve time: 0.09s
+Presolved: 26082 rows, 19800 columns, 155576 nonzeros
 Presolved model has 5760 bilinear constraint(s)
 
 Solving non-convex MIQCP
 
-Variable types: 20346 continuous, 756 integer (756 binary)
+Variable types: 19026 continuous, 774 integer (774 binary)
 Found heuristic solution: objective 180.0000000
 Deterministic concurrent LP optimizer: primal and dual simplex
 Showing primal log only...
 
 Concurrent spin time: 0.00s
 
-Solved with primal simplex
+Solved with dual simplex
 
 Use crossover to convert LP symmetric solution to basic solution...
 
-Root relaxation: objective 1.620000e+02, 678 iterations, 0.10 seconds (0.12 work units)
+Root relaxation: objective 1.620000e+02, 7529 iterations, 0.13 seconds (0.16 work units)
 
     Nodes    |    Current Node    |     Objective Bounds      |     Work
  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
 
-     0     0  162.00000    0   24  180.00000  162.00000  10.0%     -    1s
-H    0     0                     179.0000002  162.00000  9.50%     -   30s
-H    0     0                     178.5000000  162.00000  9.24%     -   30s
-H    0     0                     178.0000000  162.00000  8.99%     -   30s
-H    0     0                     177.9466586  162.00000  8.96%     -   30s
-H    0     0                     177.8071553  162.00000  8.89%     -   30s
-H    0     0                     176.0000000  162.00000  7.95%     -   30s
-H    0     0                     175.0000000  162.00000  7.43%     -   30s
-H    0     0                     171.8994633  162.00000  5.76%     -   30s
-H    0     0                     170.8994633  162.00000  5.21%     -   30s
-     0     0  162.00000    0 4691  170.89946  162.00000  5.21%     -   30s
-H    0     0                     164.0625141  162.00000  1.26%     -   31s
-H    0     0                     164.0625141  162.00000  1.26%     -   31s
-     0     0  162.00000    0 4122  164.06251  162.00000  1.26%     -   31s
-     0     0  162.00000    0 4122  164.06251  162.00000  1.26%     -   32s
-     0     0  162.00000    0 4122  164.06251  162.00000  1.26%     -   32s
-H    0     0                     163.0625142  162.00000  0.65%     -   32s
-     0     0  162.00000    0 4122  163.06251  162.00000  0.65%     -   32s
-H    0     0                     163.0625141  162.00000  0.65%     -   33s
-     0     0  162.00000    0 4122  163.06251  162.00000  0.65%     -   33s
-     0     0  162.00000    0 4122  163.06251  162.00000  0.65%     -   33s
-     0     2  162.00000    0 4122  163.06251  162.00000  0.65%     -   80s
-     3     8  162.00000    2 4102  163.06251  162.00000  0.65%   621   85s
-H   32    38                     162.2985771  162.00000  0.18%   479   86s
-    54    78  162.00000   11 4077  162.29858  162.00000  0.18%   375   96s
-H   77   158                     162.2593362  162.00000  0.16%   830   99s
-H  142   158                     162.2323311  162.00000  0.14%   522   99s
-H  155   158                     162.0000000  162.00000  0.00%   494   99s
+     0     0  162.00000    0 4821  180.00000  162.00000  10.0%     -    7s
+     0     0  162.00000    0 4736  180.00000  162.00000  10.0%     -   17s
+     0     0  162.00000    0 4727  180.00000  162.00000  10.0%     -   17s
+     0     0  162.00000    0 4551  180.00000  162.00000  10.0%     -   28s
+     0     0  162.00000    0 4516  180.00000  162.00000  10.0%     -   29s
+     0     0  162.00000    0 4472  180.00000  162.00000  10.0%     -   39s
+     0     0  162.00000    0 4470  180.00000  162.00000  10.0%     -   40s
+     0     0  162.00000    0 4445  180.00000  162.00000  10.0%     -   50s
+     0     0  162.00000    0 4441  180.00000  162.00000  10.0%     -   50s
+     0     0  162.00000    0 4418  180.00000  162.00000  10.0%     -   60s
+     0     0  162.00000    0 4417  180.00000  162.00000  10.0%     -   61s
+     0     0  162.00000    0 4394  180.00000  162.00000  10.0%     -   71s
+     0     0  162.00000    0 4392  180.00000  162.00000  10.0%     -   71s
+     0     0  162.00000    0 4366  180.00000  162.00000  10.0%     -   80s
+     0     0  162.00000    0 4366  180.00000  162.00000  10.0%     -   81s
+     0     0  162.00000    0 4321  180.00000  162.00000  10.0%     -   89s
+     0     0  162.00000    0 4319  180.00000  162.00000  10.0%     -   89s
+H    0     0                     162.0000000  162.00000  0.00%     -   98s
+     0     0  162.00000    0 4296  162.00000  162.00000  0.00%     -   98s
 
 Cutting planes:
-  MIR: 1
-  Flow cover: 20
-  RLT: 9
+  Learned: 18
+  MIR: 82
+  Flow cover: 4
+  RLT: 194
 
-Explored 157 nodes (144784 simplex iterations) in 99.72 seconds (149.32 work units)
+Explored 1 nodes (108885 simplex iterations) in 98.29 seconds (119.15 work units)
 Thread count was 12 (of 12 available processors)
 
-Solution count 10: 162 162.232 162.259 ... 171.899
+Solution count 2: 162 180 
 
 Optimal solution found (tolerance 1.00e-04)
 Best objective 1.620000000000e+02, best bound 1.620000000000e+02, gap 0.0000%
 Epoch 1/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 422ms/step - accuracy: 0.1111 - loss: 10.6222[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 423ms/step - accuracy: 0.1111 - loss: 10.6222
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 412ms/step - accuracy: 0.1667 - loss: 10.3467[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 413ms/step - accuracy: 0.1667 - loss: 10.3467
 Epoch 2/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.1667 - loss: 9.6455[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.1667 - loss: 9.6455
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.2222 - loss: 10.1502[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.2222 - loss: 10.1502
 Epoch 3/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.1667 - loss: 8.2252[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.1667 - loss: 8.2252
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.2778 - loss: 10.0532[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.2778 - loss: 10.0532
 Epoch 4/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.2222 - loss: 7.9386[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.2222 - loss: 7.9386
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3889 - loss: 9.9723[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3889 - loss: 9.9723
 Epoch 5/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.2222 - loss: 7.8569[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.2222 - loss: 7.8569
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3889 - loss: 9.9249[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3889 - loss: 9.9249
 Epoch 6/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3333 - loss: 7.8034[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3333 - loss: 7.8034
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3889 - loss: 9.9054[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3889 - loss: 9.9054
 Epoch 7/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3889 - loss: 7.7563[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3889 - loss: 7.7563
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3889 - loss: 9.8908[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3889 - loss: 9.8908
 Epoch 8/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3889 - loss: 7.7146[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3889 - loss: 7.7146
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3889 - loss: 9.8748[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3889 - loss: 9.8748
 Epoch 9/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.4444 - loss: 7.6756[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4444 - loss: 7.6756
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3889 - loss: 9.8670[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3889 - loss: 9.8670
 Epoch 10/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.5000 - loss: 7.6370[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.5000 - loss: 7.6370
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3889 - loss: 9.8653[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3889 - loss: 9.8653
 mnist - Training average accuracy over 1 experiments with 18 training points : 1.0
 no warm start
 Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 22.04.4 LTS")
@@ -397,96 +365,86 @@ Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 22.04.4 LTS"
 CPU model: Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz, instruction set [SSE2|AVX|AVX2]
 Thread count: 6 physical cores, 12 logical processors, using up to 12 threads
 
-Optimize a model with 4410 rows, 28306 columns and 122434 nonzeros
-Model fingerprint: 0xa9aa4153
-Model has 420 quadratic constraints
-Variable types: 27424 continuous, 882 integer (882 binary)
+Optimize a model with 4620 rows, 28306 columns and 109816 nonzeros
+Model fingerprint: 0x05a22ccb
+Model has 210 quadratic constraints
+Variable types: 27214 continuous, 1092 integer (1092 binary)
 Coefficient statistics:
   Matrix range     [4e-03, 3e+04]
   QMatrix range    [1e+00, 1e+00]
-  QLMatrix range   [1e+00, 2e+00]
+  QLMatrix range   [1e+00, 1e+00]
   Objective range  [1e+00, 1e+00]
   Bounds range     [1e+00, 1e+00]
-  RHS range        [8e+02, 3e+04]
-  QRHS range       [1e+00, 1e+00]
-Presolve removed 1092 rows and 12640 columns
-Presolve time: 0.12s
-Presolved: 30618 rows, 22596 columns, 194680 nonzeros
-Presolved model has 210 quadratic constraint(s)
+  RHS range        [3e+02, 3e+04]
+Presolve removed 1281 rows and 13757 columns
+Presolve time: 0.11s
+Presolved: 30429 rows, 21269 columns, 180684 nonzeros
 Presolved model has 6720 bilinear constraint(s)
 
 Solving non-convex MIQCP
 
-Variable types: 21714 continuous, 882 integer (882 binary)
+Variable types: 20366 continuous, 903 integer (903 binary)
 Found heuristic solution: objective 210.0000000
 Deterministic concurrent LP optimizer: primal and dual simplex
 Showing primal log only...
 
 Concurrent spin time: 0.00s
 
-Solved with primal simplex
+Solved with dual simplex
 
 Use crossover to convert LP symmetric solution to basic solution...
 
-Root relaxation: objective 1.890000e+02, 808 iterations, 0.10 seconds (0.14 work units)
+Root relaxation: objective 1.890000e+02, 8268 iterations, 0.14 seconds (0.18 work units)
+Total elapsed time = 6.85s (DegenMoves)
 
     Nodes    |    Current Node    |     Objective Bounds      |     Work
  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
 
-     0     0  189.00000    0   21  210.00000  189.00000  10.0%     -    0s
-H    0     0                     209.0000003  189.00000  9.57%     -   28s
-H    0     0                     205.0000000  189.00000  7.80%     -   28s
-H    0     0                     204.0559626  189.00000  7.38%     -   28s
-H    0     0                     204.0000000  189.00000  7.35%     -   29s
-H    0     0                     203.0000000  189.00000  6.90%     -   29s
-H    0     0                     202.0000000  189.00000  6.44%     -   29s
-H    0     0                     201.0000000  189.00000  5.97%     -   29s
-H    0     0                     200.0000000  189.00000  5.50%     -   29s
-H    0     0                     200.0000000  189.00000  5.50%     -   29s
-H    0     0                     199.0000003  189.00000  5.03%     -   29s
-H    0     0                     196.2932611  189.00000  3.72%     -   29s
-H    0     0                     192.5368956  189.00000  1.84%     -   29s
-     0     0  189.00000    0 4691  192.53690  189.00000  1.84%     -   29s
-H    0     0                     190.0000010  189.00000  0.53%     -   29s
-H    0     0                     190.0000005  189.00000  0.53%     -   31s
-     0     0  189.00000    0 4379  190.00000  189.00000  0.53%     -   31s
-     0     0  189.00000    0 4379  190.00000  189.00000  0.53%     -   31s
-     0     0  189.00000    0 4379  190.00000  189.00000  0.53%     -   32s
-H    0     0                     189.0000006  189.00000  0.00%     -   32s
+     0     0  189.00000    0 4526  210.00000  189.00000  10.0%     -    6s
+H    0     0                     209.0000000  189.00000  9.57%     -    7s
+     0     0  189.00000    0 4526  209.00000  189.00000  9.57%     -    7s
+H    0     0                     200.0000000  189.00000  5.50%     -   15s
+H    0     0                     199.0000000  189.00000  5.03%     -   15s
+H    0     2                     198.0000000  189.00000  4.55%     -   15s
+     0     2  189.00000    0 4526  198.00000  189.00000  4.55%     -   15s
+     7    14  189.00000    3 4372  198.00000  189.00000  4.55%  1003   21s
+    13    20  189.00000    4 4236  198.00000  189.00000  4.55%  1241   28s
+    19    26  189.00000    5 6446  198.00000  189.00000  4.55%  2958   44s
+    25    32  189.00000    5 4231  198.00000  189.00000  4.55%  2459   46s
+H   31    40                     197.0000000  189.00000  4.06%  2105   47s
+    46    64  189.00000    8 4258  197.00000  189.00000  4.06%  1654   54s
+    63   159  189.00000    9 4249  197.00000  189.00000  4.06%  1507   63s
+H  133   159                     196.0000000  189.00000  3.57%   904   63s
+   158   633  189.00000   12 4160  196.00000  189.00000  3.57%   822   79s
+H  229   633                     189.0000000  189.00000  0.00%   635   79s
 
-Cutting planes:
-  Gomory: 75
-  MIR: 1
-  Flow cover: 21
-  RLT: 1
-
-Explored 1 nodes (68088 simplex iterations) in 32.46 seconds (36.00 work units)
+Explored 632 nodes (230946 simplex iterations) in 79.04 seconds (161.40 work units)
 Thread count was 12 (of 12 available processors)
 
-Solution count 10: 189 190 190 ... 202
+Solution count 8: 189 196 197 ... 210
 
 Optimal solution found (tolerance 1.00e-04)
-Best objective 1.890000006192e+02, best bound 1.890000000000e+02, gap 0.0000%
+Best objective 1.890000000000e+02, best bound 1.890000000000e+02, gap 0.0000%
 Epoch 1/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 392ms/step - accuracy: 0.0952 - loss: 8.6728[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 393ms/step - accuracy: 0.0952 - loss: 8.6728
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 401ms/step - accuracy: 0.1429 - loss: 11.1206[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 402ms/step - accuracy: 0.1429 - loss: 11.1206
 Epoch 2/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.1429 - loss: 7.1591[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.1429 - loss: 7.1591
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.2381 - loss: 10.2962[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.2381 - loss: 10.2962
 Epoch 3/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 13ms/step - accuracy: 0.1429 - loss: 6.3284[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 14ms/step - accuracy: 0.1429 - loss: 6.3284
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.2381 - loss: 10.2185[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.2381 - loss: 10.2185
 Epoch 4/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.1905 - loss: 6.1831[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.1905 - loss: 6.1831
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.2857 - loss: 9.7214[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.2857 - loss: 9.7214
 Epoch 5/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3333 - loss: 6.0875[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3333 - loss: 6.0875
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.2857 - loss: 9.5261[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.2857 - loss: 9.5261
 Epoch 6/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.4286 - loss: 6.0173[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4286 - loss: 6.0173
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.2857 - loss: 9.4756[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.2857 - loss: 9.4756
 Epoch 7/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.5238 - loss: 5.9435[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.5238 - loss: 5.9435
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3333 - loss: 9.4329[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3333 - loss: 9.4329
 Epoch 8/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.5238 - loss: 5.8791[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.5238 - loss: 5.8791
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3333 - loss: 9.4035[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3333 - loss: 9.4035
 Epoch 9/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.5238 - loss: 5.8195[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.5238 - loss: 5.8195
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3333 - loss: 9.3844[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3333 - loss: 9.3844
 Epoch 10/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.5238 - loss: 5.7633[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.5238 - loss: 5.7633
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3810 - loss: 9.3689[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3810 - loss: 9.3689
 mnist - Training average accuracy over 1 experiments with 21 training points : 1.0
 no warm start
 Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 22.04.4 LTS")
@@ -494,27 +452,25 @@ Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 22.04.4 LTS"
 CPU model: Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz, instruction set [SSE2|AVX|AVX2]
 Thread count: 6 physical cores, 12 logical processors, using up to 12 threads
 
-Optimize a model with 5040 rows, 28714 columns and 136816 nonzeros
-Model fingerprint: 0x7aacae6d
-Model has 480 quadratic constraints
-Variable types: 27706 continuous, 1008 integer (1008 binary)
+Optimize a model with 5280 rows, 28714 columns and 124000 nonzeros
+Model fingerprint: 0xe7decac7
+Model has 240 quadratic constraints
+Variable types: 27466 continuous, 1248 integer (1248 binary)
 Coefficient statistics:
   Matrix range     [4e-03, 3e+04]
   QMatrix range    [1e+00, 1e+00]
-  QLMatrix range   [1e+00, 2e+00]
+  QLMatrix range   [1e+00, 1e+00]
   Objective range  [1e+00, 1e+00]
   Bounds range     [1e+00, 1e+00]
-  RHS range        [8e+02, 3e+04]
-  QRHS range       [1e+00, 1e+00]
-Presolve removed 1248 rows and 12352 columns
-Presolve time: 0.14s
-Presolved: 34992 rows, 24282 columns, 219712 nonzeros
-Presolved model has 240 quadratic constraint(s)
+  RHS range        [3e+02, 3e+04]
+Presolve removed 1464 rows and 13624 columns
+Presolve time: 0.13s
+Presolved: 34776 rows, 22770 columns, 205088 nonzeros
 Presolved model has 7680 bilinear constraint(s)
 
 Solving non-convex MIQCP
 
-Variable types: 23274 continuous, 1008 integer (1008 binary)
+Variable types: 21738 continuous, 1032 integer (1032 binary)
 Found heuristic solution: objective 240.0000000
 Deterministic concurrent LP optimizer: primal and dual simplex
 Showing primal log only...
@@ -525,64 +481,67 @@ Solved with dual simplex
 
 Use crossover to convert LP symmetric solution to basic solution...
 
-Root relaxation: objective 2.160000e+02, 6310 iterations, 0.12 seconds (0.17 work units)
+Root relaxation: objective 2.160000e+02, 9699 iterations, 0.15 seconds (0.20 work units)
 
     Nodes    |    Current Node    |     Objective Bounds      |     Work
  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
 
-     0     0  216.00000    0  764  240.00000  216.00000  10.0%     -    2s
-     0     0  216.00000    0  777  240.00000  216.00000  10.0%     -    3s
-H    0     0                     223.9021599  216.00000  3.53%     -    3s
-     0     0  216.00000    0  774  223.90216  216.00000  3.53%     -    4s
-     0     0  216.00000    0  775  223.90216  216.00000  3.53%     -    4s
-     0     0  216.00000    0  775  223.90216  216.00000  3.53%     -    4s
-     0     0  216.00000    0  775  223.90216  216.00000  3.53%     -    4s
-     0     0  216.00000    0  775  223.90216  216.00000  3.53%     -    4s
-     0     0  216.00000    0  775  223.90216  216.00000  3.53%     -    5s
-     0     2  216.00000    0  775  223.90216  216.00000  3.53%     -    9s
-     1     4  217.00000    1  807  223.90216  216.00000  3.53%   211   10s
-    19    26  219.00000    5  812  223.90216  216.00000  3.53%  98.3   33s
-H   31    38                     219.0000002  216.00000  1.37%  67.8   86s
-H   32    38                     218.0000007  216.00000  0.92%  1673   86s
-H   33    38                     216.2083495  216.00000  0.10%  2910   86s
-    61    26  216.00000   10  838  216.20835  216.00000  0.10%  3319   90s
-H   66    26                     216.2083495  216.00000  0.10%  3080   90s
-   150   240  216.00000   20  856  216.20835  216.00000  0.10%  1431   96s
-H  170   240                     216.2083491  216.00000  0.10%  1271   96s
-H  257   240                     216.2083491  216.00000  0.10%   868   96s
-   283   463  216.00000   30  847  216.20835  216.00000  0.10%   795  101s
-   507   450  216.00000   40    5  216.20835  216.00000  0.10%   484  111s
-   509   451  216.00000   25    0  216.20835  216.00000  0.10%   482  127s
-H  510   429                     216.1258523  216.00000  0.06%   481  128s
-H  510   407                     216.0000000  216.00000  0.00%   481  129s
+     0     0  216.00000    0 5763  240.00000  216.00000  10.0%     -    9s
+     0     0  216.00000    0 5010  240.00000  216.00000  10.0%     -   22s
+     0     0  216.00000    0 4970  240.00000  216.00000  10.0%     -   22s
+     0     0  216.00000    0 4874  240.00000  216.00000  10.0%     -   37s
+     0     0  216.00000    0 4852  240.00000  216.00000  10.0%     -   39s
+     0     0  216.00000    0 4840  240.00000  216.00000  10.0%     -   52s
+     0     0  216.00000    0 4829  240.00000  216.00000  10.0%     -   53s
+     0     0  216.00000    0 4729  240.00000  216.00000  10.0%     -   65s
+     0     0  216.00000    0 4731  240.00000  216.00000  10.0%     -   66s
+     0     0  216.00000    0 4687  240.00000  216.00000  10.0%     -   78s
+     0     0  216.00000    0 4680  240.00000  216.00000  10.0%     -   79s
+     0     0  216.00000    0 4635  240.00000  216.00000  10.0%     -   90s
+     0     0  216.00000    0 4631  240.00000  216.00000  10.0%     -   91s
+     0     0  216.00000    0 4582  240.00000  216.00000  10.0%     -  102s
+     0     0  216.00000    0 4580  240.00000  216.00000  10.0%     -  103s
+     0     0  216.00000    0 4548  240.00000  216.00000  10.0%     -  112s
+     0     0  216.00000    0 4540  240.00000  216.00000  10.0%     -  113s
+     0     0  216.00000    0 4519  240.00000  216.00000  10.0%     -  122s
+     0     0  216.00000    0 4513  240.00000  216.00000  10.0%     -  122s
+H    0     0                     216.0000000  216.00000  0.00%     -  130s
+     0     0  216.00000    0 4486  216.00000  216.00000  0.00%     -  130s
 
-Explored 510 nodes (301156 simplex iterations) in 129.04 seconds (204.37 work units)
+Cutting planes:
+  Learned: 24
+  Gomory: 1
+  MIR: 43
+  Flow cover: 8
+  RLT: 197
+
+Explored 1 nodes (127977 simplex iterations) in 130.91 seconds (155.35 work units)
 Thread count was 12 (of 12 available processors)
 
-Solution count 8: 216 216.126 216.208 ... 240
+Solution count 2: 216 240 
 
 Optimal solution found (tolerance 1.00e-04)
 Best objective 2.160000000000e+02, best bound 2.160000000000e+02, gap 0.0000%
 Epoch 1/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 420ms/step - accuracy: 0.0833 - loss: 11.4245[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 421ms/step - accuracy: 0.0833 - loss: 11.4245
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 409ms/step - accuracy: 0.1250 - loss: 11.8799[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 410ms/step - accuracy: 0.1250 - loss: 11.8799
 Epoch 2/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.1250 - loss: 10.5514[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.1250 - loss: 10.5514
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.2083 - loss: 11.1175[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.2083 - loss: 11.1175
 Epoch 3/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.2083 - loss: 10.4610[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.2083 - loss: 10.4610
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.2083 - loss: 11.0107[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.2083 - loss: 11.0107
 Epoch 4/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3333 - loss: 9.8682[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3333 - loss: 9.8682
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.2917 - loss: 10.9586[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.2917 - loss: 10.9586
 Epoch 5/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3750 - loss: 9.7718[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3750 - loss: 9.7718
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.2917 - loss: 10.5627[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.2917 - loss: 10.5627
 Epoch 6/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3750 - loss: 9.7222[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3750 - loss: 9.7222
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.2917 - loss: 9.8307[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.2917 - loss: 9.8307
 Epoch 7/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4167 - loss: 9.1998[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 13ms/step - accuracy: 0.4167 - loss: 9.1998
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.2917 - loss: 9.7232[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.2917 - loss: 9.7232
 Epoch 8/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.4167 - loss: 9.0664[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4167 - loss: 9.0664
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 13ms/step - accuracy: 0.2917 - loss: 9.6864[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 14ms/step - accuracy: 0.2917 - loss: 9.6864
 Epoch 9/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.4167 - loss: 9.0179[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4167 - loss: 9.0179
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3333 - loss: 9.6621[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3333 - loss: 9.6621
 Epoch 10/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.4167 - loss: 8.9783[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4167 - loss: 8.9783
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3750 - loss: nan[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3750 - loss: nan
 mnist - Training average accuracy over 1 experiments with 24 training points : 1.0
 no warm start
 Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 22.04.4 LTS")
@@ -590,195 +549,99 @@ Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 22.04.4 LTS"
 CPU model: Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz, instruction set [SSE2|AVX|AVX2]
 Thread count: 6 physical cores, 12 logical processors, using up to 12 threads
 
-Optimize a model with 5670 rows, 29122 columns and 154366 nonzeros
-Model fingerprint: 0xee1ca660
-Model has 540 quadratic constraints
-Variable types: 27988 continuous, 1134 integer (1134 binary)
+Optimize a model with 5940 rows, 29122 columns and 139976 nonzeros
+Model fingerprint: 0xa7af2a91
+Model has 270 quadratic constraints
+Variable types: 27718 continuous, 1404 integer (1404 binary)
 Coefficient statistics:
   Matrix range     [4e-03, 3e+04]
   QMatrix range    [1e+00, 1e+00]
-  QLMatrix range   [1e+00, 2e+00]
+  QLMatrix range   [1e+00, 1e+00]
   Objective range  [1e+00, 1e+00]
   Bounds range     [1e+00, 1e+00]
-  RHS range        [8e+02, 3e+04]
-  QRHS range       [1e+00, 1e+00]
-Presolve removed 1404 rows and 11936 columns
-Presolve time: 0.15s
-Presolved: 39366 rows, 26096 columns, 247784 nonzeros
-Presolved model has 270 quadratic constraint(s)
+  RHS range        [3e+02, 3e+04]
+Presolve removed 1647 rows and 12947 columns
+Presolve time: 0.14s
+Presolved: 39123 rows, 24815 columns, 231732 nonzeros
 Presolved model has 8640 bilinear constraint(s)
 
 Solving non-convex MIQCP
 
-Variable types: 24962 continuous, 1134 integer (1134 binary)
+Variable types: 23654 continuous, 1161 integer (1161 binary)
 Found heuristic solution: objective 270.0000000
 Deterministic concurrent LP optimizer: primal and dual simplex
 Showing primal log only...
 
-Concurrent spin time: 0.00s
-
-Solved with primal simplex
-
-Use crossover to convert LP symmetric solution to basic solution...
-
-Root relaxation: objective 2.430000e+02, 1299 iterations, 0.13 seconds (0.19 work units)
-
-    Nodes    |    Current Node    |     Objective Bounds      |     Work
- Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
-
-     0     0  243.00000    0   32  270.00000  243.00000  10.0%     -    0s
-H    0     0                     269.0003925  243.00000  9.67%     -  107s
-H    0     0                     267.7500000  243.00000  9.24%     -  107s
-H    0     0                     266.0000000  243.00000  8.65%     -  107s
-H    0     0                     265.0000005  243.00000  8.30%     -  107s
-H    0     0                     265.0000004  243.00000  8.30%     -  107s
-H    0     0                     264.0000000  243.00000  7.95%     -  107s
-H    0     0                     263.0000000  243.00000  7.60%     -  107s
-H    0     0                     262.0000000  243.00000  7.25%     -  107s
-H    0     0                     261.0000000  243.00000  6.90%     -  107s
-H    0     0                     260.0000001  243.00000  6.54%     -  107s
-H    0     0                     260.0000000  243.00000  6.54%     -  107s
-H    0     0                     259.0000000  243.00000  6.18%     -  107s
-H    0     0                     258.0000000  243.00000  5.81%     -  107s
-H    0     0                     257.0000001  243.00000  5.45%     -  107s
-H    0     0                     254.5820057  243.00000  4.55%     -  107s
-H    0     0                     253.6303572  243.00000  4.19%     -  107s
-H    0     0                     245.8976376  243.00000  1.18%     -  107s
-H    0     0                     245.8976376  243.00000  1.18%     -  107s
-H    0     0                     245.8976376  243.00000  1.18%     -  107s
-H    0     0                     243.0000000  243.00000  0.00%     -  107s
-     0     0  243.00000    0 5864  243.00000  243.00000  0.00%     -  107s
-
-Cutting planes:
-  Implied bound: 26
-  MIR: 8
-  Flow cover: 26
-
-Explored 1 nodes (114524 simplex iterations) in 107.62 seconds (121.67 work units)
-Thread count was 12 (of 12 available processors)
-
-Solution count 10: 243 245.898 245.898 ... 260
-
-Optimal solution found (tolerance 1.00e-04)
-Best objective 2.430000000000e+02, best bound 2.430000000000e+02, gap 0.0000%
-Epoch 1/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 387ms/step - accuracy: 0.1481 - loss: 11.3701[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 388ms/step - accuracy: 0.1481 - loss: 11.3701
-Epoch 2/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.2222 - loss: 11.0043[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.2222 - loss: 11.0043
-Epoch 3/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.2593 - loss: 10.0316[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.2593 - loss: 10.0316
-Epoch 4/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3333 - loss: 9.5882[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3333 - loss: 9.5882
-Epoch 5/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.2963 - loss: 9.3026[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.2963 - loss: 9.3026
-Epoch 6/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3704 - loss: 9.2900[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3704 - loss: 9.2900
-Epoch 7/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3704 - loss: 9.2850[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3704 - loss: 9.2850
-Epoch 8/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3704 - loss: 8.7985[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3704 - loss: 8.7985
-Epoch 9/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 13ms/step - accuracy: 0.3704 - loss: 8.7238[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 14ms/step - accuracy: 0.3704 - loss: 8.7238
-Epoch 10/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.4444 - loss: 8.7057[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4444 - loss: 8.7057
-mnist - Training average accuracy over 1 experiments with 27 training points : 1.0
-no warm start
-Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 22.04.4 LTS")
-
-CPU model: Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz, instruction set [SSE2|AVX|AVX2]
-Thread count: 6 physical cores, 12 logical processors, using up to 12 threads
-
-Optimize a model with 6300 rows, 29530 columns and 168108 nonzeros
-Model fingerprint: 0x435c66b3
-Model has 600 quadratic constraints
-Variable types: 28270 continuous, 1260 integer (1260 binary)
-Coefficient statistics:
-  Matrix range     [4e-03, 3e+04]
-  QMatrix range    [1e+00, 1e+00]
-  QLMatrix range   [1e+00, 2e+00]
-  Objective range  [1e+00, 1e+00]
-  Bounds range     [1e+00, 1e+00]
-  RHS range        [8e+02, 3e+04]
-  QRHS range       [1e+00, 1e+00]
-Presolve removed 1560 rows and 11744 columns
-Presolve time: 0.17s
-Presolved: 43740 rows, 27686 columns, 272144 nonzeros
-Presolved model has 300 quadratic constraint(s)
-Presolved model has 9600 bilinear constraint(s)
-
-Solving non-convex MIQCP
-
-Variable types: 26426 continuous, 1260 integer (1260 binary)
-Found heuristic solution: objective 300.0000000
-Deterministic concurrent LP optimizer: primal and dual simplex
-Showing primal log only...
-
-Concurrent spin time: 0.01s
+Concurrent spin time: 0.02s
 
 Solved with dual simplex
 
 Use crossover to convert LP symmetric solution to basic solution...
 
-Root relaxation: objective 2.700000e+02, 10414 iterations, 0.19 seconds (0.26 work units)
+Root relaxation: objective 2.430000e+02, 12427 iterations, 0.30 seconds (0.43 work units)
 
     Nodes    |    Current Node    |     Objective Bounds      |     Work
  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
 
-     0     0  270.00000    0  533  300.00000  270.00000  10.0%     -    8s
-H    0     0                     299.0000004  270.00000  9.70%     -   51s
-H    0     0                     299.0000000  270.00000  9.70%     -   51s
-H    0     0                     298.6264753  270.00000  9.59%     -   51s
-H    0     0                     297.9639743  270.00000  9.39%     -   51s
-H    0     0                     296.9639743  270.00000  9.08%     -   51s
-H    0     0                     296.0000000  270.00000  8.78%     -   51s
-H    0     0                     295.0000000  270.00000  8.47%     -   51s
-H    0     0                     294.0000000  270.00000  8.16%     -   51s
-H    0     0                     293.0000000  270.00000  7.85%     -   51s
-H    0     0                     292.0000000  270.00000  7.53%     -   51s
-H    0     0                     274.0563943  270.00000  1.48%     -   51s
-     0     0  270.00000    0 5162  274.05639  270.00000  1.48%     -   51s
-H    0     0                     271.6899504  270.00000  0.62%     -   53s
-     0     0  270.00000    0 5160  271.68995  270.00000  0.62%     -   53s
-     0     0  270.00000    0 5104  271.68995  270.00000  0.62%     -   70s
-     0     0  270.00000    0 5158  271.68995  270.00000  0.62%     -   74s
-H    0     0                     270.1422499  270.00000  0.05%     -   88s
-     0     0  270.00000    0 5103  270.14225  270.00000  0.05%     -   99s
-H    0     0                     270.1211810  270.00000  0.04%     -  102s
-     0     0  270.00000    0 5101  270.12118  270.00000  0.04%     -  102s
-H    0     0                     270.0000000  270.00000  0.00%     -  112s
-     0     0  270.00000    0 5045  270.00000  270.00000  0.00%     -  112s
+     0     0  243.00000    0 2590  270.00000  243.00000  10.0%     -   10s
+     0     0  243.00000    0 5404  270.00000  243.00000  10.0%     -   31s
+     0     0  243.00000    0 5434  270.00000  243.00000  10.0%     -   32s
+     0     0  243.00000    0 5376  270.00000  243.00000  10.0%     -   50s
+     0     0  243.00000    0 5398  270.00000  243.00000  10.0%     -   54s
+     0     0  243.00000    0 5280  270.00000  243.00000  10.0%     -   70s
+     0     0  243.00000    0 5257  270.00000  243.00000  10.0%     -   73s
+H    0     0                     269.0000000  243.00000  9.67%     -   89s
+     0     0  243.00000    0 5237  269.00000  243.00000  9.67%     -   89s
+     0     0  243.00000    0 5201  269.00000  243.00000  9.67%     -   91s
+     0     0  243.00000    0 5169  269.00000  243.00000  9.67%     -  107s
+     0     0  243.00000    0 5162  269.00000  243.00000  9.67%     -  109s
+     0     0  243.00000    0 5133  269.00000  243.00000  9.67%     -  124s
+     0     0  243.00000    0 5121  269.00000  243.00000  9.67%     -  125s
+     0     0  243.00000    0 5127  269.00000  243.00000  9.67%     -  139s
+     0     0  243.00000    0 5124  269.00000  243.00000  9.67%     -  140s
+     0     0  243.00000    0 5094  269.00000  243.00000  9.67%     -  153s
+     0     0  243.00000    0 5087  269.00000  243.00000  9.67%     -  154s
+     0     0  243.00000    0 5073  269.00000  243.00000  9.67%     -  166s
+     0     0  243.00000    0 5065  269.00000  243.00000  9.67%     -  167s
+     0     0  243.00000    0 5024  269.00000  243.00000  9.67%     -  179s
+     0     0  243.00000    0 5021  269.00000  243.00000  9.67%     -  179s
+     0     0  243.00000    0 5002  269.00000  243.00000  9.67%     -  190s
+     0     0  243.00000    0 5002  269.00000  243.00000  9.67%     -  198s
+H    0     0                     267.0000000  243.00000  8.99%     -  221s
+H    0     0                     243.0000000  243.00000  0.00%     -  221s
+     0     0  243.00000    0 5002  243.00000  243.00000  0.00%     -  221s
 
 Cutting planes:
-  Gomory: 3
-  MIR: 151
-  Flow cover: 100
-  RLT: 239
+  Learned: 27
+  MIR: 49
+  Flow cover: 16
+  RLT: 148
 
-Explored 1 nodes (116276 simplex iterations) in 112.82 seconds (128.97 work units)
+Explored 1 nodes (171715 simplex iterations) in 221.96 seconds (256.07 work units)
 Thread count was 12 (of 12 available processors)
 
-Solution count 10: 270 270.121 270.142 ... 296
+Solution count 4: 243 267 269 270 
 
 Optimal solution found (tolerance 1.00e-04)
-Best objective 2.700000000000e+02, best bound 2.700000000000e+02, gap 0.0000%
+Best objective 2.430000000000e+02, best bound 2.430000000000e+02, gap 0.0000%
 Epoch 1/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 389ms/step - accuracy: 0.1333 - loss: 8.9236[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 390ms/step - accuracy: 0.1333 - loss: 8.9236
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 390ms/step - accuracy: 0.1852 - loss: 9.6635[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 391ms/step - accuracy: 0.1852 - loss: 9.6635
 Epoch 2/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.2333 - loss: 8.3193[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.2333 - loss: 8.3193
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.2593 - loss: 8.9426[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.2593 - loss: 8.9426
 Epoch 3/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.2667 - loss: 7.7391[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.2667 - loss: 7.7391
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3333 - loss: 8.8364[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3333 - loss: 8.8364
 Epoch 4/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3000 - loss: 7.5951[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 13ms/step - accuracy: 0.3000 - loss: 7.5951
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.3333 - loss: 8.2657[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.3333 - loss: 8.2657
 Epoch 5/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.4000 - loss: 7.5236[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4000 - loss: 7.5236
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.4444 - loss: 8.1321[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4444 - loss: 8.1321
 Epoch 6/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.4333 - loss: 7.4670[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4333 - loss: 7.4670
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.4444 - loss: 8.0501[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4444 - loss: 8.0501
 Epoch 7/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.5000 - loss: 7.4229[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.5000 - loss: 7.4229
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.4444 - loss: 7.9753[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.4444 - loss: 7.9753
 Epoch 8/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.5667 - loss: 7.3832[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.5667 - loss: 7.3832
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.5185 - loss: nan[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.5185 - loss: nan
 Epoch 9/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.5333 - loss: 7.3421[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 13ms/step - accuracy: 0.5333 - loss: 7.3421
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.1111 - loss: nan[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.1111 - loss: nan
 Epoch 10/10
-[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.5333 - loss: 7.3073[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.5333 - loss: 7.3073
-mnist - Training average accuracy over 1 experiments with 30 training points : 1.0
+[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 11ms/step - accuracy: 0.1111 - loss: nan[1m1/1[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 12ms/step - accuracy: 0.1111 - loss: nan
+mnist - Training average accuracy over 1 experiments with 27 training points : 1.0
