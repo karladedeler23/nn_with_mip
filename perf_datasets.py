@@ -12,7 +12,7 @@ M = [[784 + 1, 785 * hidden_layers[0][0] + 1], [16 + 1, 17 * hidden_layers[1][0]
 margin = [M[0][-1] * 0.01, M[1][-1] * 0.1]  # A reasonable margin (for SAT margin) should be a small fraction of this estimated output range
 epsilon = 1.0e-1  # set the precision
 lambda_reg = 0.0
-loss_function = 'hinge'  # Choose between 'max_correct', 'hinge', or 'sat_margin'
+loss_function = 'sat_margin'  # Choose between 'max_correct', 'hinge', or 'sat_margin'
 warm_start = False
 
 size_list = []
@@ -26,7 +26,7 @@ print(random_nb)
 W_init = [None for _ in range(len(datasets))]
 b_init = [None for _ in range(len(datasets))]
 
-for size in range(9, 20, 3):
+for size in range(9, 35, 3):
     sample_size = size  # number of data points
     size_list.append(sample_size)
     
