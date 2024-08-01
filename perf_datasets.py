@@ -45,7 +45,7 @@ for size in range(9, 20, 3):
 plt.figure(figsize=(10, 8))
 colors = ['pink', 'purple']
 for i in range(len(datasets)):
-    plt.scatter(size_list, accuracy_train_list[i], color=colors[i], marker='o', label=f'Training Accuracy - {datasets[i]}', s=20)
+    #plt.scatter(size_list, accuracy_train_list[i], color=colors[i], marker='o', label=f'Training Accuracy - {datasets[i]}', s=20)
     plt.scatter(size_list, accuracy_test_list[i], color=colors[i], marker='x', label=f'Test Accuracy - {datasets[i]}', s=20)
 plt.title('Accuracy depending on the Training Set Size')
 plt.xlabel('Training Set Size')
