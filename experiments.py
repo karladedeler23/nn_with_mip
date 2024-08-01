@@ -434,7 +434,7 @@ def extract_weights_biases(model, weights, biases):
     return extracted_weights, extracted_biases
 
 # Predict the digits with the MIP model
-def predict_with_mip(W_opt, b_opt, X, y, true_labels):
+def predict_with_mip(W_opt, b_opt, X, y=None, true_labels=None):
     predictions = []
 
     for i in range(X.shape[0]):
@@ -455,11 +455,20 @@ def predict_with_mip(W_opt, b_opt, X, y, true_labels):
             #print(f"Layer output after ReLU activation: {layer_output}")
 
         # print(f"Prediction output : {layer_output}")
-        pred = np.argmax(layer_output)
-        predictions.append(pred)
+        #pred = np.argmax(layer_output)
+        predictions.append(layer_output)
         # print(f"Sample {i}: Prediction = {pred}, True Label = {true_labels[i]}")
     
     return predictions
+
+# Predict the digits with the MIP model
+def predict_classification(W_opt, b_opt, X, y=None, true_labels=None):
+    predictions = predict_with_mip(W_opt, b_opt, X)
+    classification_res = []
+    for pred in predictions:
+        classification_res.append(np.argmax(pred))
+    return classification_res
+
 
 
 ########################################################
@@ -496,7 +505,7 @@ def plot_distribution_parameters(current_date_time, random_nb, lambda_reg, warm_
     axes[1].set_ylabel('Frequency')
 
     plt.tight_layout()
-    directory = f'graphs/pen/{loss_function}/{random_nb}/reg{lambda_reg}/warmstart_{warm_start}/{current_date_time}'
+    directory = f'graphs/loss_landscape/{random_nb}/reg{lambda_reg}/warmstart_{warm_start}/{current_date_time}'
     file_name = f'parameter_histograms_{n}training_points.png'
     full_path = os.path.join(directory, file_name)
     if not os.path.exists(directory):
@@ -559,10 +568,10 @@ def run_multiple_experiments_warm_start(current_date_time, num_experiments, samp
             print('no warm start')
             runtime, W_opt, b_opt = train_gurobi_model(X_train_sample, y_train_sample, y_train_sample_one_hot, X_train_sample.shape[1], hidden_layers, 10, M, margin, epsilon, loss_function, lambda_reg)
         if W_opt is not None and b_opt is not None:
-            predictions_training = predict_with_mip(W_opt, b_opt, X_train_sample, y_train_sample_one_hot, y_train_sample)
+            predictions_training = predict_classification(W_opt, b_opt, X_train_sample, y_train_sample_one_hot, y_train_sample)
             accuracy_training = accuracy_score(y_train_sample, predictions_training)
             training_accuracies.append(accuracy_training)
-            predictions_testing = predict_with_mip(W_opt, b_opt, X_test, y_test_one_hot, y_test)
+            predictions_testing = predict_classification(W_opt, b_opt, X_test, y_test_one_hot, y_test)
             accuracy_testing = accuracy_score(y_test, predictions_testing)
             testing_accuracies.append(accuracy_testing)
             #plot_distribution_parameters(current_date_time, random_nb, lambda_reg, warm_start, sample_size, loss_function, W_opt, b_opt)
@@ -607,7 +616,7 @@ def run_multiple_experiments_warm_start(current_date_time, num_experiments, samp
     return np.mean(training_accuracies), np.mean(testing_accuracies), W_opt, b_opt, np.mean(runtimes)
 
 
-# Function to  train a NN using SGD
+# Function to train a NN using SGD
 def run_experiments_with_sgd(num_experiments, sample_size, hidden_layers, loss_function, random_nb, dataset = 'mnist'):
     testing_accuracies = []
 
@@ -620,3 +629,24 @@ def run_experiments_with_sgd(num_experiments, sample_size, hidden_layers, loss_f
         test_accuracy = train_sgd(X_train_sample, y_train_sample_one_hot, X_test, y_test_one_hot, X_train_sample.shape[1], hidden_layers, 10, loss_function)
         testing_accuracies.append(test_accuracy)
     return np.mean(testing_accuracies)
+
+
+# Function to retrieve only the weights, biases, taining data
+def get_W_b_opt(current_date_time, sample_size, hidden_layers, M, margin, epsilon, loss_function, random_nb, lambda_reg = 0.0, warm_start = False, W_init = None, b_init = None, dataset = 'mnist'):
+    # Load and preprocess data
+    if dataset == 'mnist' : 
+        (X_train_sample, y_train_sample, y_train_sample_one_hot), (X_test, y_test, y_test_one_hot), (X_train, y_train, y_train_one_hot) = load_and_preprocess_data_mnist(sample_size, random_nb)
+    else :
+        (X_train_sample, y_train_sample, y_train_sample_one_hot), (X_test, y_test, y_test_one_hot), (X_train, y_train, y_train_one_hot) = load_and_preprocess_data_smaller(sample_size, random_nb)
+
+    # Train Gurobi model and get optimal weights and biases
+    if warm_start and W_init is not None and b_init is not None : 
+        print('warm start')
+        _, W_opt, b_opt = warm_start_train_gurobi_model(X_train_sample, y_train_sample, y_train_sample_one_hot, X_train, y_train, y_train_one_hot, X_train_sample.shape[1], hidden_layers, 10, M, margin, epsilon, loss_function, W_init, b_init, lambda_reg)
+    else :
+        print('no warm start')
+        _, W_opt, b_opt = train_gurobi_model(X_train_sample, y_train_sample, y_train_sample_one_hot, X_train_sample.shape[1], hidden_layers, 10, M, margin, epsilon, loss_function, lambda_reg)
+
+        plot_distribution_parameters(current_date_time, random_nb, lambda_reg, warm_start, sample_size, loss_function, W_opt, b_opt)
+    
+    return W_opt, b_opt, X_train_sample, y_train_sample, y_train_sample_one_hot
