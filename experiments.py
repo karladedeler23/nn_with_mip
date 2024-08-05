@@ -457,7 +457,7 @@ def predict_with_mip(W_opt, b_opt, X, y=None, true_labels=None):
         # print(f"Prediction output : {layer_output}")
         #pred = np.argmax(layer_output)
         predictions.append(layer_output)
-        # print(f"Sample {i}: Prediction = {pred}, True Label = {true_labels[i]}")
+        #print(f"Sample {i}: Prediction = {layer_output}, True Label = {y[i]}")
     
     return predictions
 
