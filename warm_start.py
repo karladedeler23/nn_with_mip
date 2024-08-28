@@ -6,13 +6,13 @@ import os
 
 # Define parameters
 num_experiments = 1
-hidden_layers = [32]  # Hidden layers configuration
-M = [785, 785 * hidden_layers[0] + 1]
+hidden_layers = [8]  # Hidden layers configuration
+M = [17, 17 * hidden_layers[0] + 1]
 margin = M[-1] * 0.01  # A reasonable margin (for SAT margin) should be a small fraction of this estimated output range
 epsilon = 1.0e-1  # set the precision
 lambda_reg = 0.0
-dataset = 'mnist'
-loss_function = 'sat_margin'  # Choose between 'max_correct', 'hinge', or 'sat_margin'
+dataset = 'smaller'
+loss_function = 'hinge'  # Choose between 'max_correct', 'hinge', or 'sat_margin'
 warm_start = [False, True]
 
 size_list = []
@@ -27,7 +27,7 @@ W_init = [None for i in range(len(warm_start))]
 b_init = [None for i in range(len(warm_start))]
 
 
-for size in range(9, 45, 3):
+for size in range(9, 34, 3):
     sample_size = size  # number of data points
     size_list.append(sample_size)
     
@@ -45,7 +45,7 @@ for size in range(9, 45, 3):
 
         W_init[i] = W_opt
         b_init[i] = b_opt
-'''
+
 # Plotting the accuracy graph
 plt.figure(figsize=(10, 8))
 plt.plot(size_list, np.subtract(runtime_list[1],runtime_list[0]), color='b', markersize=5, label = 'with warm start - without')
@@ -64,7 +64,7 @@ plt.title('Percentage Difference in Computation Time with Warm Start Technique')
 plt.xlabel('Training Set Size')
 plt.ylabel('Percentage Difference (%)')
 plt.legend()
-
+'''
 # Adding descriptive text below the plot
 plt.subplots_adjust(bottom=0.2)  # Increase bottom space
 description_text = (
@@ -88,4 +88,24 @@ if not os.path.exists(directory):
     os.makedirs(directory)
 plt.savefig(full_path)
 
-#plt.show()
+# Plotting the accuracy graph
+plt.figure(figsize=(10, 8))
+colors = ['orange', 'red']
+for i in range(len(warm_start)):
+    plt.scatter(size_list, accuracy_test_list[i], color=colors[i], marker='x', label=f'Using Warm Start: {warm_start[i]}', s=20)
+plt.title('Accuracy depending on the Training Set Size')
+plt.xlabel('Training Set Size')
+plt.ylabel('Accuracy')
+plt.legend()
+
+plt.subplots_adjust(bottom=0.2)  # Increase bottom space
+plt.figtext(0.5, 0.14, description_text, ha='center', va='top', fontsize=7, wrap=True)
+
+
+# Save the figure with a meaningful name
+directory = f'graphs/warm_start/{dataset}/{random_nb}/reg{lambda_reg}/warmstart_{warm_start}/{current_date_time}'
+file_name = 'accuracy_comp.png'
+full_path = os.path.join(directory, file_name)
+if not os.path.exists(directory):
+    os.makedirs(directory)
+plt.savefig(full_path)
