@@ -251,10 +251,10 @@ def warm_start_train_gurobi_model(X_train_sample, y_train_sample, y_train_sample
 # Initialize model and set some parameters for the resolution
 def initialize_model():
     model = gp.Model("neural_network_training")
+    #model.setParam('MIPGap', 0)
     #model.setParam('IntegralityFocus', 1)
     #model.setParam('OptimalityTol', 1e-9)
     #model.setParam('FeasibilityTol', 1e-9)
-    #model.setParam('MIPGap', 0)
     #model.setParam('NodeLimit', 1e9)
     #model.setParam('SolutionLimit', 1e9)
     return model
@@ -505,7 +505,7 @@ def plot_distribution_parameters(current_date_time, random_nb, lambda_reg, warm_
     axes[1].set_ylabel('Frequency')
 
     plt.tight_layout()
-    directory = f'graphs/loss_landscape/{random_nb}/reg{lambda_reg}/warmstart_{warm_start}/{current_date_time}'
+    directory = f'graphs/warm_start/{random_nb}/reg{lambda_reg}/warmstart_{warm_start}/{current_date_time}'
     file_name = f'parameter_histograms_{n}training_points.png'
     full_path = os.path.join(directory, file_name)
     if not os.path.exists(directory):
@@ -574,7 +574,7 @@ def run_multiple_experiments_warm_start(current_date_time, num_experiments, samp
             predictions_testing = predict_classification(W_opt, b_opt, X_test, y_test_one_hot, y_test)
             accuracy_testing = accuracy_score(y_test, predictions_testing)
             testing_accuracies.append(accuracy_testing)
-            #plot_distribution_parameters(current_date_time, random_nb, lambda_reg, warm_start, sample_size, loss_function, W_opt, b_opt)
+            plot_distribution_parameters(current_date_time, random_nb, lambda_reg, warm_start, sample_size, loss_function, W_opt, b_opt)
             runtimes.append(runtime)
             '''
             directory = f'graphs/pen/{loss_function}/{random_nb}/reg{lambda_reg}/warmstart_{warm_start}/{current_date_time}'

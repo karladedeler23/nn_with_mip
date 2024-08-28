@@ -1,0 +1,310 @@
+Weight W1[(0, 0)] = -0.36925132948283695
+Weight W1[(0, 1)] = -1.0241635418616672
+Weight W1[(0, 2)] = -3.115484288176754
+Weight W1[(0, 3)] = 5.0
+Weight W1[(0, 4)] = -1.9573404490386246
+Weight W1[(0, 5)] = -1.4863486688537715
+Weight W1[(0, 6)] = -0.467626781188149
+Weight W1[(0, 7)] = -4.291348502590378
+Weight W1[(0, 8)] = -3.775286471678503
+Weight W1[(0, 9)] = -1.2508728704785077
+Weight W1[(0, 10)] = 3.9309391304981616
+Weight W1[(0, 11)] = -2.375350101816486
+Weight W1[(0, 12)] = 1.7541449523502421
+Weight W1[(1, 0)] = -1.782046392052474
+Weight W1[(1, 1)] = -4.775711762793745
+Weight W1[(1, 2)] = -1.485614122638862
+Weight W1[(1, 3)] = -5.0
+Weight W1[(1, 4)] = 4.087158106775636
+Weight W1[(1, 5)] = 3.9643653823855707
+Weight W1[(1, 6)] = -3.357590768798439
+Weight W1[(1, 7)] = -1.1380326055193664
+Weight W1[(1, 8)] = -0.25665218264594647
+Weight W1[(1, 9)] = 1.3492902893631473
+Weight W1[(1, 10)] = -0.8855157907178596
+Weight W1[(1, 11)] = -4.554377351429075
+Weight W1[(1, 12)] = 4.821683880022686
+Weight W1[(2, 0)] = -2.3556062653443735
+Weight W1[(2, 1)] = -3.4650108497732868
+Weight W1[(2, 2)] = -4.568950785882022
+Weight W1[(2, 3)] = -5.0
+Weight W1[(2, 4)] = 3.5110428619952536
+Weight W1[(2, 5)] = -3.9929756371705105
+Weight W1[(2, 6)] = -2.717529980062839
+Weight W1[(2, 7)] = -0.6339043490862365
+Weight W1[(2, 8)] = -0.5231337688911762
+Weight W1[(2, 9)] = -4.01137989638503
+Weight W1[(2, 10)] = -0.5501652655396564
+Weight W1[(2, 11)] = -1.5409389082042182
+Weight W1[(2, 12)] = -0.3037390957027558
+Weight W1[(3, 0)] = 4.647827598797039
+Weight W1[(3, 1)] = 0.9676640650736636
+Weight W1[(3, 2)] = 1.925765739658442
+Weight W1[(3, 3)] = -5.0
+Weight W1[(3, 4)] = -4.018156212060228
+Weight W1[(3, 5)] = -1.3649864819007642
+Weight W1[(3, 6)] = 4.980421265538335
+Weight W1[(3, 7)] = 2.249108941314557
+Weight W1[(3, 8)] = -2.8766869323349393
+Weight W1[(3, 9)] = -2.271165626881963
+Weight W1[(3, 10)] = -0.15356931431369283
+Weight W1[(3, 11)] = -2.801142012928004
+Weight W1[(3, 12)] = -2.939562762951625
+Weight W1[(4, 0)] = 4.202579482363077
+Weight W1[(4, 1)] = -2.474211853178791
+Weight W1[(4, 2)] = -4.6821740840070945
+Weight W1[(4, 3)] = -5.0
+Weight W1[(4, 4)] = 4.011626765338933
+Weight W1[(4, 5)] = -0.22677330685379865
+Weight W1[(4, 6)] = -3.284984070590509
+Weight W1[(4, 7)] = 0.32425505198468363
+Weight W1[(4, 8)] = -1.6431679152982543
+Weight W1[(4, 9)] = 1.1838013044440716
+Weight W1[(4, 10)] = 0.6107373474306885
+Weight W1[(4, 11)] = -4.915539412434765
+Weight W1[(4, 12)] = 3.0641257634893684
+Weight W2[(0, 0)] = -3.087073218580934
+Weight W2[(0, 1)] = 4.907406154306168
+Weight W2[(0, 2)] = 4.414573008275158
+Weight W2[(0, 3)] = 4.980704532733381
+Weight W2[(0, 4)] = -4.930967758725783
+Bias b1[0] = -3.8852318990642942
+Bias b1[1] = 1.7506264199258152
+Bias b1[2] = -4.5485239415122605
+Bias b1[3] = -1.8396472208786823
+Bias b1[4] = 0.9822876018855587
+Bias b2[0] = 4.724110009212763
+Auxiliary Variable for calculation of z = Wx + b [0, 0] = -0.37466268457271834
+Variable for hidden layer relu_activation[0, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [0, 1] = 2.8682953272098897
+Variable for hidden layer relu_activation[0, 1] = 2.8682953272098897
+Auxiliary Variable for calculation of z = Wx + b [0, 2] = -0.9521033653740687
+Variable for hidden layer relu_activation[0, 2] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [0, 3] = -1.093810346178828
+Variable for hidden layer relu_activation[0, 3] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [0, 4] = -0.41472626049802086
+Variable for hidden layer relu_activation[0, 4] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [1, 0] = 1.717991679003075
+Variable for hidden layer relu_activation[1, 0] = 1.717991679003075
+Auxiliary Variable for calculation of z = Wx + b [1, 1] = 2.783026400372047
+Variable for hidden layer relu_activation[1, 1] = 2.783026400372047
+Auxiliary Variable for calculation of z = Wx + b [1, 2] = 5.915767727347517
+Variable for hidden layer relu_activation[1, 2] = 5.915767727347517
+Auxiliary Variable for calculation of z = Wx + b [1, 3] = -0.08079975227676445
+Variable for hidden layer relu_activation[1, 3] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [1, 4] = 0.40429657020373294
+Variable for hidden layer relu_activation[1, 4] = 0.40429657020373294
+Auxiliary Variable for calculation of z = Wx + b [2, 0] = 5.357488635492075
+Variable for hidden layer relu_activation[2, 0] = 5.357488635492075
+Auxiliary Variable for calculation of z = Wx + b [2, 1] = 2.124143944807307
+Variable for hidden layer relu_activation[2, 1] = 2.124143944807307
+Auxiliary Variable for calculation of z = Wx + b [2, 2] = 12.936553938342788
+Variable for hidden layer relu_activation[2, 2] = 12.936553938342788
+Auxiliary Variable for calculation of z = Wx + b [2, 3] = -2.3116863270127914
+Variable for hidden layer relu_activation[2, 3] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [2, 4] = 8.034639690379722
+Variable for hidden layer relu_activation[2, 4] = 8.034639690379722
+Auxiliary Variable for calculation of z = Wx + b [3, 0] = -7.681232877059285
+Variable for hidden layer relu_activation[3, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [3, 1] = 4.973795267783812
+Variable for hidden layer relu_activation[3, 1] = 4.973795267783812
+Auxiliary Variable for calculation of z = Wx + b [3, 2] = 3.547223143989067
+Variable for hidden layer relu_activation[3, 2] = 3.547223143989067
+Auxiliary Variable for calculation of z = Wx + b [3, 3] = -0.18483948332524508
+Variable for hidden layer relu_activation[3, 3] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [3, 4] = 5.7376199660419
+Variable for hidden layer relu_activation[3, 4] = 5.7376199660419
+Auxiliary Variable for calculation of z = Wx + b [4, 0] = -2.0817162309513795
+Variable for hidden layer relu_activation[4, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [4, 1] = -0.05350915865203998
+Variable for hidden layer relu_activation[4, 1] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [4, 2] = 8.175961734508505
+Variable for hidden layer relu_activation[4, 2] = 8.175961734508505
+Auxiliary Variable for calculation of z = Wx + b [4, 3] = -0.0508742837595621
+Variable for hidden layer relu_activation[4, 3] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [4, 4] = 3.7756259847381597
+Variable for hidden layer relu_activation[4, 4] = 3.7756259847381597
+Auxiliary Variable for calculation of z = Wx + b [5, 0] = -12.207706843145269
+Variable for hidden layer relu_activation[5, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [5, 1] = 3.235087837951682
+Variable for hidden layer relu_activation[5, 1] = 3.235087837951682
+Auxiliary Variable for calculation of z = Wx + b [5, 2] = -9.860793759714308
+Variable for hidden layer relu_activation[5, 2] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [5, 3] = -11.02988693614138
+Variable for hidden layer relu_activation[5, 3] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [5, 4] = -0.4763833317088134
+Variable for hidden layer relu_activation[5, 4] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [6, 0] = -2.929878168198007
+Variable for hidden layer relu_activation[6, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [6, 1] = 27.083524221427613
+Variable for hidden layer relu_activation[6, 1] = 27.083524221427613
+Auxiliary Variable for calculation of z = Wx + b [6, 2] = -3.3223682856995436
+Variable for hidden layer relu_activation[6, 2] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [6, 3] = 0.17553979335858733
+Variable for hidden layer relu_activation[6, 3] = 0.17553979335858733
+Auxiliary Variable for calculation of z = Wx + b [6, 4] = 25.351671598337713
+Variable for hidden layer relu_activation[6, 4] = 25.351671598337713
+Auxiliary Variable for calculation of z = Wx + b [7, 0] = -8.388194664838604
+Variable for hidden layer relu_activation[7, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [7, 1] = 8.879617432867342
+Variable for hidden layer relu_activation[7, 1] = 8.879617432867342
+Auxiliary Variable for calculation of z = Wx + b [7, 2] = -7.2345360773218506
+Variable for hidden layer relu_activation[7, 2] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [7, 3] = -1.1825517640535221
+Variable for hidden layer relu_activation[7, 3] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [7, 4] = -2.810360811636983
+Variable for hidden layer relu_activation[7, 4] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [8, 0] = -2.9078235846489093
+Variable for hidden layer relu_activation[8, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [8, 1] = 0.4405571058231521
+Variable for hidden layer relu_activation[8, 1] = 0.4405571058231521
+Auxiliary Variable for calculation of z = Wx + b [8, 2] = -1.1958391052551256
+Variable for hidden layer relu_activation[8, 2] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [8, 3] = 3.395884451161692
+Variable for hidden layer relu_activation[8, 3] = 3.395884451161692
+Auxiliary Variable for calculation of z = Wx + b [8, 4] = -3.0820193516639316
+Variable for hidden layer relu_activation[8, 4] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [9, 0] = -11.70340347368554
+Variable for hidden layer relu_activation[9, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [9, 1] = 0.07599600050064005
+Variable for hidden layer relu_activation[9, 1] = 0.07599600050064005
+Auxiliary Variable for calculation of z = Wx + b [9, 2] = -3.9929165803498536
+Variable for hidden layer relu_activation[9, 2] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [9, 3] = 3.534228270599302
+Variable for hidden layer relu_activation[9, 3] = 3.534228270599302
+Auxiliary Variable for calculation of z = Wx + b [9, 4] = -6.625654729380403
+Variable for hidden layer relu_activation[9, 4] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [10, 0] = 1.1193443784579173
+Variable for hidden layer relu_activation[10, 0] = 1.1193443784579173
+Auxiliary Variable for calculation of z = Wx + b [10, 1] = 3.28715161300821
+Variable for hidden layer relu_activation[10, 1] = 3.28715161300821
+Auxiliary Variable for calculation of z = Wx + b [10, 2] = -7.28182037857967
+Variable for hidden layer relu_activation[10, 2] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [10, 3] = -0.06261341958661942
+Variable for hidden layer relu_activation[10, 3] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [10, 4] = -3.362135935528718
+Variable for hidden layer relu_activation[10, 4] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [11, 0] = -16.714596030879555
+Variable for hidden layer relu_activation[11, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [11, 1] = -7.7723051460176205
+Variable for hidden layer relu_activation[11, 1] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [11, 2] = -9.26101590947926
+Variable for hidden layer relu_activation[11, 2] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [11, 3] = 5.134994421281476
+Variable for hidden layer relu_activation[11, 3] = 5.134994421281476
+Auxiliary Variable for calculation of z = Wx + b [11, 4] = -3.6207429938248046
+Variable for hidden layer relu_activation[11, 4] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [12, 0] = -10.935083357170333
+Variable for hidden layer relu_activation[12, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [12, 1] = 6.183740171298818
+Variable for hidden layer relu_activation[12, 1] = 6.183740171298818
+Auxiliary Variable for calculation of z = Wx + b [12, 2] = 0.21061276544654267
+Variable for hidden layer relu_activation[12, 2] = 0.21061276544654267
+Auxiliary Variable for calculation of z = Wx + b [12, 3] = -0.22842288342995704
+Variable for hidden layer relu_activation[12, 3] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [12, 4] = -1.4677840249493093
+Variable for hidden layer relu_activation[12, 4] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [13, 0] = -9.557983724624155
+Variable for hidden layer relu_activation[13, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [13, 1] = 7.534711726437343
+Variable for hidden layer relu_activation[13, 1] = 7.534711726437343
+Auxiliary Variable for calculation of z = Wx + b [13, 2] = -8.197872879352888
+Variable for hidden layer relu_activation[13, 2] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [13, 3] = -0.11502021402523982
+Variable for hidden layer relu_activation[13, 3] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [13, 4] = -4.0485424414025335
+Variable for hidden layer relu_activation[13, 4] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [14, 0] = 0.6378716294143235
+Variable for hidden layer relu_activation[14, 0] = 0.6378716294143235
+Auxiliary Variable for calculation of z = Wx + b [14, 1] = 5.634770830143113
+Variable for hidden layer relu_activation[14, 1] = 5.634770830143113
+Auxiliary Variable for calculation of z = Wx + b [14, 2] = 0.2371303501317326
+Variable for hidden layer relu_activation[14, 2] = 0.2371303501317326
+Auxiliary Variable for calculation of z = Wx + b [14, 3] = -0.09983060605794719
+Variable for hidden layer relu_activation[14, 3] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [14, 4] = 2.6676085758732473
+Variable for hidden layer relu_activation[14, 4] = 2.6676085758732473
+Auxiliary Variable for calculation of z = Wx + b [15, 0] = -1.752251670718961
+Variable for hidden layer relu_activation[15, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [15, 1] = -0.057998662369230125
+Variable for hidden layer relu_activation[15, 1] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [15, 2] = -1.7773105727187777
+Variable for hidden layer relu_activation[15, 2] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [15, 3] = 3.468563511527033
+Variable for hidden layer relu_activation[15, 3] = 3.468563511527033
+Auxiliary Variable for calculation of z = Wx + b [15, 4] = -8.289467283142429
+Variable for hidden layer relu_activation[15, 4] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [16, 0] = -12.634550964579425
+Variable for hidden layer relu_activation[16, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [16, 1] = -14.038580963660369
+Variable for hidden layer relu_activation[16, 1] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [16, 2] = -2.6547641007412732
+Variable for hidden layer relu_activation[16, 2] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [16, 3] = 3.8345434650965884
+Variable for hidden layer relu_activation[16, 3] = 3.8345434650965884
+Auxiliary Variable for calculation of z = Wx + b [16, 4] = 1.059191274973574
+Variable for hidden layer relu_activation[16, 4] = 1.059191274973574
+Auxiliary Variable for calculation of z = Wx + b [17, 0] = -7.093898108023501
+Variable for hidden layer relu_activation[17, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [17, 1] = 8.166409871262415
+Variable for hidden layer relu_activation[17, 1] = 8.166409871262415
+Auxiliary Variable for calculation of z = Wx + b [17, 2] = -8.080057718251771
+Variable for hidden layer relu_activation[17, 2] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [17, 3] = -0.7837637208954693
+Variable for hidden layer relu_activation[17, 3] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [17, 4] = -4.215903104669231
+Variable for hidden layer relu_activation[17, 4] = 0.0
+Auxiliary Variable for calculation of z = Wx + b[0, 0] = 18.800000151030613
+Binary_variable associated = 1.0
+Prediction Variable y_pred[0, 0] = 18.800000151030613
+Auxiliary Variable for calculation of z = Wx + b[1, 0] = 37.2
+Binary_variable associated = 1.0
+Prediction Variable y_pred[1, 0] = 37.2
+Auxiliary Variable for calculation of z = Wx + b[2, 0] = 16.1
+Binary_variable associated = 1.0
+Prediction Variable y_pred[2, 0] = 16.1
+Auxiliary Variable for calculation of z = Wx + b[3, 0] = 16.5
+Binary_variable associated = 1.0
+Prediction Variable y_pred[3, 0] = 16.5
+Auxiliary Variable for calculation of z = Wx + b[4, 0] = 22.2
+Binary_variable associated = 1.0
+Prediction Variable y_pred[4, 0] = 22.2
+Auxiliary Variable for calculation of z = Wx + b[5, 0] = 20.59999997555884
+Binary_variable associated = 1.0
+Prediction Variable y_pred[5, 0] = 20.59999997555884
+Auxiliary Variable for calculation of z = Wx + b[6, 0] = 13.5
+Binary_variable associated = 1.0
+Prediction Variable y_pred[6, 0] = 13.5
+Auxiliary Variable for calculation of z = Wx + b[7, 0] = 48.29999924816674
+Binary_variable associated = 1.0
+Prediction Variable y_pred[7, 0] = 48.29999924816674
+Auxiliary Variable for calculation of z = Wx + b[8, 0] = 23.799999741000835
+Binary_variable associated = 1.0
+Prediction Variable y_pred[8, 0] = 23.799999741000835
+Auxiliary Variable for calculation of z = Wx + b[9, 0] = 22.700000017341207
+Binary_variable associated = 1.0
+Prediction Variable y_pred[9, 0] = 22.700000017341207
+Auxiliary Variable for calculation of z = Wx + b[10, 0] = 17.4
+Binary_variable associated = 1.0
+Prediction Variable y_pred[10, 0] = 17.4
+Auxiliary Variable for calculation of z = Wx + b[11, 0] = 30.3
+Binary_variable associated = 1.0
+Prediction Variable y_pred[11, 0] = 30.3
+Auxiliary Variable for calculation of z = Wx + b[12, 0] = 36.000000013812716
+Binary_variable associated = 1.0
+Prediction Variable y_pred[12, 0] = 36.000000013812716
+Auxiliary Variable for calculation of z = Wx + b[13, 0] = 41.700000708015
+Binary_variable associated = 1.0
+Prediction Variable y_pred[13, 0] = 41.700000708015
+Auxiliary Variable for calculation of z = Wx + b[14, 0] = 18.3
+Binary_variable associated = 1.0
+Prediction Variable y_pred[14, 0] = 18.3
+Auxiliary Variable for calculation of z = Wx + b[15, 0] = 22.00000001321102
+Binary_variable associated = 1.0
+Prediction Variable y_pred[15, 0] = 22.00000001321102
+Auxiliary Variable for calculation of z = Wx + b[16, 0] = 18.6
+Binary_variable associated = 1.0
+Prediction Variable y_pred[16, 0] = 18.6
+Auxiliary Variable for calculation of z = Wx + b[17, 0] = 44.800000071362355
+Binary_variable associated = 1.0
+Prediction Variable y_pred[17, 0] = 44.800000071362355

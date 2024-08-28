@@ -15,6 +15,9 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
+
+
+
 ########################################################
 
 #### Definition of the parameters we might want to change 
@@ -375,7 +378,7 @@ def write_variables_to_file(model, filename):
         for i in range(n):
             for j in range(output_dim):
                 f.write(f"Hinge Loss Term hinge_loss_terms[{i}, {j}] = {hinge_loss_terms[i, j].X}\n")
-        '''
+        
         # Write the values of correct_pred variables
         for i in range(n):
             #for j in range(output_dim):
@@ -384,7 +387,7 @@ def write_variables_to_file(model, filename):
         for i in range(n):
             for j in range(output_dim):
                 f.write(f"Predicted class sample {i} class {j} = {predicted_class[i, j].X}\n")
-        
+        '''
 
 # Call the function to write variables to a file
 write_variables_to_file(model, 'isolating_behaviors_scripts/variables_values.txt')
