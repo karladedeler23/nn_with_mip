@@ -69,7 +69,7 @@ def train_gurobi_model_regression(X_train_sample, y_train_sample, input_dim, hid
 
     if optimize_model(model):
         W, b = extract_weights_biases(model, weights, biases)
-        write_variables_to_file(model, weights, biases, hidden_vars, binary_vars[-1], relu_activation, y_pred, hidden_layers, output_dim, n, 'variables_values.txt')
+        #write_variables_to_file(model, weights, biases, hidden_vars, binary_vars[-1], relu_activation, y_pred, hidden_layers, output_dim, n, 'variables_values.txt')
         return model.Runtime, W, b
     else:
         return None, None, None

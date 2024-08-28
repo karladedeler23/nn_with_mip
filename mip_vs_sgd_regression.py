@@ -8,7 +8,7 @@ import os
 num_experiments = 1
 random_nb = np.random.randint(390)
 print(random_nb)
-hidden_layers = [5]  # Example hidden layers
+hidden_layers = [4]  # Example hidden layers
 lambda_reg = 0.0  # Regularization parameter
 bound = 5
 
@@ -19,7 +19,7 @@ current_date_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 
 
 
-for size in range(8, 19, 2):
+for size in range(20, 49, 3):
     sample_size = size  # number of data points
     size_list.append(sample_size)
     
