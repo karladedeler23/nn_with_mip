@@ -6,13 +6,11 @@ from keras.datasets import mnist
 from keras.models import Sequential
 from keras.layers import Input, Dense, Flatten
 from keras.constraints import Constraint
-from tensorflow.keras.callbacks import Callback
 from keras.utils import to_categorical
 from tensorflow.keras import backend as K
 from sklearn.metrics import accuracy_score
 import tensorflow as tf
 import pandas as pd
-from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from matplotlib import pyplot as plt
 import os
@@ -92,36 +90,6 @@ def load_and_preprocess_data_smaller(n, random_nb):
 
 ### TRAINING WITH SGD
 
-# Define the custom max_correct loss function 
-def custom_accuracy(y_true, y_pred):
-    # Convert y_true to the correct format
-    y_true_class = K.argmax(y_true, axis=-1)
-    # Compute the predicted class
-    y_pred_class = K.argmax(y_pred, axis=-1)
-    # Compute the accuracy
-    accuracy = K.sum(K.cast(K.equal(y_true_class, y_pred_class), dtype='float32'))
-    return accuracy
-
-# Define the custom hinge loss function
-def hinge_loss(y_true, y_pred):
-    hinge_loss = K.sum(K.maximum(0.0, 1 - (2 * y_true - 1) * y_pred))
-    return hinge_loss
-
-# To stop training when the loss is below a given variable:
-class CustomStopper(Callback):
-    def __init__(self, monitor='loss', value=6000, verbose=1):
-        super(CustomStopper, self).__init__()
-        self.monitor = monitor
-        self.value = value
-        self.verbose = verbose
-
-    def on_epoch_end(self, epoch, logs=None):
-        current = logs.get(self.monitor)
-        if current is not None and current < self.value:
-            if self.verbose > 0:
-                print(f"Epoch {epoch + 1}: early stopping threshold reached: {current:.4f}")
-            self.model.stop_training = True
-
 # To make sure the weights and biases are also between -1 and 1 like when using MIP
 class ClipConstraint(Constraint):
     def __init__(self, min_value, max_value):
@@ -133,9 +101,9 @@ class ClipConstraint(Constraint):
         return {'min_value': self.min_value, 'max_value': self.max_value}
 
 def train_sgd(X, y_one_hot, X_test, y_test_one_hot, input_dim, hidden_layers, output_dim, loss_function):
-    # Define the model with the constraints applied
     weight_constraint = ClipConstraint(min_value=-1, max_value=1)
     bias_constraint = ClipConstraint(min_value=-1, max_value=1)
+    
     model_sgd = Sequential([
         Input(shape=(input_dim,)),
         Dense(hidden_layers[0], activation='relu', 
@@ -146,42 +114,12 @@ def train_sgd(X, y_one_hot, X_test, y_test_one_hot, input_dim, hidden_layers, ou
             bias_constraint=bias_constraint)
     ])
 
-    # Define the loss function
     obj_function = 'categorical_crossentropy'
 
-    # Define the custom callback to stop training when loss is below 10 times the variable
-    #custom_stopper = CustomStopper(monitor='loss', value=0.9*X.shape[0]*10, verbose=1)
-
     model_sgd.compile(optimizer='adam', loss=obj_function, metrics=['accuracy'])
-    model_sgd.fit(X, y_one_hot, epochs=10, batch_size=X.shape[0], verbose=1) #callbacks=[custom_stopper])
+    model_sgd.fit(X, y_one_hot, epochs=10, batch_size=X.shape[0], verbose=1)
     accuracy_sgd = model_sgd.evaluate(X_test, y_test_one_hot, verbose=0)[1]
 
-    '''
-    # Extract weights and biases
-    sgd_w, sgd_b = [], []
-    for layer_idx, layer in enumerate(model_sgd.layers):
-        weights, biases = layer.get_weights()
-        sgd_w.append(weights)
-        sgd_b.append(biases)
-
-    # Forward pass to calculate the output
-    hidden_layer_output = np.maximum(0, np.dot(X, sgd_w[0]) + sgd_b[0])  # ReLU activation
-    #print(f"hidden_layer_output : {hidden_layer_output}")
-    output_layer_output = np.maximum(0, np.dot(hidden_layer_output, sgd_w[1]) + sgd_b[1])  # ReLU activation
-    print(f"output_layer_output : {output_layer_output}")
-    print(f"Keras predictions loss: {model_sgd.predict(X)}")
-
-    # Calculate hinge loss manually
-    hinge_loss_per_class = np.maximum(1.0 - (2*y_one_hot-1) * output_layer_output, 0.0)
-    hinge_loss_total = np.sum(hinge_loss_per_class)
-    print(f"Manual hinge loss: {hinge_loss_total}")
-
-    # Compare with Keras evaluation
-    loss, accuracy = model_sgd.evaluate(X, y_one_hot, verbose=0)
-    print(f"Keras evaluation loss: {loss}")
-    
-    return sgd_w, sgd_b
-    '''
     return accuracy_sgd
 
 
@@ -470,7 +408,6 @@ def predict_classification(W_opt, b_opt, X, y=None, true_labels=None):
     return classification_res
 
 
-
 ########################################################
 
 ### PLOTTING THE DISTRIBUTION OF THE PARAMETERS OBTAINED
@@ -511,26 +448,6 @@ def plot_distribution_parameters(current_date_time, random_nb, lambda_reg, warm_
     if not os.path.exists(directory):
         os.makedirs(directory)
     plt.savefig(full_path)  # Save histograms
-    #plt.show()
-
-    '''
-    # Box plots
-    fig, axes = plt.subplots(1, 2, figsize=(14, 6))
-
-    # Weight box plot
-    sns.boxplot(W_flat, ax=axes[0])
-    axes[0].set_title('Box Plot of Weights')
-    axes[0].set_xlabel('Weight values')
-
-    # Bias box plot
-    sns.boxplot(b_flat, ax=axes[1])
-    axes[1].set_title('Box Plot of Biases')
-    axes[1].set_xlabel('Bias values')
-
-    plt.tight_layout()
-    plt.savefig(f'parameter_boxplots_{n}training_points_{loss_function}_loss_{current_date_time}.png')  # Save box plots
-    #plt.show()
-    '''
 
 
 ########################################################
@@ -539,7 +456,6 @@ def plot_distribution_parameters(current_date_time, random_nb, lambda_reg, warm_
 def run_multiple_experiments_warm_start(current_date_time, num_experiments, sample_size, hidden_layers, M, margin, epsilon, loss_function, random_nb, lambda_reg = 0.0, warm_start = False, W_init = None, b_init = None, dataset = 'mnist'):
     training_accuracies, testing_accuracies = [], []
     runtimes = []
-    ''' W_list, b_list = [], [] '''
     nn_config = {'hidden layers': hidden_layers,
                 'training set size' : sample_size,
                 'starting point in the data': random_nb,
@@ -589,30 +505,10 @@ def run_multiple_experiments_warm_start(current_date_time, num_experiments, samp
                 file.write(f"Training accuracy: {accuracy_training}\n")
                 file.write(f"Testing accuracy: {accuracy_testing}\n\n")
             '''
-            '''
-            W_list.append(W_opt)
-            b_list.append(b_opt)
-            '''
         else:
             print("Model did not converge.")
             return
 
-    '''
-    # Stack weights from each layer across simulations
-    stacked_weights = [np.stack([w[i] for w in W_list], axis=0) for i in range(len(W_list[0]))]
-    stacked_biaises = [np.stack([b[i] for b in b_list], axis=0) for i in range(len(b_list[0]))]
-
-    # Calculate the mean of the weights across simulations
-    W_avg = [np.mean(weights, axis=0) for weights in stacked_weights]
-    b_avg = [np.mean(biaises, axis=0) for biaises in stacked_biaises]
-
-    (X_train_sample, y_train_sample, y_train_sample_one_hot), (X_test, y_test, y_test_one_hot), (X_train, y_train, y_train_one_hot) = load_and_preprocess_data(sample_size*num_experiments, random_nb)
-    predictions_training_avg = predict_with_mip(W_avg, b_avg, X_train_sample, y_train_sample_one_hot, y_train_sample)
-    accuracy_training_avg = accuracy_score(y_train_sample, predictions_training_avg)
-    predictions_testing_avg = predict_with_mip(W_avg, b_avg, X_test, y_test_one_hot, y_test)
-    accuracy_testing_avg = accuracy_score(y_test, predictions_testing_avg)
-    return accuracy_training_avg, accuracy_testing_avg, W_avg, b_avg
-    '''
     return np.mean(training_accuracies), np.mean(testing_accuracies), W_opt, b_opt, np.mean(runtimes)
 
 

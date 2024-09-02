@@ -1,8 +1,9 @@
 from experiments import *
 from isolating_behaviors_scripts.write_to import write_variables_to_file
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.optimizers import SGD
-from sklearn.metrics import mean_squared_error
-from tensorflow.keras.regularizers import l2
+from tensorflow.keras.regularizers import l2, l1
 from datetime import datetime
 
 ########################################################
@@ -19,25 +20,26 @@ def load_and_preprocess_data_regression(n, random_nb):
     data = pd.read_csv(url, delim_whitespace=True, names=column_names)
     
     X = data.iloc[:, :-1].values
-    y = data.iloc[:, -1].values
-    
+    y = data.iloc[:, -1].values.reshape(-1, 1)
+
+    # Nornalize input and ouput
+    scaler_X = MinMaxScaler(feature_range=(-1, 1))
+    scaler_y = MinMaxScaler(feature_range=(0, 1))
+    X = scaler_X.fit_transform(X)
+    y = scaler_y.fit_transform(y).flatten()
+  
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     
-    scaler = StandardScaler()
-    X_train = scaler.fit_transform(X_train)
-    X_test = scaler.transform(X_test)
-
     # Select only n training points
     selected_indices = [i + random_nb for i in range(n)]
     X_train_sample = X_train[selected_indices]
     y_train_sample = y_train[selected_indices]
-    '''
-    print("Shapes:")
-    print(f"Training set: {X_train_sample.shape[0]}")
-    print(f"Testing set: {X_test.shape[0]}")
-    '''
-    return X_train_sample, X_test, y_train_sample, y_test
 
+    ''' print("Shapes:")
+    print(f"Training set: {X_train_sample.shape[0]}")
+    print(f"Testing set: {X_test.shape[0]}") '''
+
+    return X_train_sample, X_test, y_train_sample, y_test
 
 def compute_big_M(input_dim, hidden_layers):
     M = [10*input_dim+1]
@@ -50,22 +52,24 @@ def compute_big_M(input_dim, hidden_layers):
 ### TRAINING NN WITH MIP
 
 # Function to train Gurobi model for regression
-def train_gurobi_model_regression(X_train_sample, y_train_sample, input_dim, hidden_layers, output_dim, lambda_reg, bound):
-    n = X_train_sample.shape[0]
+def train_gurobi_model_regression(X_train, y_train, input_dim, hidden_layers, output_dim, loss_function, type_reg, lambda_reg):
+    n = X_train.shape[0]
     M = compute_big_M(input_dim, hidden_layers)
-    # print(M)
+
     model = initialize_model()
 
     weights, biases, hidden_vars, relu_activation, binary_vars, y_pred = create_variables(model, input_dim, hidden_layers, output_dim, n)
-    modify_bounds_to_infinity(weights, biases, bound)
+    update_bound(y_pred, 'UB', 1)
 
     if hidden_layers != []:
-        add_hidden_layer_constraints(model, X_train_sample, weights, biases, hidden_vars, relu_activation, binary_vars, input_dim, hidden_layers, M, n)
+        add_hidden_layer_constraints(model, X_train, weights, biases, hidden_vars, relu_activation, binary_vars, input_dim, hidden_layers, M, n)
         add_output_layer_constraints(model, relu_activation, weights, biases, hidden_vars, y_pred, binary_vars, output_dim, hidden_layers, M, n)
 
     else:
-        add_output_layer_constraints(model, relu_activation, weights, biases, X_train_sample, y_pred, binary_vars, output_dim, hidden_layers, M, n)
-    set_loss_function_regression(model, weights, biases, y_pred, y_train_sample, n, input_dim, hidden_layers, output_dim, lambda_reg)
+        add_output_layer_constraints(model, relu_activation, weights, biases, X_train, y_pred, binary_vars, output_dim, hidden_layers, M, n)
+    
+    #set_loss_function_regression(model, weights, biases, loss_function, y_pred, y_train, n, output_dim, type_reg, lambda_reg)
+    new_formulation(model, weights, biases, loss_function, n, y_pred, y_train, lambda_reg, type_reg)
 
     if optimize_model(model):
         W, b = extract_weights_biases(model, weights, biases)
@@ -74,281 +78,248 @@ def train_gurobi_model_regression(X_train_sample, y_train_sample, input_dim, hid
     else:
         return None, None, None
 
-def modify_bounds_to_infinity(weights, biases, bound):
-    # Modify the bounds of the weights and biases
-    for W in weights:
-        for i in W.keys():
-            W[i].setAttr(GRB.Attr.LB, -bound)
-            W[i].setAttr(GRB.Attr.UB, bound)
+# Function to change the bound for a varibale within the model after creation, to maximise the reuse of previous function
+def update_bound(var, bound, value):
+    assert bound in ['LB', 'UB'], "Bound must be either 'LB' (Lower Bound) or 'UB' (Upper Bound)"
+    for v in var.values():
+        v.setAttr(bound, value)
 
-    for b in biases:
-        for i in b.keys():
-            b[i].setAttr(GRB.Attr.LB, -bound)
-            b[i].setAttr(GRB.Attr.UB, bound)
-
-
-'''
-# Define variables to mimic the NN
-def create_variables_regression(model, input_dim, hidden_layers, output_dim, n):
-    structure = hidden_layers + [output_dim]
-    weights, biases, hidden_vars = [], [], []
-
-    previous_layer_size = input_dim
-    for i in range(len(structure)):
-        layer_size = structure[i]
-        W = model.addVars(layer_size, previous_layer_size, vtype=GRB.CONTINUOUS, lb=-GRB.INFINITY, ub=GRB.INFINITY, name=f"W{i+1}")
-        b = model.addVars(layer_size, vtype=GRB.CONTINUOUS, lb=-GRB.INFINITY, ub=GRB.INFINITY, name=f"b{i+1}")
-        weights.append(W)
-        biases.append(b)
-        previous_layer_size = layer_size
-
-    # Define variables for the hidden outputs
-    for i, layer_size in enumerate(hidden_layers):
-        z_hidden = model.addVars(n, layer_size, vtype=GRB.CONTINUOUS, lb = -GRB.INFINITY, name=f"z{i+1}")
-        hidden_vars.append(z_hidden)
-
-    # Define the output layer variables for the final activation function (here ReLU)
-    y_pred = model.addVars(n, output_dim, vtype=GRB.CONTINUOUS, lb= -GRB.INFINITY, name=f"y_pred")
-
-    return weights, biases, hidden_vars, y_pred
-
-# Constraints for the  hidden layers
-def add_layer_constraints_regression(model, X_train_sample, weights, biases, hidden_vars, input_dim, hidden_layers, n):   
-    if hidden_vars != []:
-        # Constraints for the first hidden layer
+def calculate_error(model, loss_function, n, y_pred, y_train_sample):
+    loss_expr = 0
+    
+    if loss_function == 'mse':
         for i in range(n):
-            for j in range(hidden_layers[0]):
-                model.addConstr(hidden_vars[0][i, j] == gp.quicksum(X_train_sample[i, k] * weights[0][j, k] for k in range(input_dim)) + biases[0][j])
+            loss_expr += 1/n * (y_pred[i, 0] - y_train_sample[i]) * (y_pred[i, 0] - y_train_sample[i])
+    elif loss_function == 'mae':
+        for i in range(n):
+            diff_pred = model.addVars(n, vtype=GRB.CONTINUOUS, name=f"abs_diff_y_pred")
+            model.addConstr(diff_pred[i] >= y_pred[i,0] - y_train_sample[i])
+            model.addConstr(diff_pred[i] >= - (y_pred[i, 0] - y_train_sample[i]))
+            loss_expr += 1/n * diff_pred[i]
+    else:
+        raise ValueError("Unsupported loss function")
+    return loss_expr
 
-        # Constraints for subsequent hidden layers
-        for l in range(1, len(hidden_layers)):
-            for i in range(n):
-                for j in range(hidden_layers[l]):
-                    model.addConstr(hidden_vars[l][i, j] == gp.quicksum(relu_activation[l-1][i, k] * weights[l][j, k] for k in range(hidden_layers[l-1])) + biases[l][j])
+def calculate_reg_l1(model, weights, biases):
+    print("REGULARISATION L1")
+    abs_weights, abs_biases = [], []
+    reg_expr = 0
+    
+    # Create absolute value variables for weights
+    for i, weight_matrix in enumerate(weights):
+        abs_weight_matrix = {}
+        for j, k in weight_matrix.keys():
+            abs_weight_matrix[j, k] = model.addVar(name=f'abs_weight_{i}_{j}_{k}', vtype=GRB.CONTINUOUS, lb=0, ub=1)
+        abs_weights.append(abs_weight_matrix)
+    
+    # Create absolute value variables for biases
+    for i, bias_matrix in enumerate(biases):
+        abs_bias_matrix = {}
+        for j in bias_matrix.keys():
+            abs_bias_matrix[j] = model.addVar(name=f'abs_bias_{i}_{j}', vtype=GRB.CONTINUOUS, lb=0, ub=1)
+        abs_biases.append(abs_bias_matrix)
+    
+    # Add the absolute values of the weights to the regularization term
+    for i, weight_matrix in enumerate(weights):
+        for (j, k) in weight_matrix.keys():
+            model.addConstr(abs_weights[i][j, k] >= weight_matrix[j, k])
+            model.addConstr(abs_weights[i][j, k] >= -weight_matrix[j, k])
+            # Add regularization to the loss expression
+            reg_expr += abs_weights[i][j, k]
+    
+    # Add the absolute values of the biases to the regularization term
+    for i, bias_matrix in enumerate(biases):
+        for j in bias_matrix.keys():
+            model.addConstr(abs_biases[i][j] >= bias_matrix[j])
+            model.addConstr(abs_biases[i][j] >= -bias_matrix[j])
+            # Add regularization to the loss expression
+            reg_expr += abs_biases[i][j]
 
-# Function to add constraints for the output layer for regression
-def add_output_layer_constraints_regression(model, weights, biases, hidden_vars, y_pred, output_dim, hidden_layers, n):
-    # Adding constraints for the output layer (regression)
-    for i in range(n):
-        length = None
-        if hidden_layers == []:
-            length = len(hidden_vars[i])
-        else : 
-            length = hidden_layers[-1]
-        for j in range(output_dim):
-            model.addConstr(
-                y_pred[i, j] == gp.quicksum(weights[-1][j, k] * hidden_vars[i, k] for k in range(length)) + biases[-1][j],
-                name=f"output_layer_{i}_{j}"
-            )
-'''
+    return reg_expr
+
+def calculate_reg_l2(weights, biases):
+    print("REGULARISATION L2")
+    reg_expr = 0
+
+    # Add the absolute values of the weights to the regularization term
+    for i, weight_matrix in enumerate(weights):
+        for (j, k) in weight_matrix.keys():
+            reg_expr += (weight_matrix[j, k] ** 2)
+    
+    # Add the absolute values of the biases to the regularization term
+    for i, bias_matrix in enumerate(biases):
+        for j in bias_matrix.keys():
+            reg_expr +=  (bias_matrix[j] ** 2)
+    return reg_expr
 
 # Function to set loss function for regression
-def set_loss_function_regression(model, weights, biases, y_pred, y_train_sample, n, input_dim, hidden_layers, output_dim, lambda_reg):
-    # Adding loss function for regression (MSE)
+def set_loss_function_regression(model, weights, biases, loss_function, y_pred, y_train_sample, n, output_dim, reg, lambda_reg):
+    # Adding loss function for regression
+    loss_expr = gp.LinExpr()
+    loss_expr = calculate_error(model, loss_function, n, y_pred, y_train_sample)
+
+    # Adding regularization
+    if lambda_reg != 0.0:
+        if reg == 1 :
+            loss_expr += lambda_reg * calculate_reg_l1(model, weights, biases)
+        elif reg == 2 :
+            loss_expr += lambda_reg * calculate_reg_l2(weights, biases)
+    
+    # Objective function
+    model.setObjective(loss_expr, GRB.MINIMIZE)
+
+def new_formulation(model, weights, biases, error_function, n, y_pred, y_train_sample, threshold, reg):
+    error = model.addVar(vtype=GRB.CONTINUOUS, name="error")
+    error_def = gp.LinExpr()
+    error_def += calculate_error(model, error_function, n, y_pred, y_train_sample)
+
+    # Add a constraint to ensure the error is under the threshold
+    model.addConstr(error == error_def, name="error_def")
+    model.addConstr(error <= threshold, name="error_threshold")
+
+    # Calculating the loss function = regularisation
     loss_expr = gp.LinExpr()
     loss_expr += 1
-    for i in range(n):
-        loss_expr += 1/n * (y_pred[i, 0] - y_train_sample[i]) * (y_pred[i, 0] - y_train_sample[i])
-    
-    # Adding L2 regularization
-    if lambda_reg != 0.0:
-        print("REGULARISATION L2")
-
-        # Add the absolute values of the weights to the regularization term
-        for i, weight_matrix in enumerate(weights):
-            for (j, k) in weight_matrix.keys():
-                loss_expr += lambda_reg * (weight_matrix[j, k] ** 2)
-        
-        # Add the absolute values of the biases to the regularization term
-        for i, bias_matrix in enumerate(biases):
-            for j in bias_matrix.keys():
-                loss_expr += lambda_reg * (bias_matrix[j] ** 2)
+    if reg == 1 :
+        loss_expr += calculate_reg_l1(model, weights, biases)
+    elif reg == 2 :
+        loss_expr += calculate_reg_l2(weights, biases)
     
     # Objective function
     model.setObjective(loss_expr, GRB.MINIMIZE)
 
 ########################################################
 
-# Function to compute the accuracy (Mean Squared Error)
-def compute_accuracy(X, y, weights, biases):
-    # Predict on the test set
+### CALCULATING THE ERROR
+
+def compute_error_with_mip(X, y, weights, biases, loss_function):
+    error = 0
     y_pred = [item[0] for item in predict_with_mip(weights, biases, X, y)]
-    print(y)
-    # Compute Mean Squared Error
-    mse = np.mean((y_pred - y)**2)
     # print(f'{y_pred} instead of {y}')
-    return mse
+    if loss_function == 'mse':
+        # Compute Mean Squared Error
+        error = np.mean((y_pred - y)**2)
+    elif loss_function == 'mae':
+        error = np.mean(np.abs(y_pred - y))
+    else :
+        raise ValueError("Unsupported loss function")
+    return error
+
+def compute_error_with_sgd(X, y, model, loss_function):
+    error = 0
+    y_pred = model.predict(X).flatten()
+    # print(f'{y_pred} instead of {y}')
+    if loss_function == 'mse':
+        # Compute Mean Squared Error
+        error = np.mean((y_pred - y)**2)
+    elif loss_function == 'mae':
+        error = np.mean(np.abs(y_pred - y))
+    else :
+        raise ValueError("Unsupported loss function")
+    return error
 
 ########################################################
 
 ### MAIN FUNCTION TO RUN THE TRAINING
 
-def run_regression_mip(current_date_time, num_experiments, sample_size, hidden_layers, random_nb, bound, lambda_reg = 0.0, warm_start = False, W_init = None, b_init = None):
-    training_accuracies, testing_accuracies = [], []
-    runtimes = []
-    predictions = []
-    nn_config = {'hidden layers': hidden_layers,
-                'training set size' : sample_size,
-                'starting point in the data': random_nb,
-                'loss' : 'mean squared error',                
-                'Regularisation' : lambda_reg,
-                'Warm start' : warm_start
-                }
-
-    for i in range(num_experiments):
-        # Load and preprocess data
-        X_train, X_test, y_train, y_test = load_and_preprocess_data_regression(sample_size, random_nb+i*sample_size)
-        input_dim = X_train.shape[1]
-
-        # Train Gurobi model and get optimal weights and biases
-        if warm_start and W_init is not None and b_init is not None : 
-            print('warm start')
-            # Using previous weights (when we are actually training with more points)
-            # runtime, W, b = train_gurobi_model_regression_warm_start(X_train, y_train, input_dim, hidden_layers, 1, M, lambda_reg, W_init, b_init)
-        else :
-            print('no warm start')
-            runtime, W, b = train_gurobi_model_regression(X_train, y_train, input_dim, hidden_layers, 1,lambda_reg, bound)
-        if W is not None and b is not None:
-            runtimes.append(runtime)
-            print(f"Training completed in {runtime:.2f} seconds. \n")
-            # Compute and print the test accuracy
-            predictions.append(predict_with_mip(W, b, X_train))
-            train_mse = compute_accuracy(X_train, y_train, W, b)
-            training_accuracies.append(train_mse)
-            test_mse = compute_accuracy(X_test, y_test, W, b)
-            testing_accuracies.append(test_mse)
-            
-            print("MIP")
-            print(f"Train Mean Squared Error: {train_mse:.2f}")
-            print(f"Test Mean Squared Error: {test_mse:.2f} \n")
-            
-        else:
-            print("Training failed.")
-
-    return np.mean(training_accuracies), np.mean(testing_accuracies), W, b, np.mean(runtimes), predictions
+def run_regression_mip(X_train, y_train, hidden_layers, loss_function, type_reg, lambda_reg = 0.0):
+    input_dim = X_train.shape[1]
+    runtime, W, b = train_gurobi_model_regression(X_train, y_train, input_dim, hidden_layers, 1, loss_function, type_reg, lambda_reg)
+    if W is not None and b is not None:
+        print(f"Training completed in {runtime:.2f} seconds. \n")
+    else:
+        print("Training failed.")
+    return W, b
     
-    
-# Function to train a NN using SGD
-def run_regression_sgd(num_experiments, sample_size, hidden_layers, random_nb, lambda_reg, bound):
-    testing_accuracies = []
-    predictions = []
-
-    for i in range(num_experiments):
-        # Load and preprocess data
-        X_train, X_test, y_train, y_test = load_and_preprocess_data_regression(sample_size, random_nb + i * sample_size)
-        weight_constraint = ClipConstraint(min_value=-bound, max_value=bound)
-        bias_constraint = ClipConstraint(min_value=-bound, max_value=bound)
-
-        # Build the neural network model
-        model_nn = Sequential()
-
-        # Input layer
-        model_nn.add(Input(shape=(X_train.shape[1],)))
-        model_nn.add(Dense(hidden_layers[0], activation='relu', kernel_regularizer=l2(lambda_reg), kernel_constraint=weight_constraint, 
-            bias_constraint=bias_constraint))
-
-        # Hidden layers
-        for units in hidden_layers[1:]:
-            model_nn.add(Dense(units, activation='relu', kernel_regularizer=l2(lambda_reg), kernel_constraint=weight_constraint, 
-            bias_constraint=bias_constraint))
-        
-        # Output layer
-        model_nn.add(Dense(1, activation='relu', kernel_regularizer=l2(lambda_reg)))
-
-        # Compile the model with SGD optimizer
-        sgd_optimizer = SGD(learning_rate=0.01)
-        model_nn.compile(optimizer=sgd_optimizer, loss='mean_squared_error')
-
-        # Train the model
-        model_nn.fit(X_train, y_train, epochs=10, batch_size=32, verbose=0)
-
-        # Make predictions
-        y_pred_train_nn = model_nn.predict(X_train).flatten()
-        predictions.append(y_pred_train_nn)
-        y_pred_test_nn = model_nn.predict(X_test).flatten()
-
-        # Evaluate performance
-        mse_train_nn = mean_squared_error(y_train, y_pred_train_nn)
-        mse_test_nn = mean_squared_error(y_test, y_pred_test_nn)
-        testing_accuracies.append(mse_test_nn)
-        
-        print("Neural Network with SGD")
-        print(f"Train Mean Squared Error: {mse_train_nn:.2f}")
-        print(f"Test Mean Squared Error: {mse_test_nn:.2f}\n")
-        
-        
-
-    return predictions, np.mean(testing_accuracies)
+def run_regression_sgd(X_train, y_train, hidden_layers, loss_function, type_reg, lambda_reg = 0.0):
+    # Build the neural network model
+    weight_constraint = ClipConstraint(min_value=-1, max_value=1)
+    bias_constraint = ClipConstraint(min_value=-1, max_value=1)
+    model_nn = Sequential()
+    regularizer = l2(lambda_reg)
+    if type_reg == 1:
+        regularizer = l1(lambda_reg)
+    # Input layer
+    model_nn.add(Input(shape=(X_train.shape[1],)))
+    model_nn.add(Dense(hidden_layers[0], activation='relu', kernel_regularizer=regularizer, kernel_constraint=weight_constraint, 
+        bias_constraint=bias_constraint))
+    # Hidden layers
+    for units in hidden_layers[1:]:
+        model_nn.add(Dense(units, activation='relu', kernel_regularizer=regularizer, kernel_constraint=weight_constraint, 
+        bias_constraint=bias_constraint))
+    # Output layer
+    model_nn.add(Dense(1, activation='relu', kernel_regularizer=regularizer))
+    # Compile the model with SGD optimizer
+    sgd_optimizer = SGD(learning_rate=0.01)
+    model_nn.compile(optimizer=sgd_optimizer, loss=loss_function)
+    # Train the model
+    model_nn.fit(X_train, y_train, epochs=10, batch_size=32, verbose=0)
+    return model_nn
 
 ########################################################
 
 def main():
-    num_experiments = 1
     random_nb = np.random.randint(390)
     print(random_nb)
-    sample_size = 10  # Number of samples to use for training
-    hidden_layers = [4]  # Example hidden layers
-    bound = 5
-    lambda_reg = 0.0  # Regularization parameter
-    current_date_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-    _, _, _, _, _, y_pred_mip = run_regression_mip(current_date_time, num_experiments, sample_size, hidden_layers, random_nb, bound, lambda_reg, warm_start = False, W_init = None, b_init = None)
-    y_pred_sgd, _ = run_regression_sgd(num_experiments, sample_size, hidden_layers, random_nb, lambda_reg, bound)
+    sample_size = 30 
+    hidden_layers = [1]
 
+    loss_function = 'mae'
+    type_reg = 1
+    lambda_reg = 0.1 
 
-    # Assuming y_test is the true values, and y_pred_sgd and y_pred_mip are the predictions
-    _, _, y_test, _ = load_and_preprocess_data_regression(sample_size, random_nb)
+    X_train, X_test, y_train, y_test = load_and_preprocess_data_regression(sample_size, random_nb)
+    W, b = run_regression_mip(X_train, y_train, hidden_layers, loss_function, type_reg, lambda_reg)
+    model_sgd = run_regression_sgd(X_train, y_train, hidden_layers, loss_function, type_reg, lambda_reg)
 
+    print("With MIP")
+    error_train_mip = compute_error_with_mip(X_train, y_train, W, b, loss_function)
+    error_test_mip = compute_error_with_mip(X_test, y_test, W, b, loss_function)
+    print(f"Training {loss_function}: {error_train_mip:.2f}")
+    print(f"Testing {loss_function}: {error_test_mip:.2f}\n")
+
+    print("With SGD")
+    error_train_sgd = compute_error_with_sgd(X_train, y_train, model_sgd, loss_function)
+    error_test_sgd = compute_error_with_sgd(X_test, y_test, model_sgd, loss_function)
+    print(f"Training {loss_function}: {error_train_sgd:.2f}")
+    print(f"Testing {loss_function}: {error_test_sgd:.2f}\n")
+
+    '''
     # Convert lists to NumPy arrays
-    y_test = np.squeeze(y_test)  # Remove single-dimensional entries
-    y_pred_sgd = np.squeeze(y_pred_sgd)
-    y_pred_mip = np.squeeze(y_pred_mip)
+    y_train = np.squeeze(y_train)  
+    y_pred_train_sgd = np.squeeze(model_sgd.predict(X_train))
+    y_pred_train_mip = np.squeeze(predict_with_mip(W, b, X_train))
 
-    mse_sgd = mean_squared_error(y_test, y_pred_sgd)
-    mse_mip = mean_squared_error(y_test, y_pred_mip)
-    mse_difference = mse_sgd - mse_mip
-
-    print(f"MSE SGD: {mse_sgd:.2f}")
-    print(f"MSE MIP: {mse_mip:.2f}")
-    print(f"MSE Difference: {mse_difference:.2f}")
-
-    # Define margin
-    margin = 1
-    # Calculate min and max values
-    min_value = min(min(y_pred_sgd), min(y_pred_mip), min(y_test))
-    max_value = max(max(y_pred_sgd), max(y_pred_mip), max(y_test))
-    # Set figure size to be square
+    # Results on training set
+    margin = 0.1
+    min_value = min(min(y_pred_train_sgd), min(y_pred_train_mip), min(y_train))
+    max_value = max(max(y_pred_train_sgd), max(y_pred_train_mip), max(y_train))
     plt.figure(figsize=(8, 8))
-    # Plot predictions
-    plt.plot(y_test, y_test, color='green', linestyle='--')
-    plt.scatter(y_test, y_pred_sgd, color='blue', label='SGD Predictions', alpha=0.5)
-    plt.scatter(y_test, y_pred_mip, color='red', label='MIP Predictions', alpha=0.5)
-    # Set axis labels and title
+    plt.plot(y_train, y_train, color='green', linestyle='--')
+    plt.scatter(y_train, y_pred_train_sgd, color='blue', label='SGD Predictions', alpha=0.5)
+    plt.scatter(y_train, y_pred_train_mip, color='red', label='MIP Predictions', alpha=0.5)
     plt.xlabel('True Values')
     plt.ylabel('Predictions')
     plt.title('Comparison of Model Predictions')
-    # Set equal scaling
     plt.gca().set_aspect('equal', adjustable='box')
-    # Set axis limits with added margin
-    plt.xlim([min(y_test) - margin, max(y_test) + margin])
+    plt.xlim([min(y_train) - margin, max(y_train) + margin])
     plt.ylim([min_value - margin, max_value + margin])
     plt.legend()
     plt.show()
 
     # Residual Analysis
-    residual_sgd = y_test - y_pred_sgd
-    residual_mip = y_test - y_pred_mip
-
+    residual_sgd = y_train - y_pred_train_sgd
+    residual_mip = y_train - y_pred_train_mip
     plt.figure(figsize=(12, 6))
-    plt.scatter(y_test, residual_sgd, color='blue', label='SGD Residuals')
-    plt.scatter(y_test, residual_mip, color='red', label='MIP Residuals')
+    plt.scatter(y_train, residual_sgd, color='blue', label='SGD Residuals')
+    plt.scatter(y_train, residual_mip, color='red', label='MIP Residuals')
     plt.axhline(y=0, color='black', linestyle='--')
     plt.xlabel('True Values')
     plt.ylabel('Residuals')
     plt.title('Residuals Analysis')
     plt.legend()
     plt.show()
-
-
+    '''
     return
 
 if __name__ == '__main__':
