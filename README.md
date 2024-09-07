@@ -36,11 +36,12 @@ root/
 │   ├── classification.py   # Classification task script
 │   ├── regression.py       # Regression task script
 │   ├── plots/              # Scripts for generating plots
-│   │   ├── plot_mip_vs_sgd.py       # MIP vs SGD comparison
-│   │   ├── plot_regularization.py   # Effect of regularization
-│   │   ├── plot_warm_start.py       # Warm start technique
+│   │   ├── plot_diff_loss.py        # Loss functions comparison
 │   │   ├── plot_loss_landscape.py   # Loss landscape exploration
+│   │   ├── plot_mip_vs_sgd.py       # MIP vs SGD comparison
 │   │   ├── plot_pen_vs_mnist.py     # Comparison on Pen and MNIST datasets
+│   │   ├── plot_regularisation.py   # Effect of regularization
+│   │   ├── plot_warm_start.py       # Warm start technique
 │   └── utils/              # Utility functions (optional)
 ├── graphs/                 # Folder to store generated plots
 ```
