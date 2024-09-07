@@ -1,8 +1,11 @@
-from experiments import run_multiple_experiments_warm_start, run_experiments_with_sgd
 from matplotlib import pyplot as plt
 from datetime import datetime
 import numpy as np
-import os
+import sys, os
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, parent_dir)
+from classification import run_multiple_experiments_warm_start, run_experiments_with_sgd
+
 
 # Define parameters
 num_experiments = 1

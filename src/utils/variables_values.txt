@@ -1,0 +1,116 @@
+Weight W1[(0, 0)] = 4.284931872222276e-09
+Weight W1[(0, 1)] = 3.2988869559686138e-09
+Weight W1[(0, 2)] = 1.1537398172176546e-09
+Weight W1[(0, 3)] = 4.2611373252647925e-09
+Weight W1[(0, 4)] = 1.0845984400079263e-09
+Weight W1[(0, 5)] = 0.0
+Weight W1[(0, 6)] = -1.3573913026960401e-09
+Weight W1[(0, 7)] = 1.9600196635505613e-09
+Weight W1[(0, 8)] = 1.23082438471778e-09
+Weight W1[(0, 9)] = 8.7110278392526e-10
+Weight W1[(0, 10)] = -8.620474300620368e-10
+Weight W1[(0, 11)] = -5.473514350608266e-09
+Weight W1[(0, 12)] = 1.5609853354019846e-09
+Weight W2[(0, 0)] = 0.0
+Bias b1[0] = -6.692385536145924e-09
+Bias b2[0] = 0.10642101860433009
+Auxiliary Variable for calculation of z = Wx + b [0, 0] = -2.855396366854477e-08
+Variable for hidden layer relu_activation[0, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [1, 0] = -2.086633968787797e-08
+Variable for hidden layer relu_activation[1, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [2, 0] = -2.3558294861895324e-08
+Variable for hidden layer relu_activation[2, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [3, 0] = -2.9121387930680085e-08
+Variable for hidden layer relu_activation[3, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [4, 0] = -2.8754687027356098e-08
+Variable for hidden layer relu_activation[4, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [5, 0] = -2.1245052953331862e-08
+Variable for hidden layer relu_activation[5, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [6, 0] = -2.1980977278273325e-08
+Variable for hidden layer relu_activation[6, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [7, 0] = -1.976551999183178e-08
+Variable for hidden layer relu_activation[7, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [8, 0] = -1.817588546619708e-08
+Variable for hidden layer relu_activation[8, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [9, 0] = -2.7078751824899778e-08
+Variable for hidden layer relu_activation[9, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [10, 0] = -1.558022846695944e-08
+Variable for hidden layer relu_activation[10, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [11, 0] = -2.3453814772986283e-08
+Variable for hidden layer relu_activation[11, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [12, 0] = -2.9066679163327978e-08
+Variable for hidden layer relu_activation[12, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [13, 0] = -2.932771484333586e-08
+Variable for hidden layer relu_activation[13, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [14, 0] = -1.6020740060373254e-08
+Variable for hidden layer relu_activation[14, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [15, 0] = -2.3702672341881587e-08
+Variable for hidden layer relu_activation[15, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [16, 0] = -2.9398891068507283e-08
+Variable for hidden layer relu_activation[16, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [17, 0] = -2.8101776717536506e-08
+Variable for hidden layer relu_activation[17, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [18, 0] = -2.8121509019718207e-08
+Variable for hidden layer relu_activation[18, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b [19, 0] = -2.787626300472794e-08
+Variable for hidden layer relu_activation[19, 0] = 0.0
+Auxiliary Variable for calculation of z = Wx + b[0, 0] = 0.10642101860433009
+Binary_variable associated = 1.0
+Prediction Variable y_pred[0, 0] = 0.10642101860433009
+Auxiliary Variable for calculation of z = Wx + b[1, 0] = 0.10642101860433009
+Binary_variable associated = 1.0
+Prediction Variable y_pred[1, 0] = 0.10642101860433009
+Auxiliary Variable for calculation of z = Wx + b[2, 0] = 0.10642101860433009
+Binary_variable associated = 1.0
+Prediction Variable y_pred[2, 0] = 0.10642101860433009
+Auxiliary Variable for calculation of z = Wx + b[3, 0] = 0.10642101860433009
+Binary_variable associated = 1.0
+Prediction Variable y_pred[3, 0] = 0.10642101860433009
+Auxiliary Variable for calculation of z = Wx + b[4, 0] = 0.10642101860433009
+Binary_variable associated = 1.0
+Prediction Variable y_pred[4, 0] = 0.10642101860433009
+Auxiliary Variable for calculation of z = Wx + b[5, 0] = 0.10642101860433009
+Binary_variable associated = 1.0
+Prediction Variable y_pred[5, 0] = 0.10642101860433009
+Auxiliary Variable for calculation of z = Wx + b[6, 0] = 0.10642101860433009
+Binary_variable associated = 1.0
+Prediction Variable y_pred[6, 0] = 0.10642101860433009
+Auxiliary Variable for calculation of z = Wx + b[7, 0] = 0.10642101860433009
+Binary_variable associated = 1.0
+Prediction Variable y_pred[7, 0] = 0.10642101860433009
+Auxiliary Variable for calculation of z = Wx + b[8, 0] = 0.10642101860433009
+Binary_variable associated = 1.0
+Prediction Variable y_pred[8, 0] = 0.10642101860433009
+Auxiliary Variable for calculation of z = Wx + b[9, 0] = 0.10642101860433009
+Binary_variable associated = 1.0
+Prediction Variable y_pred[9, 0] = 0.10642101860433009
+Auxiliary Variable for calculation of z = Wx + b[10, 0] = 0.10642101860433009
+Binary_variable associated = 1.0
+Prediction Variable y_pred[10, 0] = 0.10642101860433009
+Auxiliary Variable for calculation of z = Wx + b[11, 0] = 0.10642101860433009
+Binary_variable associated = 1.0
+Prediction Variable y_pred[11, 0] = 0.10642101860433009
+Auxiliary Variable for calculation of z = Wx + b[12, 0] = 0.10642101860433009
+Binary_variable associated = 1.0
+Prediction Variable y_pred[12, 0] = 0.10642101860433009
+Auxiliary Variable for calculation of z = Wx + b[13, 0] = 0.10642101860433009
+Binary_variable associated = 1.0
+Prediction Variable y_pred[13, 0] = 0.10642101860433009
+Auxiliary Variable for calculation of z = Wx + b[14, 0] = 0.10642101860433009
+Binary_variable associated = 1.0
+Prediction Variable y_pred[14, 0] = 0.10642101860433009
+Auxiliary Variable for calculation of z = Wx + b[15, 0] = 0.10642101860433009
+Binary_variable associated = 1.0
+Prediction Variable y_pred[15, 0] = 0.10642101860433009
+Auxiliary Variable for calculation of z = Wx + b[16, 0] = 0.10642101860433009
+Binary_variable associated = 1.0
+Prediction Variable y_pred[16, 0] = 0.10642101860433009
+Auxiliary Variable for calculation of z = Wx + b[17, 0] = 0.10642101860433009
+Binary_variable associated = 1.0
+Prediction Variable y_pred[17, 0] = 0.10642101860433009
+Auxiliary Variable for calculation of z = Wx + b[18, 0] = 0.10642101860433009
+Binary_variable associated = 1.0
+Prediction Variable y_pred[18, 0] = 0.10642101860433009
+Auxiliary Variable for calculation of z = Wx + b[19, 0] = 0.10642101860433009
+Binary_variable associated = 1.0
+Prediction Variable y_pred[19, 0] = 0.10642101860433009

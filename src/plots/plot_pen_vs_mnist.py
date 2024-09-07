@@ -1,8 +1,10 @@
-from experiments import run_multiple_experiments_warm_start
 from matplotlib import pyplot as plt
 from datetime import datetime
 import numpy as np
-import os
+import sys, os
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, parent_dir)
+from classification import run_multiple_experiments_warm_start
 
 # Define parameters
 num_experiments = 1
@@ -68,7 +70,7 @@ description_text = (
 plt.figtext(0.5, 0.14, description_text, ha='center', va='top', fontsize=7, wrap=True)
 
 # Save the figure with a meaningful name
-directory = f'graphs/perf_datasets/{loss_function}/{random_nb}/reg{lambda_reg}/warmstart_{warm_start}/{current_date_time}'
+directory = f'graphs/pen_vs_mnist/{loss_function}/{random_nb}/reg{lambda_reg}/warmstart_{warm_start}/{current_date_time}'
 file_name = 'accuracy_mnist_vs_smaller.png'
 full_path = os.path.join(directory, file_name)
 if not os.path.exists(directory):

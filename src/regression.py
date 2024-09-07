@@ -1,5 +1,9 @@
-from experiments import *
-from isolating_behaviors_scripts.write_to import write_variables_to_file
+from model_setup import *
+from utils.write_to import write_variables_to_file
+from matplotlib import pyplot as plt
+import pandas as pd
+from keras.models import Sequential
+from keras.layers import Input, Dense, Flatten
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.optimizers import SGD
@@ -52,7 +56,7 @@ def compute_big_M(input_dim, hidden_layers):
 ### TRAINING NN WITH MIP
 
 # Function to train Gurobi model for regression
-def train_gurobi_model_regression(X_train, y_train, input_dim, hidden_layers, output_dim, loss_function, type_reg, lambda_reg):
+def train_gurobi_model_regression(X_train, y_train, input_dim, hidden_layers, output_dim, loss_function, type_reg, lambda_reg, new = False):
     n = X_train.shape[0]
     M = compute_big_M(input_dim, hidden_layers)
 
@@ -68,12 +72,14 @@ def train_gurobi_model_regression(X_train, y_train, input_dim, hidden_layers, ou
     else:
         add_output_layer_constraints(model, relu_activation, weights, biases, X_train, y_pred, binary_vars, output_dim, hidden_layers, M, n)
     
-    #set_loss_function_regression(model, weights, biases, loss_function, y_pred, y_train, n, output_dim, type_reg, lambda_reg)
-    new_formulation(model, weights, biases, loss_function, n, y_pred, y_train, lambda_reg, type_reg)
+    if new == False: 
+        set_loss_function_regression(model, weights, biases, loss_function, y_pred, y_train, n, output_dim, type_reg, lambda_reg)
+    else:
+        new_formulation(model, weights, biases, loss_function, n, y_pred, y_train, lambda_reg, type_reg)
 
     if optimize_model(model):
         W, b = extract_weights_biases(model, weights, biases)
-        #write_variables_to_file(model, weights, biases, hidden_vars, binary_vars[-1], relu_activation, y_pred, hidden_layers, output_dim, n, 'variables_values.txt')
+        #write_variables_to_file(model, weights, biases, hidden_vars, binary_vars[-1], relu_activation, y_pred, hidden_layers, output_dim, n, 'src/utils/variables_values.txt')
         return model.Runtime, W, b
     else:
         return None, None, None
@@ -84,6 +90,7 @@ def update_bound(var, bound, value):
     for v in var.values():
         v.setAttr(bound, value)
 
+# Function to calculate the error
 def calculate_error(model, loss_function, n, y_pred, y_train_sample):
     loss_expr = 0
     
@@ -100,6 +107,7 @@ def calculate_error(model, loss_function, n, y_pred, y_train_sample):
         raise ValueError("Unsupported loss function")
     return loss_expr
 
+# Function to regularisation L1 term, without the coefficient lambda
 def calculate_reg_l1(model, weights, biases):
     print("REGULARISATION L1")
     abs_weights, abs_biases = [], []
@@ -137,6 +145,7 @@ def calculate_reg_l1(model, weights, biases):
 
     return reg_expr
 
+# Function to regularisation L2 term, without the coefficient lambda
 def calculate_reg_l2(weights, biases):
     print("REGULARISATION L2")
     reg_expr = 0
@@ -168,6 +177,7 @@ def set_loss_function_regression(model, weights, biases, loss_function, y_pred, 
     # Objective function
     model.setObjective(loss_expr, GRB.MINIMIZE)
 
+# Function to create a new formulation
 def new_formulation(model, weights, biases, error_function, n, y_pred, y_train_sample, threshold, reg):
     error = model.addVar(vtype=GRB.CONTINUOUS, name="error")
     error_def = gp.LinExpr()
@@ -194,7 +204,7 @@ def new_formulation(model, weights, biases, error_function, n, y_pred, y_train_s
 
 def compute_error_with_mip(X, y, weights, biases, loss_function):
     error = 0
-    y_pred = [item[0] for item in predict_with_mip(weights, biases, X, y)]
+    y_pred = [item[0] for item in predict_with_mip(weights, biases, X)]
     # print(f'{y_pred} instead of {y}')
     if loss_function == 'mse':
         # Compute Mean Squared Error
@@ -218,13 +228,14 @@ def compute_error_with_sgd(X, y, model, loss_function):
         raise ValueError("Unsupported loss function")
     return error
 
+
 ########################################################
 
-### MAIN FUNCTION TO RUN THE TRAINING
+### RUNNING THE TRAINING
 
-def run_regression_mip(X_train, y_train, hidden_layers, loss_function, type_reg, lambda_reg = 0.0):
+def run_regression_mip(X_train, y_train, hidden_layers, loss_function, type_reg, lambda_reg = 0.0, new = False):
     input_dim = X_train.shape[1]
-    runtime, W, b = train_gurobi_model_regression(X_train, y_train, input_dim, hidden_layers, 1, loss_function, type_reg, lambda_reg)
+    runtime, W, b = train_gurobi_model_regression(X_train, y_train, input_dim, hidden_layers, 1, loss_function, type_reg, lambda_reg, new)
     if W is not None and b is not None:
         print(f"Training completed in {runtime:.2f} seconds. \n")
     else:
@@ -256,41 +267,18 @@ def run_regression_sgd(X_train, y_train, hidden_layers, loss_function, type_reg,
     model_nn.fit(X_train, y_train, epochs=10, batch_size=32, verbose=0)
     return model_nn
 
+
 ########################################################
 
-def main():
-    random_nb = np.random.randint(390)
-    print(random_nb)
-    sample_size = 30 
-    hidden_layers = [1]
+### PLOTTING FOR INSIGHTS IF NEEDED
 
-    loss_function = 'mae'
-    type_reg = 1
-    lambda_reg = 0.1 
-
-    X_train, X_test, y_train, y_test = load_and_preprocess_data_regression(sample_size, random_nb)
-    W, b = run_regression_mip(X_train, y_train, hidden_layers, loss_function, type_reg, lambda_reg)
-    model_sgd = run_regression_sgd(X_train, y_train, hidden_layers, loss_function, type_reg, lambda_reg)
-
-    print("With MIP")
-    error_train_mip = compute_error_with_mip(X_train, y_train, W, b, loss_function)
-    error_test_mip = compute_error_with_mip(X_test, y_test, W, b, loss_function)
-    print(f"Training {loss_function}: {error_train_mip:.2f}")
-    print(f"Testing {loss_function}: {error_test_mip:.2f}\n")
-
-    print("With SGD")
-    error_train_sgd = compute_error_with_sgd(X_train, y_train, model_sgd, loss_function)
-    error_test_sgd = compute_error_with_sgd(X_test, y_test, model_sgd, loss_function)
-    print(f"Training {loss_function}: {error_train_sgd:.2f}")
-    print(f"Testing {loss_function}: {error_test_sgd:.2f}\n")
-
-    '''
+def visualise_mip_vs_sgd(model_sgd, X, W, b, y):
     # Convert lists to NumPy arrays
-    y_train = np.squeeze(y_train)  
-    y_pred_train_sgd = np.squeeze(model_sgd.predict(X_train))
-    y_pred_train_mip = np.squeeze(predict_with_mip(W, b, X_train))
-
-    # Results on training set
+    y_train = np.squeeze(y)  
+    y_pred_train_sgd = np.squeeze(model_sgd.predict(X))
+    y_pred_train_mip = np.squeeze(predict_with_mip(W, b, X))
+    
+    # Plotting the results
     margin = 0.1
     min_value = min(min(y_pred_train_sgd), min(y_pred_train_mip), min(y_train))
     max_value = max(max(y_pred_train_sgd), max(y_pred_train_mip), max(y_train))
@@ -306,8 +294,8 @@ def main():
     plt.ylim([min_value - margin, max_value + margin])
     plt.legend()
     plt.show()
-
-    # Residual Analysis
+    
+    # Plotting the residuals
     residual_sgd = y_train - y_pred_train_sgd
     residual_mip = y_train - y_pred_train_mip
     plt.figure(figsize=(12, 6))
@@ -319,7 +307,43 @@ def main():
     plt.title('Residuals Analysis')
     plt.legend()
     plt.show()
-    '''
+
+    return
+
+
+########################################################
+
+### MAIN FUNCTIONS
+
+def main():
+    random_nb = np.random.randint(390)
+    print(random_nb)
+    sample_size = 20 
+    hidden_layers = [1]
+
+    loss_function = 'mse'
+    type_reg = 1
+    lambda_reg = 0.1 
+
+    X_train, X_test, y_train, y_test = load_and_preprocess_data_regression(sample_size, random_nb)
+    W, b = run_regression_mip(X_train, y_train, hidden_layers, loss_function, type_reg, lambda_reg, True)
+    model_sgd = run_regression_sgd(X_train, y_train, hidden_layers, loss_function, type_reg, lambda_reg)
+
+    print("With MIP")
+    error_train_mip = compute_error_with_mip(X_train, y_train, W, b, loss_function)
+    error_test_mip = compute_error_with_mip(X_test, y_test, W, b, loss_function)
+    print(f"Training {loss_function}: {error_train_mip:.2f}")
+    print(f"Testing {loss_function}: {error_test_mip:.2f}\n")
+
+    print("With SGD")
+    error_train_sgd = compute_error_with_sgd(X_train, y_train, model_sgd, loss_function)
+    error_test_sgd = compute_error_with_sgd(X_test, y_test, model_sgd, loss_function)
+    print(f"Training {loss_function}: {error_train_sgd:.2f}")
+    print(f"Testing {loss_function}: {error_test_sgd:.2f}\n")
+
+    
+    visualise_mip_vs_sgd(model_sgd, X_train, W, b, y_train)
+    
     return
 
 if __name__ == '__main__':
